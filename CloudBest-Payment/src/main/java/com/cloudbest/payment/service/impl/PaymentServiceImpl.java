@@ -74,8 +74,9 @@ public class PaymentServiceImpl implements PaymentService {
         AlipayTradeAppPayModel model = new
                 AlipayTradeAppPayModel();
         model.setOutTradeNo(alipayBean.getOutTradeNo());//商户的订单，就是本平台的订单
-        double v = 0.01 * (Integer.valueOf(RandomUuidUtil.generateNumString(1))+1);
-        model.setTotalAmount(String.valueOf(v));//订单金额（元）
+//        double v = 0.01 * (Integer.valueOf(RandomUuidUtil.generateNumString(1))+1);
+//        model.setTotalAmount(String.valueOf(v));//订单金额（元）
+        model.setTotalAmount(alipayBean.getTotalAmount());//订单金额（元）
         model.setSubject(alipayBean.getSubject());//订单名称
         model.setBody(alipayBean.getBody());//商品描述，可空
         model.setProductCode("QUICK_MSECURITY_PAY");//产品代码，固定QUICK_WAP_PAY

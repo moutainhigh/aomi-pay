@@ -63,7 +63,8 @@ public class CustomerInfServiceImpl implements CustomerInfService {
     private SmsRecordService smsRecordService;
 
 //    String Score_Url = "http://10.103.1.2:8976";
-    String Score_Url = "http://localhost:8976";
+//    String Score_Url = "http://localhost:8976";
+    String Score_Url = "http://172.19.73.77:8888";
     //    String Sum_Score = "/youhui/query/sumScore";
     String Sum_Score = "/manager/query/sumScore";
     //    String Add_Score = "/youhui/cloudbest/addScore";
