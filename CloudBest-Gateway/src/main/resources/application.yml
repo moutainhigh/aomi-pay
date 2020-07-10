@@ -1,0 +1,72 @@
+server:
+  port: 8888 #端口
+spring:
+  application:
+    name: zuul-server #服务名称
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 300
+      maxQueueSize: 200
+      queueSizeRejectionThreshold: 150
+  command:
+    default:
+      circuitBreaker:
+        requestVolumeThreshold: 50
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          strategy: THREAD
+          semaphore:
+            maxConcurrentRequests: 1000
+          thread:
+            timeoutInMilliseconds: 15000
+
+ribbon:
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
+zuul:
+#  retryable: true
+#  add-host-header: true
+#  ignoredServices: "*"
+#  sensitiveHeaders: "*"
+  host:
+    socket-timeout-millis: 15000
+    connect-timeout-millis: 15000
+  routes:
+    user:
+      path: /app/user/**
+      serviceId: service-user
+      strip-prefix: false
+    order:
+      path: /app/order/**
+      serviceId: service-order
+      strip-prefix: false
+    items:
+      path: /app/items/**
+      serviceId: service-items
+      strip-prefix: false
+    payment:
+      path: /app/payment/**
+      serviceId: service-payment
+      strip-prefix: false
+    brand:
+      path: /brand/**
+      serviceId: service-user
+      strip-prefix: false
+#配置Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka/
+  instance:
+    prefer-ip-address: true #使用ip地址注册
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+
+logging:
+  config: classpath:log4j2.xml
+
+
