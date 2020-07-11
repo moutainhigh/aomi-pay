@@ -27,7 +27,7 @@ public class YhCustomerBindVO implements Serializable {
     private Long cloudUserId;
 
     /**
-     * 有惠用户ID
+     * 友惠用户ID
      */
     private Long yhUserId;
 

@@ -34,7 +34,7 @@ public class YhCustomerBindController {
     private YhCustomerBindService customerBindService;
 
     /**
-     * 新增有惠用户绑定信息
+     * 新增友惠用户绑定信息
      */
     @RequestMapping(value = "/user/yh/addYh",method = RequestMethod.POST)
     public Result addYh(@RequestBody YhCustomerBind customerBind){
@@ -47,7 +47,7 @@ public class YhCustomerBindController {
     }
 
     /**
-     * 修改有惠用户绑定信息
+     * 修改友惠用户绑定信息
      */
     @RequestMapping(value = "/user/yh/updateYh",method = RequestMethod.POST)
     public Result updateYh(@RequestBody YhCustomerBind customerBind){
@@ -60,7 +60,7 @@ public class YhCustomerBindController {
     }
 
     /**
-     * 逻辑删除有惠用户绑定信息
+     * 逻辑删除友惠用户绑定信息
      */
     @RequestMapping(value = "/user/yh/offYh",method = RequestMethod.POST)
     public Result offYh(@RequestBody YhCustomerBind customerBind){
@@ -73,7 +73,7 @@ public class YhCustomerBindController {
     }
 
     /**
-     * 查询优惠用户绑定列表
+     * 查询友惠用户绑定列表
      */
     @RequestMapping(value = "/user/yh/queryList",method = RequestMethod.POST)
     public Result queryList(@RequestBody YhCustomerBindVO vo){
@@ -87,7 +87,7 @@ public class YhCustomerBindController {
     }
 
     /**
-     * 查询优惠用户绑定详情信息
+     * 查询友惠用户绑定详情信息
      */
     @RequestMapping(value = "/user/yh/queryById",method = RequestMethod.POST)
     public Result queryById(@RequestBody YhCustomerBindVO vo) throws Exception{

@@ -96,7 +96,7 @@ public class YhCustomerBindServiceImpl implements YhCustomerBindService {
     public YhCustomerBind offCustomerBind(Integer id) {
         YhCustomerBind customerBind = customerBindMapper.selectById(id);
         if (customerBind!=null){
-            throw new BusinessException(CommonErrorCode.E_900133.getCode(),"尚未与有惠绑定");
+            throw new BusinessException(CommonErrorCode.E_900133.getCode(),"尚未与友惠绑定");
         }
         return customerBind;
     }
