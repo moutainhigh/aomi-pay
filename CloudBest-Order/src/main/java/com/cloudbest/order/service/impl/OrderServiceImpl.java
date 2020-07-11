@@ -304,7 +304,7 @@ public class OrderServiceImpl implements OrderService {
         alipayBean.setTotalAmount(String.valueOf(0.01));//订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
         alipayBean.setOutTradeNo(IdWorker.getMillisecond()+ RandomUuidUtil.generateNumString(8));//商户网站唯一订单号
 //        alipayBean.setExpireTime("15m");//商户网站唯一订单号
-        alipayBean.setBody("云上优品");//商品名称   暂定
+        alipayBean.setBody("云上优选");//商品名称   暂定
 
         Result zfb = payClient.zfb(alipayBean);
         JSONObject object = JSONObject.fromObject(zfb);
@@ -481,7 +481,7 @@ public class OrderServiceImpl implements OrderService {
 //        alipayBean.setTotalAmount(String.valueOf(0.01));//订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
 //        alipayBean.setOutTradeNo(IdWorker.getMillisecond()+ RandomUuidUtil.generateNumString(8));//商户网站唯一订单号
 ////        alipayBean.setExpireTime("15m");//商户网站唯一订单号
-//        alipayBean.setBody("云上优品");//商品名称   暂定
+//        alipayBean.setBody("云上优选");//商品名称   暂定
 //
 //        Result zfb = payClient.zfb(alipayBean);
 //        JSONObject object = JSONObject.fromObject(zfb);

@@ -238,6 +238,24 @@ public class ItemsInfoController {
         return new Result(CommonErrorCode.SUCCESS,mapList);
     }
 
+    /**
+     * 猜你喜欢，随机查询数据+精品推荐（写死数据）
+     *
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/app/items/items/query/queryIndexItems")
+    public Result queryIndexItems(HttpServletRequest request
+    ){
+
+        Map<String,Object> map = new HashMap<>();
+        try{
+            map.put("topQualityItems",cItemsInfoService.queryTopQualityItems());
+            map.put("favoriteItems",cItemsInfoService.queryFavoriteItems());
+        }catch (BusinessException businessException){
+            return new Result(businessException.getCode(),businessException.getDesc(),false);
+        }
+        return new Result(CommonErrorCode.SUCCESS,map);
+    }
+
     //查询商品详情信息（包括sku，sku对应的价格，描述，图片，sku销量，仓库所在地，发货城市，用户默认地址）
     @RequestMapping(method = RequestMethod.POST, value = "/app/items/items/query/getItemInfo")
     public Result getItemInfo(HttpServletRequest request,

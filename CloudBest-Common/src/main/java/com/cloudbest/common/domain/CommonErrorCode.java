@@ -44,10 +44,12 @@ public enum CommonErrorCode implements ErrorCode {
 	E_900129(900129,"登陆信息为空"),
 	E_900130(900130,"身份证号已存在"),
 	E_900131(900131,"今日已经发送十次，请明日再进行尝试"),
-	E_900132(900132,"请30秒后再尝试发送"),
+	E_900132(900132,"请  秒后再尝试发送"),
 	E_900133(900133,"无用户绑定信息"),
 	E_900134(900134,"验证码超时"),
 	E_900135(900135,"用户绑定失败"),
+	E_900136(900136,"收货地址已达到上限!"),
+	E_900137(900137,"地址重复!"),
 
 	////////////////////////////////////公用异常编码 //////////////////////////
 
@@ -170,7 +172,7 @@ public enum CommonErrorCode implements ErrorCode {
 		return desc;
 	}
 
-	CommonErrorCode(boolean success,int code, String desc) {
+	CommonErrorCode(boolean success, int code, String desc) {
 		this.success=success;
 		this.code = code;
 		this.desc = desc;

@@ -53,7 +53,7 @@ public class CustomerInfVO implements Serializable {
     private String gender;
 
     /**
-     * 有惠加密后的有惠商户ID
+     * 友惠加密后的友惠商户ID
      */
     private String yhKey;
     /**

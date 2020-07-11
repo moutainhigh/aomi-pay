@@ -253,19 +253,19 @@ public class CustomerInfController implements Serializable {
     }
 
     /**
-     * 判断有惠用户ID是否绑定过
+     * 判断友惠用户ID是否绑定过
      */
     @RequestMapping(value = "/brand/youhui/users/bindStatus/{yhBind}",method = RequestMethod.POST)
     public Result bindStatus(@PathVariable(value="yhBind")String yhKey) throws Exception{
-        log.info("判断有惠用户ID是否绑定过,密文："+yhKey);
+        log.info("判断友惠用户ID是否绑定过,密文："+yhKey);
         Map<String,Object> mapResult = new HashMap<>();
         if (yhKey==null){
             return new Result(CommonErrorCode.E_110006);
         }
-        log.info("=================================判断有惠用户ID是否绑定过开始解签===============================================");
+        log.info("=================================判断友惠用户ID是否绑定过开始解签===============================================");
         String decode = new String(java.util.Base64.getDecoder().decode(yhKey), "utf-8");
         String yhMerchantNo = RSAUtil.decrypt(decode,RSAUtil.privateKey);
-        log.info("=================================判断有惠用户ID是否绑定过解签成功,解签结果："+yhMerchantNo);
+        log.info("=================================判断友惠用户ID是否绑定过解签成功,解签结果："+yhMerchantNo);
         try{
             mapResult = customerInfService.bindStatus(yhMerchantNo);
         }catch (BusinessException businessException){
@@ -277,18 +277,18 @@ public class CustomerInfController implements Serializable {
     }
 
     /**
-     * 绑定有惠用户ID
+     * 绑定友惠用户ID
      */
     @RequestMapping(value = "/brand/youhui/users/yhBind/{yhBind}",method = RequestMethod.POST)
     public Result yhBind(@PathVariable(value="yhBind")String yhKey,@RequestBody CustomerInfVO vo) throws Exception{
-        log.info("绑定有惠用户ID,密文："+yhKey+",手机号："+vo.getMobilePhone()+",密码："+vo.getPassword());
+        log.info("绑定友惠用户ID,密文："+yhKey+",手机号："+vo.getMobilePhone()+",密码："+vo.getPassword());
         if (vo.getMobilePhone()==null||vo.getPassword()==null||yhKey==null){
             return new Result(CommonErrorCode.E_110006);
         }
-        log.info("=================================绑定有惠用户ID开始解签===============================================");
+        log.info("=================================绑定友惠用户ID开始解签===============================================");
         String decode = new String(java.util.Base64.getDecoder().decode(yhKey), "utf-8");
         String yhMerchantNo = RSAUtil.decrypt(decode,RSAUtil.privateKey);
-        log.info("=================================绑定有惠用户ID解签成功,解签结果："+yhMerchantNo);
+        log.info("=================================绑定友惠用户ID解签成功,解签结果："+yhMerchantNo);
         try{
             customerInfService.yhBind(vo.getMobilePhone(),vo.getPassword(),yhMerchantNo);
         }catch (BusinessException businessException){

@@ -2,16 +2,16 @@ package com.cloudbest.user.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @TableName("customer_addr")
-public class CustomerAddr implements Serializable {
+public class CustomerAddr implements Serializable,Cloneable{
 
     private static final long serialVersionUID = 1L;
 
@@ -142,5 +142,16 @@ public class CustomerAddr implements Serializable {
 
     public void setModifiedTime(LocalDateTime modifiedTime) {
         this.modifiedTime = modifiedTime;
+    }
+
+    @Override
+    public Object clone() {
+        CustomerAddr customerAddr = null;
+        try{
+            customerAddr = (CustomerAddr)super.clone();
+        }catch(CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return customerAddr;
     }
 }
