@@ -2,18 +2,17 @@ package com.cloudbest.user.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.Result;
 import com.cloudbest.common.util.PhoneUtil;
 import com.cloudbest.common.util.TokenUtil;
 import com.cloudbest.user.entity.CustomerAddr;
+import com.cloudbest.user.mapper.CustomerAddrMapper;
 import com.cloudbest.user.service.CustomerAddrService;
 import com.cloudbest.user.vo.CustomerAddrVO;
-import com.mysql.cj.xdevapi.JsonString;
-import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import net.sf.json.JSONString;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,8 @@ public class CustomerAddrController {
 
     @Autowired
     private CustomerAddrService customerAddrService;
+    @Autowired
+    private CustomerAddrMapper customerAddrMapper;
 
     /**
      * 根据用户id查询地址
@@ -76,13 +77,18 @@ public class CustomerAddrController {
      * 添加用户地址
      */
     @RequestMapping(value = "/app/user/addAddr/{token}",method = RequestMethod.POST)
-    public Result addAddr(@RequestBody JSONObject str,@PathVariable("token")String token) throws Exception{
+    public Result addAddr(@RequestBody JSONObject str, @PathVariable("token")String token) throws Exception{
         log.info("添加用户地址入参："+ JSON.toJSONString(str.getJSONObject("customerAddr")));
+        Long customerId = null;
         try {
-            TokenUtil.getUserId(token);
+            customerId = TokenUtil.getUserId(token);
         }catch (BusinessException businessException){
             return new Result(900121,"token验证失败",false);
         }
+        if (customerAddrMapper.selectCount(new LambdaQueryWrapper<CustomerAddr>().eq(CustomerAddr::getCustomerId,customerId))>=10){
+            return new Result(900136,"收货地址已达到上限!",false);
+        }
+
         JSONObject customerObject = str.getJSONObject("customerAddr");
         String phone = customerObject.getString("phone");
         if (!PhoneUtil.isMobileSimple(phone)){
@@ -102,6 +108,7 @@ public class CustomerAddrController {
         customerAddr.setAddress(customerObject.getString("address"));
         customerAddr.setName(name);
         customerAddr.setPhone(phone);
+        customerAddr.setCustomerId(customerId);
         try{
             customerAddrService.addAddr(token,customerAddr);
         }catch (BusinessException businessException){
@@ -114,7 +121,7 @@ public class CustomerAddrController {
      * 修改用户默认地址
      */
     @RequestMapping(value = "/app/user/updateDef/{token}",method = RequestMethod.POST)
-    public Result updateDef(@RequestBody JSONObject str,@PathVariable("token")String token) throws Exception {
+    public Result updateDef(@RequestBody JSONObject str, @PathVariable("token")String token) throws Exception {
         try {
             TokenUtil.getUserId(token);
         }catch (BusinessException businessException){
@@ -132,7 +139,7 @@ public class CustomerAddrController {
      * 删除地址
      */
     @RequestMapping(value = "/app/user/delateAddr/{token}",method = RequestMethod.POST)
-    public Result delateAddr(@RequestBody JSONObject str,@PathVariable("token")String token)throws Exception{
+    public Result delateAddr(@RequestBody JSONObject str, @PathVariable("token")String token)throws Exception{
         Integer id = str.getInt("id");
         try {
             TokenUtil.getUserId(token);
@@ -150,7 +157,7 @@ public class CustomerAddrController {
      * 修改地址
      */
     @RequestMapping(value = "/app/user/updateAddr/{token}",method = RequestMethod.POST)
-    public Result updateAddr(@RequestBody JSONObject str,@PathVariable("token")String token)throws Exception{
+    public Result updateAddr(@RequestBody JSONObject str, @PathVariable("token")String token)throws Exception{
         log.info("修改用户地址入参："+ JSON.toJSONString(str.getJSONObject("customerAddr")));
         try {
             TokenUtil.getUserId(token);

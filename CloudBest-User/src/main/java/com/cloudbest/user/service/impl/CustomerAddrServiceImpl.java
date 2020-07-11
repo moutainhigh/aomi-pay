@@ -39,16 +39,25 @@ public class CustomerAddrServiceImpl implements CustomerAddrService {
     @Autowired
     private CustomerInfMapper customerInfMapper;
     @Override
-    public void addAddr(String token ,CustomerAddr customerAddr) throws Exception {
+    public void addAddr(String token , CustomerAddr customerAddr) throws Exception {
         if (token==null){
             throw new BusinessException(CommonErrorCode.E_900121.getCode(),"token信息为空");
         }
         if (customerAddr==null){
             throw new BusinessException(CommonErrorCode.E_900116.getCode(),"地址为空");
         }
-        Long customerId = TokenUtil.getUserId(token);
-        customerAddr.setCustomerId(customerId);
+        CustomerAddr addr = (CustomerAddr) customerAddr.clone();
         int isDef = customerAddr.getIsDefault();
+        Long customerId = TokenUtil.getUserId(token);
+        List<CustomerAddr> listAddr = queryAddrs(customerId);
+        for (CustomerAddr c:listAddr) {
+            addr.setId(c.getId());
+            addr.setIsDefault(c.getIsDefault());
+            addr.setModifiedTime(c.getModifiedTime());
+            if (addr.equals(c)){
+                throw new BusinessException(CommonErrorCode.E_900137.getCode(),"地址重复!");
+            }
+        }
         customerAddr.setIsDefault(0);
         customerAddr.setModifiedTime(LocalDateTime.now());
         customerAddrMapper.insert(customerAddr);

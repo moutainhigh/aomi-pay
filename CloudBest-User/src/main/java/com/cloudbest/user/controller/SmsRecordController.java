@@ -1,7 +1,6 @@
 package com.cloudbest.user.controller;
 
 
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
@@ -9,7 +8,9 @@ import com.cloudbest.common.domain.Result;
 import com.cloudbest.common.util.IPUtil;
 import com.cloudbest.common.util.PhoneUtil;
 import com.cloudbest.common.util.StringUtil;
+import com.cloudbest.user.entity.CustomerLogin;
 import com.cloudbest.user.entity.SmsRecord;
+import com.cloudbest.user.mapper.CustomerLoginMapper;
 import com.cloudbest.user.mapper.SmsRecordMapper;
 import com.cloudbest.user.service.SmsRecordService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Random;
 
 /**
  * <p>
@@ -40,8 +41,8 @@ public class SmsRecordController {
     private SmsRecordService smsRecordService;
     @Autowired
     private SmsRecordMapper smsRecordMapper;
-//    @Autowired
-//    private RedisUtil redisUtil;
+    @Autowired
+    private CustomerLoginMapper customerLoginMapper;
     /**
      * 发送验证码
      */
@@ -49,39 +50,28 @@ public class SmsRecordController {
     public Result UserLogin(HttpServletRequest request, @RequestBody JSONObject str) {
         int x =0;
         String phone = str.getString("phone");
+        String flag = str.getString("flag");
         if (StringUtil.isBlank(phone)){
             return new Result(900112,"手机号不能为空",false);
         }
         if(!PhoneUtil.isMobileSimple(phone)){
             return new Result(900123,"手机号码格式不正确",false);
         }
+        switch (flag){
+            case "register":
+                if (customerLoginMapper.selectCount(new LambdaQueryWrapper<CustomerLogin>().eq(CustomerLogin::getMobilePhone,phone))>0){
+                    return new Result(900107,"发送验证码错误",false);
+                }
+                break;
+            case "losePsw":
+                if (customerLoginMapper.selectCount(new LambdaQueryWrapper<CustomerLogin>().eq(CustomerLogin::getMobilePhone,phone))==0){
+                    return new Result(900107,"发送验证码错误",false);
+                }
+                break;
+        }
         try{
             String ip = IPUtil.getIpAddr(request);
-            /*String ipAddress = request.getHeader("x-forwarded-for");
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("Proxy-Client-ipAddress");
-            }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("WL-Proxy-Client-ipAddress");
-            }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("HTTP_CLIENT_IP");
-            }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("HTTP_X_FORWARDED_FOR");
-            }
-            if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getRemoteAddr();
-            }
 
-            String[] ipAddressStr = ipAddress.split(",");
-            List<String> ipList = new ArrayList<String>();
-            for(int i = 0;i < ipAddressStr.length;i++){
-                if(ipAddressStr[i].startsWith("172."))
-                    continue;
-                ipList.add(ipAddressStr[i]);
-            }
-            ipList.add(phone);*/
             int count = smsRecordMapper.selectCount(new LambdaQueryWrapper<SmsRecord>()
                     .eq(SmsRecord::getCreateDate, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .eq(SmsRecord::getPhone,phone));
@@ -98,11 +88,6 @@ public class SmsRecordController {
                     return new Result(900132,"请"+(60000-time)/1000+"秒后再尝试发送",false);
                 }
             }
-//            Map<String, Object> restClientLimit = redisUtil.restClientLimit("sendMsg",60, phone);
-//            if(!CommonConstants.SUCCESS.equals(restClientLimit.get(CommonConstants.RESP_CODE))){
-//                return new Result(999999,"操作繁忙请稍后再试~",false);
-//            }
-
             Random random = new Random();
             x = random.nextInt(899999) + 100000;
             smsRecordService.sendSms(x,phone);
