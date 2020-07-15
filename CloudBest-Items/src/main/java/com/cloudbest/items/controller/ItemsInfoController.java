@@ -160,6 +160,7 @@ public class ItemsInfoController {
         Map<String,Object> mapResult = new HashMap<>();
         try{
             mapList = cItemsInfoService.queryItems(vo);
+
             //查询活动信息
             Promotion promotion = promotionService.queryPromotionFirst();
             if (null!=promotion){
