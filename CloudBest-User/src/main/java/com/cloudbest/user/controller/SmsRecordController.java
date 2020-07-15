@@ -50,7 +50,13 @@ public class SmsRecordController {
     public Result UserLogin(HttpServletRequest request, @RequestBody JSONObject str) {
         int x =0;
         String phone = str.getString("phone");
-        String flag = str.getString("flag");
+        String flag = null;
+        try{
+            flag = str.getString("flag");
+        }catch (Exception e){
+            flag = "register";
+        }
+
         if (StringUtil.isBlank(phone)){
             return new Result(900112,"手机号不能为空",false);
         }
