@@ -3,7 +3,6 @@
 
 <mapper namespace="com.cloudbest.items.mapper.NewProductsMapper">
 
-    <!--  &lt;!&ndash; 可根据自己的需求，是否要使用 -->
       <resultMap type="com.cloudbest.items.entity.NewProducts" id="newProductsMap">
           <result property="id" column="id"/>
           <result property="image" column="img"/>
@@ -36,7 +35,7 @@
 <!--    private LocalDateTime createTime;//创建时间-->
 
     <select id="selectNewProducts" resultMap="newProductsMap">
-        SELECT * from new_products where `status`=1 and current_time  between BETWEEN grouding_time AND validity_time  ORDER BY create_time DESC LIMIT 6;
+         SELECT * from new_products where `status`=1 and current_time  between  grouding_time AND validity_time  ORDER BY create_time DESC LIMIT 6;
     </select>
 
 </mapper>

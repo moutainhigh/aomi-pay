@@ -40,5 +40,4 @@ public class NewProducts implements Serializable {
     @TableId(value = "create_time")
     private LocalDateTime createTime;//创建时间
 
-
 }
