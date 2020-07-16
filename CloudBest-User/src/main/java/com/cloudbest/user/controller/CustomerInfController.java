@@ -10,7 +10,6 @@ import com.cloudbest.common.util.RSAUtil;
 import com.cloudbest.common.util.AliOSSUtil;
 import com.cloudbest.common.util.TokenUtil;
 import com.cloudbest.user.entity.CustomerInf;
-import com.cloudbest.user.entity.SmsRecord;
 import com.cloudbest.user.mapper.CustomerInfMapper;
 import com.cloudbest.user.service.CustomerInfService;
 import com.cloudbest.user.service.SmsRecordService;
@@ -49,8 +48,6 @@ public class CustomerInfController implements Serializable {
     @Autowired
     private CustomerInfService customerInfService;
 
-    @Autowired
-    private SmsRecordService smsRecordService;
     @Autowired
     private CustomerInfMapper customerInfMapper;
 
