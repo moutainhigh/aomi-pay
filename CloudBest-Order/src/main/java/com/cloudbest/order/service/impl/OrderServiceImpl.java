@@ -186,7 +186,7 @@ public class OrderServiceImpl implements OrderService {
         //如果运费不为零则不做改动
         if(totalPrice.compareTo(BigDecimal.ZERO)==0){
             if(deliveryAmount.compareTo(BigDecimal.ZERO)==0){
-                orderSubmitVO.setPayType(5);
+                orderSubmitVO.setPayType(4);
             }
         }
         List<OrderItemVO> orderItemVOS = orderSubmitVO.getOrderItemVOS();
