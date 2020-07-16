@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cloudbest.common.constants.ScoreSystemConstants;
 import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.Result;
@@ -59,15 +60,7 @@ public class MainServiceImpl implements MainService {
     private ItemMapper itemMapper;
     @Autowired
     private ItemClient itemClient;
-//    String Score_Url = "http://10.103.1.2:8976";
-//    String Score_Url = "http://localhost:8976";
-    String Score_Url = "http://172.19.73.77:8888";
-    //    String Sum_Score = "/youhui/query/sumScore";
-    String Sum_Score = "/manager/query/sumScore";
-    //    String Add_Score = "/youhui/cloudbest/addScore";
-    String Add_Score = "/cloudbest/cloudbest/addScore";
-    //    String Sub_Score = "/youhui/cloudbest/subScore";
-    String Sub_Score = "/manager/score/subScore";
+
     //查询用户所有订单（主订单）
     @Override
     public List<MainEntityVO> selectAllOrder(OrderMainVO vo,String token) {
@@ -226,7 +219,7 @@ public class MainServiceImpl implements MainService {
         if (vo.getStatus()==4){
             if (mainEntity.getPayStatus()==3&&vo.getMainOrderId()!=null){
                 //添加用户商城购物券
-                String url = Score_Url+Add_Score;
+                String url = ScoreSystemConstants.SCORE_URL.concat(ScoreSystemConstants.ADD_SCORE);
                 MultiValueMap<String, Object> requestEntity  = new LinkedMultiValueMap<String, Object>();
                 requestEntity.add("cbId", mainEntity.getUserId());
                 requestEntity.add("orderNo", vo.getMainOrderId());
@@ -289,8 +282,8 @@ public class MainServiceImpl implements MainService {
         if (null != String.valueOf(mainEntity.getCostScore())&&!String.valueOf(mainEntity.getCostScore()).equals("null")){
             subScore = mainEntity.getCostScore().setScale(2, BigDecimal.ROUND_HALF_EVEN);
         }
-        if (subScore != BigDecimal.ZERO) {
-            String url = Score_Url + Sub_Score;
+        if (!BigDecimal.ZERO.equals(subScore)) {
+            String url = ScoreSystemConstants.SCORE_URL.concat(ScoreSystemConstants.SUB_SCORE);
             MultiValueMap<String, Object> requestEntity = new LinkedMultiValueMap<String, Object>();
             requestEntity.add("cbId", mainEntity.getUserId());
             requestEntity.add("orderNo", orderId);
