@@ -178,8 +178,17 @@ public class OrderServiceImpl implements OrderService {
 
         // 2 验证价格
 
-        BigDecimal totalPrice = orderSubmitVO.getTotalPrice();
 
+        BigDecimal totalPrice = orderSubmitVO.getTotalPrice();//订单总额
+        BigDecimal deliveryAmount = orderSubmitVO.getDeliveryAmount();//运费
+        //如果订单总额为判断运费
+        //如果运费为零则设置为全积分支付
+        //如果运费不为零则不做改动
+        if(totalPrice.compareTo(BigDecimal.ZERO)==0){
+            if(deliveryAmount.compareTo(BigDecimal.ZERO)==0){
+                orderSubmitVO.setPayType(4);
+            }
+        }
         List<OrderItemVO> orderItemVOS = orderSubmitVO.getOrderItemVOS();
         if (CollectionUtils.isEmpty(orderItemVOS)){
             throw new  BusinessException(CommonErrorCode.E_901001.getCode(),"请求添加购物项！");//暂定异常
@@ -214,6 +223,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal userIntegration = orderSubmitVO.getUseIntegration();
         int r = userIntegration.compareTo(BigDecimal.ZERO);
         OrderSubmitResponseVO orderSubmitResponseVO = null;
+
         if ( r == 0 ){
             //纯价格 支付
             //验价
@@ -334,7 +344,7 @@ public class OrderServiceImpl implements OrderService {
         //订单总额
         mainEntity.setTotalAmount(orderSubmitVO.getTotalPrice());
         //应付总额
-        mainEntity.setPayAmount(orderSubmitVO.getTotalPrice());//根据积分计算后，加上运费后计算得到的总额，暂未计算
+        //mainEntity.setPayAmount(orderSubmitVO.getTotalPrice());//根据积分计算后，加上运费后计算得到的总额，暂未计算
         //订单消耗积分
         mainEntity.setCostScore(orderSubmitVO.getUseIntegration());
         //支付方式
@@ -348,7 +358,7 @@ public class OrderServiceImpl implements OrderService {
         //订单备注
         mainEntity.setNote(orderSubmitVO.getNote());//未设置  用户备注
 
-        mainMapper.insert(mainEntity);//存入库中
+        //mainMapper.insert(mainEntity);//存入库中
         orderSubmitResponseVO.setMainEntity(mainEntity);
 
 
@@ -384,7 +394,8 @@ public class OrderServiceImpl implements OrderService {
         //物流方式  卖家提供
         secondarilyEntity.setDeliveryCompany(orderSubmitVO.getDeliveryCompany());
         //运费  根据物流公司提供
-        secondarilyEntity.setDeliveryAmount(orderSubmitVO.getDeliveryAmount());
+        BigDecimal deliveryAmount = orderSubmitVO.getDeliveryAmount();
+        secondarilyEntity.setDeliveryAmount(deliveryAmount);
         //物流单号
         secondarilyEntity.setDeliveryId(null);
         //发货时间
@@ -394,6 +405,10 @@ public class OrderServiceImpl implements OrderService {
         //收货时间
         secondarilyEntity.setReceiveTime(null);//未收货  暂无
         secondarilyMapper.insert(secondarilyEntity);//存入库中
+        //应付总额
+        BigDecimal totalPrice = orderSubmitVO.getTotalPrice();
+        mainEntity.setPayAmount(deliveryAmount.add(totalPrice));//根据积分计算后，加上运费后计算得到的总额，暂未计算
+        mainMapper.insert(mainEntity);//存入库中
         orderSubmitResponseVO.setSecondarilyEntity(secondarilyEntity);
 
 

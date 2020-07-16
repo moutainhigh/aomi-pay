@@ -1,10 +1,7 @@
 package com.cloudbest.items.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cloudbest.common.util.DateUtil;
+import com.cloudbest.common.domain.BusinessException;
+import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.items.entity.AppAdvertise;
 import com.cloudbest.items.entity.NewProducts;
 import com.cloudbest.items.entity.RotationChart;
@@ -29,27 +26,37 @@ public class NewAndRotationServiceImpl implements NewAndRotationService {
     private AppAdvertiseMapper appAdvertiseMapper;
     @Override
     public Map<String,Object> selectNewProductsById( ) {
-
         Map<String,Object> mapResult = new HashMap<>();
-//分页参数
-        int current =0;
-        int size =6;
-        //拼装参数构造器
-        QueryWrapper<NewProducts> newProductsqueryWrapper = new QueryWrapper<>();
-        newProductsqueryWrapper.eq("status",1);
-        newProductsqueryWrapper.orderByDesc("create_time");
-
-        Page<NewProducts> page = new Page<>(current, size);
-        IPage<NewProducts> newProductsPage = this.newProductsMapper.selectPage(page, newProductsqueryWrapper);
-        List<NewProducts> newProducts = newProductsPage.getRecords();
-        List<RotationChart> rotationCharts = this.rotationChartMapper.selectList(new LambdaQueryWrapper<RotationChart>().le(RotationChart::getGroudingTime, DateUtil.getCurrDate()).ge(RotationChart::getValidityTime,DateUtil.getCurrDate()).eq(RotationChart::getStatus,1));
-        QueryWrapper<AppAdvertise> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status",1);
-        queryWrapper.orderByDesc("create_time");
-        List<AppAdvertise> appAdvertises = this.appAdvertiseMapper.selectList(queryWrapper);
+        List<NewProducts> newProducts = this.newProductsMapper.selectNewProducts();
+        List<RotationChart> rotationCharts = this.rotationChartMapper.selectRotationCharts();
+        List<AppAdvertise> appAdvertises = this.appAdvertiseMapper.selectAppAdvertises();
         mapResult.put("rotationCharts",rotationCharts);
         mapResult.put("appAdvertises",appAdvertises);
         mapResult.put("newProducts",newProducts);
         return mapResult;
+    }
+
+    @Override
+    public void addNewProductsById(NewProducts newProducts) {
+        if (newProducts==null){
+            throw  new BusinessException(CommonErrorCode.FAIL.getCode(),"添加新品不存在");
+        }
+        this.newProductsMapper.insert(newProducts);
+    }
+
+    @Override
+    public void addRotationChart(RotationChart rotationChart) {
+        if (rotationChart==null){
+            throw  new BusinessException(CommonErrorCode.FAIL.getCode(),"添加轮播图不存在");
+        }
+        this.rotationChartMapper.insert(rotationChart);
+    }
+
+    @Override
+    public void addaAppAdvertise(AppAdvertise appAdvertise) {
+        if (appAdvertise==null){
+            throw  new BusinessException(CommonErrorCode.FAIL.getCode(),"添加广告不存在");
+        }
+        this.appAdvertiseMapper.insert(appAdvertise);
     }
 }

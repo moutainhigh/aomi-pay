@@ -42,6 +42,8 @@ public class OrderController {
     private MainMapper mainMapper;
     @Autowired
     private PayClient payClient;
+    @Autowired
+    private MainController mainController;
     private static Logger log = LoggerFactory.getLogger(OrderController.class);
     /**
      * 确认订单
@@ -119,6 +121,7 @@ public class OrderController {
             case 1:
                 //调用支付接口 支付订单
                 BigDecimal payAmount = mainEntity.getPayAmount();
+
                 AlipayBean alipayBean = new AlipayBean();
                 alipayBean.setSubject("云上优选 订单号："+mainEntity.getMainOrderId());//   商品的标题/交易标题/订单标题/订单关键字等。
                 alipayBean.setTotalAmount(payAmount.toString());//订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
@@ -137,6 +140,7 @@ public class OrderController {
                 break;
             case 4:
                 //全积分支付，不调取支付接口
+                this.mainController.updateOrder(mainEntity.getMainOrderId(),mainEntity.getPayStatus());
                 break;
         }
         return string;

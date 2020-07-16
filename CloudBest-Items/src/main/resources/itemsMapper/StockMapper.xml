@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cloudbest.items.mapper.StockMapper">
+
+<!--    &lt;!&ndash; 可根据自己的需求，是否要使用 &ndash;&gt;-->
+<!--    <resultMap type="com.cloudbest.items.entity.Stock" id="StockMap">-->
+<!--        <result property="id" column="id"/>-->
+<!--        <result property="itemId" column="item_id"/>-->
+<!--        <result property="itemAttr" column="item_attr"/>-->
+<!--        <result property="repositoryId" column="repository_id"/>-->
+<!--        <result property="preSalePrice" column="pre_sale_price"/>-->
+<!--        <result property="salePrice" column="sale_price"/>-->
+<!--        <result property="scoreScale" column="score_scale"/>-->
+<!--        <result property="lenWidHeight" column="len_wid_height"/>-->
+<!--        <result property="weight" column="weight"/>-->
+<!--        <result property="city" column="city"/>-->
+<!--        <result property="usableStock" column="usable_stock"/>&lt;!&ndash;可用库存数&ndash;&gt;-->
+<!--        <result property="skuSaltVolume" column="sku_salt_volume"/>-->
+<!--        <result property="updateTime" column="update_time"/>-->
+<!--    </resultMap>-->
+
+
+<!--    @TableId(value = "id", type = IdType.AUTO)-->
+<!--    private Integer id;-->
+
+<!--   -->
+<!--    @TableId(value = "item_id")-->
+<!--    private Integer itemId;-->
+<!-- -->
+<!--    @TableId(value = "item_attr")-->
+<!--    private String itemAttr;-->
+
+<!--   -->
+<!--    @TableId(value = "repository_id")-->
+<!--    private Integer repositoryId;-->
+
+<!--   -->
+<!--    @TableId(value = "pre_sale_price")-->
+<!--    private BigDecimal preSalePrice;-->
+<!-- -->
+<!--    @TableId(value = "sale_price")-->
+<!--    private BigDecimal salePrice;-->
+
+<!--    @TableId(value = "score_scale")-->
+<!--    private BigDecimal scoreScale;-->
+
+<!--    @TableId(value = "len_wid_height")-->
+<!--    private String lenWidHeight;-->
+
+<!--    @TableId(value = "weight")-->
+<!--    private double weight;-->
+
+<!--    @TableId(value = "status")-->
+<!--    private Integer status;-->
+
+<!--    @TableId(value = "usable_stock")-->
+<!--    private Integer usableStock;-->
+
+<!--    @TableId(value = "sku_salt_volume")-->
+<!--    private Integer skuSaltVolume;-->
+
+<!--    @TableId(value = "update_time")-->
+<!--    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")-->
+<!--    private Date updateTime;-->
+
+<!--    resultMap="StockMap"-->
+    <select id="checkStore" >
+        select * from c_stock where id=#{skuId} and usable_stock>#{num}
+    </select>
+
+    <update id="lockStore" >                                      /*  数量*/
+        update c_stock set usable_stock = usable_stock - #{num} where id=#{skuId}
+    </update>
+
+    <update id="unlockStore" >                                      /*  数量*/
+        update c_stock set usable_stock = usable_stock + #{num} where id=#{skuId}
+    </update>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
