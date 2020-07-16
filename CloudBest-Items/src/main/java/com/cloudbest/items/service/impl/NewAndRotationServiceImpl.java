@@ -1,5 +1,7 @@
 package com.cloudbest.items.service.impl;
 
+import com.cloudbest.common.domain.BusinessException;
+import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.items.entity.AppAdvertise;
 import com.cloudbest.items.entity.NewProducts;
 import com.cloudbest.items.entity.RotationChart;
@@ -32,5 +34,29 @@ public class NewAndRotationServiceImpl implements NewAndRotationService {
         mapResult.put("appAdvertises",appAdvertises);
         mapResult.put("newProducts",newProducts);
         return mapResult;
+    }
+
+    @Override
+    public void addNewProductsById(NewProducts newProducts) {
+        if (newProducts==null){
+            throw  new BusinessException(CommonErrorCode.FAIL.getCode(),"添加新品不存在");
+        }
+        this.newProductsMapper.insert(newProducts);
+    }
+
+    @Override
+    public void addRotationChart(RotationChart rotationChart) {
+        if (rotationChart==null){
+            throw  new BusinessException(CommonErrorCode.FAIL.getCode(),"添加轮播图不存在");
+        }
+        this.rotationChartMapper.insert(rotationChart);
+    }
+
+    @Override
+    public void addaAppAdvertise(AppAdvertise appAdvertise) {
+        if (appAdvertise==null){
+            throw  new BusinessException(CommonErrorCode.FAIL.getCode(),"添加广告不存在");
+        }
+        this.appAdvertiseMapper.insert(appAdvertise);
     }
 }
