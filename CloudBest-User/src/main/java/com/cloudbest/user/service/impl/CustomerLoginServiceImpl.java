@@ -12,6 +12,7 @@ import com.cloudbest.common.util.TokenUtil;
 import com.cloudbest.user.entity.CustomerInf;
 import com.cloudbest.user.entity.CustomerLogin;
 import com.cloudbest.user.entity.CustomerLoginLog;
+import com.cloudbest.user.entity.SmsRecord;
 import com.cloudbest.user.mapper.CustomerInfMapper;
 import com.cloudbest.user.mapper.CustomerLoginLogMapper;
 import com.cloudbest.user.mapper.CustomerLoginMapper;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -127,9 +129,16 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (code==null){
             throw new BusinessException(CommonErrorCode.E_900103.getCode(),"验证码为空");
         }
-        String codeByPhone = smsRecordService.getCodeByPhone(mobile);
+        SmsRecord smsRecord = smsRecordService.lastSms(mobile);
+        String codeByPhone = smsRecord.getVeriCode();
         if (!code.equals(codeByPhone)){
             throw new BusinessException(CommonErrorCode.E_900102.getCode(),"验证码不正确");
+        }
+        //判断验证码是否超过2分钟
+        Duration duration = Duration.between(smsRecord.getCreateTime(), LocalDateTime.now());
+        int time = (int)duration.toMillis();
+        if (time>=2*60*1000){
+            throw new BusinessException(CommonErrorCode.E_900134.getCode(),"验证码超时");
         }
         String savePsw = MD5Util.getMd5(newPsw+"aomi1003");
         loginMapper.updatePsw(mobile,savePsw);
