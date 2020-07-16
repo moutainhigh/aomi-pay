@@ -11,7 +11,6 @@ import com.cloudbest.common.util.AliOSSUtil;
 import com.cloudbest.common.util.StringUtil;
 import com.cloudbest.common.util.TokenUtil;
 import com.cloudbest.user.entity.CustomerInf;
-import com.cloudbest.user.entity.SmsRecord;
 import com.cloudbest.user.mapper.CustomerInfMapper;
 import com.cloudbest.user.model.GetScoreRecordAndSumScoreResponse;
 import com.cloudbest.user.service.CustomerInfService;
@@ -51,8 +50,6 @@ public class CustomerInfController implements Serializable {
     @Autowired
     private CustomerInfService customerInfService;
 
-    @Autowired
-    private SmsRecordService smsRecordService;
     @Autowired
     private CustomerInfMapper customerInfMapper;
 

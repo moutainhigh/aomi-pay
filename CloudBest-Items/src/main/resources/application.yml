@@ -80,7 +80,7 @@ eureka:
 
 mybatis‐plus:
   typeAliasesPackage: com.cloudbest.items.entity
-  mapper‐locations: com/cloudbest/items/mapper/**/*Mapper.xml
+  mapper‐locations: classpath:itemsMapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 #    global-config:
