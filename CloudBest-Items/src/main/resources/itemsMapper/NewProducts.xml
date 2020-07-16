@@ -5,7 +5,7 @@
 
       <resultMap type="com.cloudbest.items.entity.NewProducts" id="newProductsMap">
           <result property="id" column="id"/>
-          <result property="image" column="img"/>
+          <result property="image" column="image"/>
           <result property="description" column="description"/>
           <result property="status" column="status"/>
           <result property="groudingTime" column="grouding_time"/>

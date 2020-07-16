@@ -17,10 +17,10 @@ public class NewProducts implements Serializable {
     private Integer id;//
 
     @TableId(value = "image")
-    private String image;//轮播图url
+    private String image;
 
     @TableId(value = "description")
-    private String description;//轮播图简介
+    private String description;
 
     @TableId(value = "status")
     private Integer status;//状态（0：关闭；1：开启）
@@ -41,96 +41,6 @@ public class NewProducts implements Serializable {
     private LocalDateTime createTime;//创建时间
 
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getGroudingTime() {
-        return groudingTime;
-    }
-
-    public void setGroudingTime(LocalDateTime groudingTime) {
-        this.groudingTime = groudingTime;
-    }
-
-    public LocalDateTime getValidityTime() {
-        return validityTime;
-    }
-
-    public void setValidityTime(LocalDateTime validityTime) {
-        this.validityTime = validityTime;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "NewProducts{" +
-                "id=" + id +
-                ", image='" + image + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", groudingTime=" + groudingTime +
-                ", validityTime=" + validityTime +
-                ", type=" + type +
-                ", tag='" + tag + '\'' +
-                ", createTime=" + createTime +
-                '}';
-    }
 
 
 }
