@@ -18,7 +18,7 @@
     <!-- 查询   -->
     <select id="selectAppAdvertises" resultMap="AppAdvertiseMap">
         <!-- 上架时间   -->  <!-- 下架时间   -->
-        select * from app_advertise where current_time between grouding_time and validity_time;
+        select * from app_advertise where current_time between grouding_time and validity_time ORDER BY position ;
     </select>
 </mapper>
 

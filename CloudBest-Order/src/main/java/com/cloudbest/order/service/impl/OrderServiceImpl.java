@@ -181,7 +181,14 @@ public class OrderServiceImpl implements OrderService {
 
         BigDecimal totalPrice = orderSubmitVO.getTotalPrice();//订单总额
         BigDecimal deliveryAmount = orderSubmitVO.getDeliveryAmount();//运费
-
+        //如果订单总额为判断运费
+        //如果运费为零则设置为全积分支付
+        //如果运费不为零则不做改动
+        if(totalPrice.compareTo(BigDecimal.ZERO)==0){
+            if(deliveryAmount.compareTo(BigDecimal.ZERO)==0){
+                orderSubmitVO.setPayType(5);
+            }
+        }
         List<OrderItemVO> orderItemVOS = orderSubmitVO.getOrderItemVOS();
         if (CollectionUtils.isEmpty(orderItemVOS)){
             throw new  BusinessException(CommonErrorCode.E_901001.getCode(),"请求添加购物项！");//暂定异常
