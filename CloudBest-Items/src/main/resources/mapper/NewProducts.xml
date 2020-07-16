@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cloudbest.items.mapper.NewProductsMapper">
+
+    <resultMap type="com.cloudbest.items.entity.NewProducts" id="newProductsMap">
+        <result property="id" column="id"/>
+        <result property="image" column="img"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="groudingTime" column="grouding_time"/>
+        <result property="validityTime" column="validity_time"/>
+        <result property="type" column="type"/>
+        <result property="tag" column="tag"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!--    @TableId(value = "id", type = IdType.AUTO)-->
+    <!--    private Integer id;//-->
+    <!--    @TableId(value = "img")-->
+    <!--    private String img;//轮播图url-->
+    <!--    @TableId(value = "description")-->
+    <!--    private String description;//轮播图简介-->
+    <!--    @TableId(value = "status")-->
+    <!--    private Integer status;//状态（0：关闭；1：开启）-->
+    <!--    @TableId(value = "grouding_time")-->
+    <!--    private LocalDateTime groudingTime;//开启时间（上架时间）-->
+    <!--    @TableId(value = "validity_time")-->
+    <!--    private LocalDateTime validityTime;//关闭时间（下架时间）-->
+    <!--    @TableId(value = "type")-->
+    <!--    private Integer type;//类型（1：点击进入商品详情；2：点击进入活动标签；3：点击进入网址）-->
+    <!--    @TableId(value = "tag")-->
+    <!--    private String tag;//标签（商品ID或者网址地址或者活动标签枚举值）-->
+    <!--    @TableId(value = "create_time")-->
+    <!--    private LocalDateTime createTime;//创建时间-->
+
+    <select id="selectNewProducts" resultMap="newProductsMap">
+         SELECT * from new_products where `status`=1 and current_time  between  grouding_time AND validity_time  ORDER BY create_time DESC LIMIT 6;
+    </select>
+
+</mapper>

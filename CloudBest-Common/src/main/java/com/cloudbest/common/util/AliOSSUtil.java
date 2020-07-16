@@ -33,9 +33,9 @@ public class AliOSSUtil {
 	
 	@Value("${alioss.endpoint}")
 //	private String endpoint = "https://oss-cn-shanghai-internal.aliyuncs.com";
-	private String endpoint = "http://oss-cn-shanghai.aliyuncs.com";
+	private String endpoint = "https://oss-cn-shanghai.aliyuncs.com";
 	@Value("${alioss.out-endpoint}")
-	private String outEndpoint = "http://oss-cn-shanghai.aliyuncs.com";
+	private String outEndpoint = "https://oss-cn-shanghai.aliyuncs.com";
 	@Value("${alioss.access_key_id}")
 	private String access_key_id = "LTAI4FzVTyi2XjJTKH6cHcWa";
 	@Value("${alioss.access_key_secret}")
