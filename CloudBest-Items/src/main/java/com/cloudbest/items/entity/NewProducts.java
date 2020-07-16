@@ -17,10 +17,10 @@ public class NewProducts implements Serializable {
     private Integer id;//
 
     @TableId(value = "image")
-    private String image;//轮播图url
+    private String image;
 
     @TableId(value = "description")
-    private String description;//轮播图简介
+    private String description;
 
     @TableId(value = "status")
     private Integer status;//状态（0：关闭；1：开启）
@@ -131,6 +131,8 @@ public class NewProducts implements Serializable {
                 ", createTime=" + createTime +
                 '}';
     }
+
+
 
 
 }
