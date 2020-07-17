@@ -145,7 +145,7 @@ public class CustomerInfController implements Serializable {
         } catch (BusinessException businessException) {
             return new Result(businessException.getCode(), businessException.getDesc(), false);
         }
-        return new Result(CommonErrorCode.SUCCESS);
+        return new Result(CommonErrorCode.SUCCESS,customerInf);
     }
 
     /**
