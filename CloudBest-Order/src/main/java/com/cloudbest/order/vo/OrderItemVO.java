@@ -9,12 +9,13 @@ import java.math.BigDecimal;
 @Data
 public class OrderItemVO {
 
+
     @Override
     public String toString() {
         return "OrderItemVO{" +
                 "skuId=" + skuId +
                 ", spuId=" + spuId +
-                ", image='" + image +
+                ", image='" + image + '\'' +
                 ", price=" + price +
                 ", count=" + count +
                 ", status=" + status +

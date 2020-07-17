@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class OrderSubmitVO {
 
+        private String token;
         private Long userId;
         //订单状态
         private Integer status;
@@ -42,49 +43,13 @@ public class OrderSubmitVO {
 
         private String orderToken; // 防重，订单编号
 
-        @Override
-        public String toString() {
-                return "OrderSubmitVO{" +
-                        "userId=" + userId +
-                        ", status=" + status +
-                        ", mainOrderId='" + mainOrderId + '\'' +
-                        ", ancillaryOrderId='" + ancillaryOrderId + '\'' +
-                        ", userName='" + userName + '\'' +
-                        ", address='" + address + '\'' +
-                        ", payType=" + payType +
-                        ", deliveryAmount=" + deliveryAmount +
-                        ", deliveryCompany=" + deliveryCompany +
-                        ", deliveryId='" + deliveryId + '\'' +
-                        ", orderItemVOS=" + orderItemVOS +
-                        ", useIntegration=" + useIntegration +
-                        ", note='" + note + '\'' +
-                        ", totalPrice=" + totalPrice +
-                        ", orderToken='" + orderToken + '\'' +
-                        '}';
+
+        public String getToken() {
+                return token;
         }
 
-        public String getNote() {
-                return note;
-        }
-
-        public void setNote(String note) {
-                this.note = note;
-        }
-
-        public BigDecimal getDeliveryAmount() {
-                return deliveryAmount;
-        }
-
-        public void setDeliveryAmount(BigDecimal deliveryAmount) {
-                this.deliveryAmount = deliveryAmount;
-        }
-
-        public BigDecimal getUseIntegration() {
-                return useIntegration;
-        }
-
-        public void setUseIntegration(BigDecimal useIntegration) {
-                this.useIntegration = useIntegration;
+        public void setToken(String token) {
+                this.token = token;
         }
 
         public Long getUserId() {
@@ -93,6 +58,30 @@ public class OrderSubmitVO {
 
         public void setUserId(Long userId) {
                 this.userId = userId;
+        }
+
+        public Integer getStatus() {
+                return status;
+        }
+
+        public void setStatus(Integer status) {
+                this.status = status;
+        }
+
+        public String getMainOrderId() {
+                return mainOrderId;
+        }
+
+        public void setMainOrderId(String mainOrderId) {
+                this.mainOrderId = mainOrderId;
+        }
+
+        public String getAncillaryOrderId() {
+                return ancillaryOrderId;
+        }
+
+        public void setAncillaryOrderId(String ancillaryOrderId) {
+                this.ancillaryOrderId = ancillaryOrderId;
         }
 
         public String getUserName() {
@@ -119,6 +108,14 @@ public class OrderSubmitVO {
                 this.payType = payType;
         }
 
+        public BigDecimal getDeliveryAmount() {
+                return deliveryAmount;
+        }
+
+        public void setDeliveryAmount(BigDecimal deliveryAmount) {
+                this.deliveryAmount = deliveryAmount;
+        }
+
         public Integer getDeliveryCompany() {
                 return deliveryCompany;
         }
@@ -127,12 +124,36 @@ public class OrderSubmitVO {
                 this.deliveryCompany = deliveryCompany;
         }
 
+        public String getDeliveryId() {
+                return deliveryId;
+        }
+
+        public void setDeliveryId(String deliveryId) {
+                this.deliveryId = deliveryId;
+        }
+
         public List<OrderItemVO> getOrderItemVOS() {
                 return orderItemVOS;
         }
 
         public void setOrderItemVOS(List<OrderItemVO> orderItemVOS) {
                 this.orderItemVOS = orderItemVOS;
+        }
+
+        public BigDecimal getUseIntegration() {
+                return useIntegration;
+        }
+
+        public void setUseIntegration(BigDecimal useIntegration) {
+                this.useIntegration = useIntegration;
+        }
+
+        public String getNote() {
+                return note;
+        }
+
+        public void setNote(String note) {
+                this.note = note;
         }
 
         public BigDecimal getTotalPrice() {
@@ -151,35 +172,28 @@ public class OrderSubmitVO {
                 this.orderToken = orderToken;
         }
 
-        public Integer getStatus() {
-                return status;
+        @Override
+        public String toString() {
+                return "OrderSubmitVO{" +
+                        "token='" + token + '\'' +
+                        ", userId=" + userId +
+                        ", status=" + status +
+                        ", mainOrderId='" + mainOrderId + '\'' +
+                        ", ancillaryOrderId='" + ancillaryOrderId + '\'' +
+                        ", userName='" + userName + '\'' +
+                        ", address='" + address + '\'' +
+                        ", payType=" + payType +
+                        ", deliveryAmount=" + deliveryAmount +
+                        ", deliveryCompany=" + deliveryCompany +
+                        ", deliveryId='" + deliveryId + '\'' +
+                        ", orderItemVOS=" + orderItemVOS +
+                        ", useIntegration=" + useIntegration +
+                        ", note='" + note + '\'' +
+                        ", totalPrice=" + totalPrice +
+                        ", orderToken='" + orderToken + '\'' +
+                        '}';
         }
 
-        public void setStatus(Integer status) {
-                this.status = status;
-        }
 
-        public String getAncillaryOrderId() {
-                return ancillaryOrderId;
-        }
 
-        public void setAncillaryOrderId(String ancillaryOrderId) {
-                this.ancillaryOrderId = ancillaryOrderId;
-        }
-
-        public String getMainOrderId() {
-                return mainOrderId;
-        }
-
-        public void setMainOrderId(String mainOrderId) {
-                this.mainOrderId = mainOrderId;
-        }
-
-        public String getDeliveryId() {
-                return deliveryId;
-        }
-
-        public void setDeliveryId(String deliveryId) {
-                this.deliveryId = deliveryId;
-        }
 }
