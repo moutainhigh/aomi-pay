@@ -9,6 +9,7 @@ import com.cloudbest.common.domain.Result;
 import com.cloudbest.common.util.RandomUuidUtil;
 import com.cloudbest.common.util.StringUtil;
 import com.cloudbest.common.util.TokenUtil;
+import com.cloudbest.order.controller.MainController;
 import com.cloudbest.order.entity.ItemEntity;
 import com.cloudbest.order.entity.MainEntity;
 import com.cloudbest.order.entity.SecondarilyEntity;
@@ -61,6 +62,8 @@ public class OrderServiceImpl implements OrderService {
     private ItemMapper itemMapper;
     @Autowired
     private PayClient payClient;
+    @Autowired
+    private MainController mainController;
 
 
     private static final String TOKEN_PREFIX ="order:token";
@@ -298,6 +301,24 @@ public class OrderServiceImpl implements OrderService {
         return score;
     }
 
+
+    //全积分支付
+    @Override
+    public void payByScore(MainEntity mainEntity) {
+        BigDecimal sumScore = this.sumScore(mainEntity.getUserId());
+        BigDecimal costScore = mainEntity.getCostScore();
+        if (sumScore.compareTo(costScore) == -1){
+            throw new BusinessException(CommonErrorCode.FAIL.getCode(),"购物券不足");
+        }
+        //扣除积分修改订单状态
+        try {
+            this.mainController.updateOrder(mainEntity.getMainOrderId(),mainEntity.getPayStatus());
+        } catch (BusinessException businessException) {
+            throw new BusinessException(CommonErrorCode.FAIL.getCode(),"扣除积分失败");
+        }
+    }
+
+
     @Override
     public String crateAliPay() {
         log.info("=======================crateAliPay========================");
@@ -314,6 +335,7 @@ public class OrderServiceImpl implements OrderService {
         form = object.getString("data");
         return form;
     }
+
 
 
     //创建订单

@@ -12,10 +12,7 @@ import com.cloudbest.order.feign.PayClient;
 import com.cloudbest.order.mapper.MainMapper;
 import com.cloudbest.order.mapper.SecondarilyMapper;
 import com.cloudbest.order.service.OrderService;
-import com.cloudbest.order.vo.AlipayBean;
-import com.cloudbest.order.vo.OrderConfirmVO;
-import com.cloudbest.order.vo.OrderSubmitResponseVO;
-import com.cloudbest.order.vo.OrderSubmitVO;
+import com.cloudbest.order.vo.*;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
@@ -69,16 +66,13 @@ public class OrderController {
 
     /**
      * 提交订单
-     * 购物车页面传递的数据结构如下：
-     * {101: 3, 102: 1}
-     * {skuId: count}
-     * @param
      * @return
      */
     @PostMapping("app/order/submit/{token}")   //ok
     public Result submit(@RequestBody OrderSubmitVO orderSubmitVO,
                          @PathVariable("token") String token){
         log.info("===========================提交订单============================");
+        log.info("param:{}",orderSubmitVO.toString());
         try {
             TokenUtil.getUserId(token);
         } catch (Exception e) {
@@ -100,6 +94,92 @@ public class OrderController {
     }
 
 
+
+
+
+
+
+
+    /**
+     * 提交订单
+     * 版本2020.1
+     * zpc
+     * @param
+     * @return
+     */
+    @PostMapping("app/order/submit/updateone/{token}")   //ok
+    public Result submitTwo(@RequestBody OrderSubmitVO orderSubmitVO,
+                         @PathVariable("token") String token){
+        log.info("===========================提交订单============================");
+        try {
+            TokenUtil.getUserId(token);
+        } catch (Exception e) {
+            throw  new  RuntimeException("请先登录");//暂定异常
+        }
+        OrderSubmitResponseVO orderSubmitResponseVO =null;
+        try {
+            orderSubmitResponseVO = this.orderService.submit(orderSubmitVO);
+            MainEntity mainEntity = orderSubmitResponseVO.getMainEntity();
+            //定时关单
+            this.NettyTask(mainEntity);
+        } catch (BusinessException businessException){
+            return new Result(businessException.getCode(),businessException.getDesc(),false);
+        }
+        return new Result(CommonErrorCode.SUCCESS,orderSubmitResponseVO);
+    }
+
+    /**
+     * 选择支付接口
+     * 版本2020.1
+     * @param
+     * @return
+     */
+    @PostMapping("app/order/select/updateone/payType/{token}")
+    public String payTypeTwo(@RequestBody MainEntity mainEntity,@PathVariable("token") String token){
+
+        try {
+            TokenUtil.getUserId(token);
+        } catch (Exception e) {
+            throw  new  RuntimeException("请先登录");//暂定异常
+        }
+
+        log.info("支付入参："+JSON.toJSONString(mainEntity));
+        Integer payType = mainEntity.getPayType();
+        String string = null;
+        switch (payType){
+            case 1:
+                //调用支付接口 支付订单
+                BigDecimal payAmount = mainEntity.getPayAmount();
+                AlipayBean alipayBean = new AlipayBean();
+                alipayBean.setSubject("云上优选 订单号："+mainEntity.getMainOrderId());//   商品的标题/交易标题/订单标题/订单关键字等。
+                alipayBean.setTotalAmount(payAmount.toString());//订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
+                alipayBean.setOutTradeNo(mainEntity.getMainOrderId());//商户网站唯一订单号
+                alipayBean.setBody("云上优选");//商品名称   暂定
+                log.info("支付入参："+JSON.toJSONString(mainEntity));
+                Result zfb = payClient.zfb(alipayBean);
+                JSONObject object = JSONObject.fromObject(zfb);
+                string = object.getString("data");
+                break;
+            case 2:
+                //调用微信支付接口 支付订单
+                break;
+            case 3:
+                //调用银联支付接口 支付订单
+                break;
+        }
+        return string;
+    }
+
+
+
+
+    /**
+     * 创建订单接口
+     * 版本2020.1
+     * zpc
+     * @param
+     * @return
+     */
     @PostMapping("app/order/create/order")
     public Result crateOrder(@RequestBody OrderSubmitVO orderSubmitVO){
         try {
@@ -111,7 +191,11 @@ public class OrderController {
     }
 
 
-    //判断支付方式方式，确定支付方式
+    /**
+     * 选择支付接口
+     * @param
+     * @return
+     */
     @PostMapping("order/select/payType")
     public String payType(@RequestBody MainEntity mainEntity){
         log.info("支付入参："+JSON.toJSONString(mainEntity));
@@ -121,7 +205,6 @@ public class OrderController {
             case 1:
                 //调用支付接口 支付订单
                 BigDecimal payAmount = mainEntity.getPayAmount();
-
                 AlipayBean alipayBean = new AlipayBean();
                 alipayBean.setSubject("云上优选 订单号："+mainEntity.getMainOrderId());//   商品的标题/交易标题/订单标题/订单关键字等。
                 alipayBean.setTotalAmount(payAmount.toString());//订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
@@ -139,12 +222,28 @@ public class OrderController {
                 //调用银联支付接口 支付订单
                 break;
             case 4:
-                //全积分支付，不调取支付接口
-                this.mainController.updateOrder(mainEntity.getMainOrderId(),mainEntity.getPayStatus());
+                //全购物券支付，不调取支付接口
+                //this.useAllScore(mainEntity);
                 break;
         }
         return string;
     }
+
+
+    //全积分支付
+    @PostMapping("app/order/pay/useAllScore/{token}")
+    public Result useAllScore(@RequestBody MainEntity mainEntity,@PathVariable("token") String token){
+        try {
+            TokenUtil.getUserId(token);
+        } catch (Exception e) {
+            throw  new  RuntimeException("请先登录");//暂定异常
+        }
+        this.orderService.payByScore(mainEntity);
+        return new Result(CommonErrorCode.SUCCESS);
+    }
+
+
+
 
     //判断物流方式，确定物流信息
     @PostMapping("order/select/deliveryType")
@@ -174,6 +273,9 @@ public class OrderController {
         }
         return string;
     }
+
+
+
     //定时任务
     public void NettyTask(MainEntity mainEntity) {
         // 创建延迟任务实例
