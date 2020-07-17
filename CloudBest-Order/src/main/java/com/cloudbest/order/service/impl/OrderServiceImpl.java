@@ -2,6 +2,7 @@ package com.cloudbest.order.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.cloudbest.common.constants.ScoreSystemConstants;
 import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.Result;
@@ -31,6 +32,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -225,7 +229,7 @@ public class OrderServiceImpl implements OrderService {
             //调取用户购物券接口
             //获取用户的购物券
             // BigDecimal userAllIntegration = BigDecimal.valueOf(80);//假定
-            //BigDecimal userAllIntegration = this.sumScore(orderSubmitVO.getUserId());
+            BigDecimal userAllIntegration = this.sumScore(orderSubmitVO.getUserId());
 
 //            if (userAllIntegration.compareTo(userIntegration) == -1){
 //                //用户购物券不足,提醒用户，提示页面
@@ -278,21 +282,21 @@ public class OrderServiceImpl implements OrderService {
         return orderSubmitResponseVO;
     }
 
-//    //获取用户积分
-//    public BigDecimal sumScore(Long customerId) {
-//        BigDecimal score = BigDecimal.ZERO;
-//        String url = "http://10.103.1.2:8976/youhui/query/sumScore";
-//        MultiValueMap<String, Long> requestEntity  = new LinkedMultiValueMap<String, Long>();
-//        requestEntity.add("merchantNo", customerId);
-//        RestTemplate restTemplate=new RestTemplate();
-//        String result = restTemplate.postForObject(url, requestEntity, String.class);
-//        JSONObject jsonObject =  JSONObject.fromObject(result);
-//        if (!jsonObject.getBoolean("success")){
-//            throw new BusinessException(999999,"查询购物券失败");
-//        }
-//        score = new BigDecimal(jsonObject.getDouble("data")).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-//        return score;
-//    }
+    //获取用户积分
+    public BigDecimal sumScore(Long customerId) {
+        BigDecimal score = BigDecimal.ZERO;
+        String url = ScoreSystemConstants.SCORE_URL.concat(ScoreSystemConstants.SUM_SCORE);
+        MultiValueMap<String, Long> requestEntity = new LinkedMultiValueMap<String, Long>();
+        requestEntity.add("cbId", customerId);
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.postForObject(url, requestEntity, String.class);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        if (!jsonObject.getBoolean("success")) {
+            throw new BusinessException(999999, "查询购物券失败");
+        }
+        score = new BigDecimal(jsonObject.getDouble("data")).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        return score;
+    }
 
     @Override
     public String crateAliPay() {
