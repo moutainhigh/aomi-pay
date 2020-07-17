@@ -134,11 +134,15 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         if (!code.equals(codeByPhone)){
             throw new BusinessException(CommonErrorCode.E_900102.getCode(),"验证码不正确");
         }
-        //判断验证码是否超过2分钟
+        //判断验证码是否超过15分钟
         Duration duration = Duration.between(smsRecord.getCreateTime(), LocalDateTime.now());
         int time = (int)duration.toMillis();
-        if (time>=2*60*1000){
+        if (time>=15*60*1000){
             throw new BusinessException(CommonErrorCode.E_900134.getCode(),"验证码超时");
+        }
+        Integer integer = customerInfMapper.selectCount(new LambdaQueryWrapper<CustomerInf>().eq(CustomerInf::getMobilePhone,mobile));
+        if(integer==0){
+            throw new BusinessException(CommonErrorCode.E_900108.getCode(),"该手机号未注册");
         }
         String savePsw = MD5Util.getMd5(newPsw+"aomi1003");
         loginMapper.updatePsw(mobile,savePsw);

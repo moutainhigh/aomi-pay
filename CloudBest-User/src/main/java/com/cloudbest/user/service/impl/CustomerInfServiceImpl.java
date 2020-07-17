@@ -103,22 +103,22 @@ public class CustomerInfServiceImpl implements CustomerInfService {
         if (code == null) {
             throw new BusinessException(CommonErrorCode.E_900103.getCode(), "验证码为空");
         }
-        Integer integer = customerInfMapper.selectCount(new LambdaQueryWrapper<CustomerInf>().eq(CustomerInf::getMobilePhone, mobile));
-        if (integer > 0) {
-            throw new BusinessException(CommonErrorCode.E_900113.getCode(), "手机号码已存在");
-        }
-        /** 如果短信验证码不为空， 那么需要 */
+        //如果短信验证码不为空， 那么需要
         SmsRecord smsRecord = smsRecordService.lastSms(mobile);
         //判断验证码是否正确
         String codeStr = smsRecord.getVeriCode();
         if (code.equalsIgnoreCase("null") || code == null || code.equalsIgnoreCase("") || !code.equalsIgnoreCase(codeStr)) {
-            throw new BusinessException(CommonErrorCode.E_900102.getCode(), "验证码不正确");
+            throw new BusinessException(CommonErrorCode.E_900102.getCode(),"验证码不正确");
         }
-        //判断验证码是否超过2分钟
+        //判断验证码是否超过15分钟
         Duration duration = Duration.between(smsRecord.getCreateTime(), LocalDateTime.now());
-        int time = (int) duration.toMillis();
-        if (time >= 2 * 60 * 1000) {
-            throw new BusinessException(CommonErrorCode.E_900134.getCode(), "验证码超时");
+        int time = (int)duration.toMillis();
+        if (time>=15*60*1000){
+            throw new BusinessException(CommonErrorCode.E_900134.getCode(),"验证码超时");
+        }
+        Integer integer = customerInfMapper.selectCount(new LambdaQueryWrapper<CustomerInf>().eq(CustomerInf::getMobilePhone,mobile));
+        if(integer>0){
+            throw new BusinessException(CommonErrorCode.E_900113.getCode(),"手机号码已存在");
         }
 
         CustomerInf customerInf = new CustomerInf();
