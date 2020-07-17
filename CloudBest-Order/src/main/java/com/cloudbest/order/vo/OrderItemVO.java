@@ -9,6 +9,20 @@ import java.math.BigDecimal;
 @Data
 public class OrderItemVO {
 
+    @Override
+    public String toString() {
+        return "OrderItemVO{" +
+                "skuId=" + skuId +
+                ", spuId=" + spuId +
+                ", image='" + image +
+                ", price=" + price +
+                ", count=" + count +
+                ", status=" + status +
+                ", scoreScale=" + scoreScale +
+                ", weight=" + weight +
+                '}';
+    }
+
     private Integer skuId;//商品id(skuId)
     private Integer spuId;//商品id(spuId)
     private String image;//图片信息
@@ -85,19 +99,6 @@ public class OrderItemVO {
         this.weight = weight;
     }
 
-    @Override
-    public String toString() {
-        return "OrderItemVO{" +
-                "skuId=" + skuId +
-                ", spuId=" + spuId +
-                ", image='" + image + '\'' +
-                ", price=" + price +
-                ", count=" + count +
-                ", status=" + status +
-                ", scoreScale=" + scoreScale +
-                ", weight=" + weight +
-                '}';
-    }
 
 
 
