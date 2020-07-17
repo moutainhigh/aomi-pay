@@ -50,12 +50,12 @@ public class SmsRecordController {
     public Result UserLogin(HttpServletRequest request, @RequestBody JSONObject str) {
         int x =0;
         String phone = str.getString("phone");
-        String flag = null;
+        /*String flag = null;
         try{
             flag = str.getString("flag");
         }catch (Exception e){
             flag = "register";
-        }
+        }*/
 
         if (StringUtil.isBlank(phone)){
             return new Result(900112,"手机号不能为空",false);
@@ -63,7 +63,7 @@ public class SmsRecordController {
         if(!PhoneUtil.isMobileSimple(phone)){
             return new Result(900123,"手机号码格式不正确",false);
         }
-        switch (flag){
+        /*switch (flag){
             case "register":
                 if (customerLoginMapper.selectCount(new LambdaQueryWrapper<CustomerLogin>().eq(CustomerLogin::getMobilePhone,phone))>0){
                     return new Result(900107,"发送验证码错误",false);
@@ -74,7 +74,7 @@ public class SmsRecordController {
                     return new Result(900107,"发送验证码错误",false);
                 }
                 break;
-        }
+        }*/
         try{
             String ip = IPUtil.getIpAddr(request);
 
