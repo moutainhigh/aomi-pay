@@ -11,7 +11,7 @@ public class OrderItemVO {
 
     private Integer skuId;//商品id(skuId)
     private Integer spuId;//商品id(spuId)
-    private String Image;//图片信息
+    private String image;//图片信息
     private BigDecimal price;//加入购物车时的价格
     private Integer count;//数量
     private Boolean status;//是否有货
@@ -19,19 +19,7 @@ public class OrderItemVO {
     private Double scoreScale; //商品允许使用的购物券最大比例
     private Double weight;//商品重量
 
-    @Override
-    public String toString() {
-        return "OrderItemVO{" +
-                "skuId=" + skuId +
-                ", spuId=" + spuId +
-                ", Image='" + Image + '\'' +
-                ", price=" + price +
-                ", count=" + count +
-                ", status=" + status +
-                ", scoreScale=" + scoreScale +
-                ", weight=" + weight +
-                '}';
-    }
+
 
     public Integer getSkuId() {
         return skuId;
@@ -41,21 +29,20 @@ public class OrderItemVO {
         this.skuId = skuId;
     }
 
-
-    public Double getScoreScale() {
-        return scoreScale;
+    public Integer getSpuId() {
+        return spuId;
     }
 
-    public void setScoreScale(Double scoreScale) {
-        this.scoreScale = scoreScale;
+    public void setSpuId(Integer spuId) {
+        this.spuId = spuId;
     }
 
     public String getImage() {
-        return Image;
+        return image;
     }
 
     public void setImage(String image) {
-        Image = image;
+        this.image = image;
     }
 
     public BigDecimal getPrice() {
@@ -78,24 +65,41 @@ public class OrderItemVO {
         return status;
     }
 
-    public void setStatus(Boolean stasus) {
-        this.status = stasus;
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Double getScoreScale() {
+        return scoreScale;
+    }
+
+    public void setScoreScale(Double scoreScale) {
+        this.scoreScale = scoreScale;
     }
 
     public Double getWeight() {
         return weight;
     }
 
-    public Integer getSpuId() {
-        return spuId;
-    }
-
-    public void setSpuId(Integer spuId) {
-        this.spuId = spuId;
-    }
-
     public void setWeight(Double weight) {
         this.weight = weight;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItemVO{" +
+                "skuId=" + skuId +
+                ", spuId=" + spuId +
+                ", image='" + image + '\'' +
+                ", price=" + price +
+                ", count=" + count +
+                ", status=" + status +
+                ", scoreScale=" + scoreScale +
+                ", weight=" + weight +
+                '}';
+    }
+
+
+
 
 }
