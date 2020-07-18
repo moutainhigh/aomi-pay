@@ -40,8 +40,10 @@ public class GeneralConvertorUtil {
      * @param <S>
      * @return
      */
-    public <T, S> List<T> convertor(List<S> source, Class<T> clz) {
-        if (source == null) return null;
+    public static <T, S> List<T> convertor(List<S> source, Class<T> clz) {
+        if (source == null) {
+            return null;
+        }
         List<T> map = new ArrayList<>();
         for (S s : source) {
             map.add(mapper.map(s, clz));
@@ -58,8 +60,10 @@ public class GeneralConvertorUtil {
      * @param <S>
      * @return
      */
-    public <T, S> Set<T> convertor(Set<S> source, Class<T> clz) {
-        if (source == null) return null;
+    public static <T, S> Set<T> convertor(Set<S> source, Class<T> clz) {
+        if (source == null) {
+            return null;
+        }
         Set<T> set = new TreeSet<>();
         for (S s : source) {
             set.add(mapper.map(s, clz));
@@ -76,12 +80,14 @@ public class GeneralConvertorUtil {
      * @param <S>
      * @return
      */
-    public <T, S> T convertor(S source, Class<T> clz) {
-        if (source == null) return null;
+    public static <T, S> T convertor(S source, Class<T> clz) {
+        if (source == null) {
+            return null;
+        }
         return mapper.map(source, clz);
     }
 
-    public void convertor(Object source, Object object) {
+    public static void convertor(Object source, Object object) {
         mapper.map(source, object);
     }
 
