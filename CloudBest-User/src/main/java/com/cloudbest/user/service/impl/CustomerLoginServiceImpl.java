@@ -70,7 +70,11 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
         user.setCustomerId(customerInf.getCustomerId());
         user.setMobilePhone(mobile);
         user.setHeadportrait(customerInf.getHeadportrait());
-        user.setScreenname(customerInf.getScreenname());
+        if (customerInf.getScreenname()==null || customerInf.getScreenname().equals("") ){
+            user.setScreenname(mobile);
+        }else {
+            user.setScreenname(customerInf.getScreenname());
+        }
         user.setCustomerName(customerInf.getCustomerName());
         user.setIdentityCardNo(customerInf.getIdentityCardNo());
         user.setGender(customerInf.getGender());
