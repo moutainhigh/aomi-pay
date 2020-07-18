@@ -399,7 +399,8 @@ public class OrderServiceImpl implements OrderService {
             }
 
             //验证商品购买数量是否符合限购数量
-           // orderSubmitVO.getUserId();
+            orderSubmitVO.getUserId();
+            //this.itemClient.getByItemIdSkuId();
 
         });
 

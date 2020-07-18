@@ -1,6 +1,7 @@
 package com.cloudbest.order.feign;
 
 import com.cloudbest.common.domain.Result;
+import com.cloudbest.order.vo.PurchaseLimitVO;
 import com.cloudbest.order.vo.SkuLockVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -29,4 +30,7 @@ public interface ItemClient {
 
     @RequestMapping(method = RequestMethod.POST, value ="/items/query/queryItemsById")
     public Result queryItemsById(@RequestParam Integer spuId);
+
+    @PostMapping("/items/purchaseLimit/getByItemIdSkuId")
+    public Result getByItemIdSkuId(@RequestBody PurchaseLimitVO purchaseLimitVO);
 }
