@@ -19,6 +19,8 @@ public class DateUtil {
 
 	public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
+	public static final String YYYY_MM_DD = "yyyy-MM-dd";
+
 	public static final String YYYYMMDD = "yyyyMMdd";
 
 	public static final String HHmmss = "HHmmss";
@@ -82,6 +84,22 @@ public class DateUtil {
 			cal.setTime(date);
 		}
 		cal.add(Calendar.DAY_OF_MONTH, increase);
+		return cal.getTime();
+	}
+
+	/**
+	 * 从给定的date，减increase天
+	 *
+	 * @param date
+	 * @param reduce
+	 * @return
+	 */
+	public static Date reduceDay2Date(Date date, int reduce) {
+		Calendar cal = Calendar.getInstance();
+		if (date != null) {
+			cal.setTime(date);
+		}
+		cal.add(Calendar.DAY_OF_MONTH, -reduce);
 		return cal.getTime();
 	}
 
@@ -437,6 +455,5 @@ public class DateUtil {
 		Calendar cal = Calendar.getInstance();
 		return cal.get(cal.DATE);
 	}
-
 
 }

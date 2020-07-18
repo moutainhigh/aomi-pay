@@ -8,9 +8,7 @@ import com.cloudbest.common.constants.ScoreSystemConstants;
 import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.Result;
-import com.cloudbest.common.util.RandomUuidUtil;
-import com.cloudbest.common.util.StringUtil;
-import com.cloudbest.common.util.TokenUtil;
+import com.cloudbest.common.util.*;
 import com.cloudbest.order.controller.MainController;
 import com.cloudbest.order.entity.ItemEntity;
 import com.cloudbest.order.entity.MainEntity;
@@ -30,6 +28,7 @@ import com.cloudbest.order.vo.*;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -37,12 +36,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -398,9 +399,48 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
 
-            //验证商品购买数量是否符合限购数量
-            orderSubmitVO.getUserId();
-            //this.itemClient.getByItemIdSkuId();
+            //验证是否符合限购规则
+            PurchaseLimitVO purchaseLimitVOParam = new PurchaseLimitVO();
+            purchaseLimitVOParam.setItemId(orderItemVO.getSpuId());
+            purchaseLimitVOParam.setSkuId(orderItemVO.getSkuId());
+            Result purchaseLimitResult = itemClient.getByItemIdSkuId(purchaseLimitVOParam);
+            if(!purchaseLimitResult.isSuccess()){
+                throw new BusinessException(purchaseLimitResult.getCode(),purchaseLimitResult.getMessage());
+            }
+            if(!StringUtils.isEmpty(purchaseLimitResult.getData())){
+                //linkdhashmap转实体
+                JSONObject json = JSONObject.fromObject(purchaseLimitResult.getData());
+                PurchaseLimitVO purchaseLimitVO = (PurchaseLimitVO) JSONObject.toBean(json, PurchaseLimitVO.class);
+
+                if(!StringUtils.isEmpty(purchaseLimitVO)){
+                    //获取限购频率（天数）
+                    int day = purchaseLimitVO.getPurchaseLimitFrequency();
+                    //根据天数计算下单开始时间，结束时间
+                    String nowDateYmdStr = DateUtil.format(DateUtil.getCurrDate(),DateUtil.YYYY_MM_DD);
+                    Date startDateYmd = DateUtil.reduceDay2Date(DateUtil.format(nowDateYmdStr,DateUtil.YYYY_MM_DD_HH_MM_SS),5);
+
+                    String startDateYmdhmsStr = DateUtil.format(startDateYmd,DateUtil.YYYY_MM_DD).concat(" 00:00:00");
+                    Date startDate = DateUtil.format(startDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
+                    //nowDateYmdStr.concat(" 00:00:00");
+                    String endDateYmdhmsStr = nowDateYmdStr.concat(" 23:59:59");
+
+                    Date endDate = DateUtil.format(endDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
+
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("userId",orderSubmitVO.getUserId());
+                    map.put("skuId",orderItemVO.getSkuId());
+                    map.put("itemId",orderItemVO.getSpuId());
+                    map.put("startDate",startDate);
+                    map.put("endDate",endDate);
+
+                    //根据spuid,skuid,userid  where time , 查询限购频率内的购买数量
+                    Integer quantity = mainMapper.selectSumProductQuantity(map);
+                    if(quantity>=purchaseLimitVO.getPurchaseLimitVolume()){
+                        throw new BusinessException(CommonErrorCode.E_901018);
+                    }
+                }
+            }
+
 
         });
 
