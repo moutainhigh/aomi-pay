@@ -26,4 +26,7 @@ public interface ItemClient {
     //修改商品销量
     @GetMapping("item/query/skuid/updateSaleVolume")
     public Result updateSaleVolume(@RequestParam("id") Integer id,@RequestParam("num") Integer num);
+
+    @RequestMapping(method = RequestMethod.POST, value ="/items/query/queryItemsById")
+    public Result queryItemsById(@RequestParam Integer spuId);
 }

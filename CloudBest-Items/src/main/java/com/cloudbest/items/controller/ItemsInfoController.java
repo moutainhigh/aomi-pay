@@ -199,6 +199,25 @@ public class ItemsInfoController {
         }
         return new Result(CommonErrorCode.SUCCESS,itemsInfos);
     }
+    /**
+     * 查询商品信息
+     * zpc
+     */
+
+    @RequestMapping(method = RequestMethod.POST, value ="/items/query/queryItemsById")
+    public Result queryItemsById(@RequestParam Integer spuId){
+
+        ItemsInfo itemsInfo = null;
+        try{
+            itemsInfo = cItemsInfoService.queryItemsById(spuId);
+        }catch (BusinessException businessException){
+            return new Result(businessException.getCode(),businessException.getDesc(),false);
+        }
+        return new Result(CommonErrorCode.SUCCESS,itemsInfo);
+    }
+
+
+
 
     /**
      * 查询商品信息(猜你喜欢，随机查询数据)

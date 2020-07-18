@@ -47,4 +47,7 @@ public interface ItemsInfoService {
     ItemsInfo onOffItems(Integer id, Integer isView);
 
     List<Map<String, Object>> queryTopQualityItems();
+
+
+    ItemsInfo queryItemsById(Integer spuId);
 }

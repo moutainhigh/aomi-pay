@@ -1,6 +1,7 @@
 package com.cloudbest.order.otherentity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@TableName("c_items_info")
 public class ItemsInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -63,7 +65,7 @@ public class ItemsInfo implements Serializable {
     private Date validityTime;
 
     /**
-     * 前端是否显示（0：不显示；1：显示）
+     * 前端是否显示（0：不显示；1：显示；9：逻辑删除）
      */
     @TableId(value = "is_view")
     private Integer isView;
@@ -73,6 +75,12 @@ public class ItemsInfo implements Serializable {
      */
     @TableId(value = "description")
     private String description;
+
+    /**
+     * 商品详情
+     */
+    @TableId(value = "item_info")
+    private String itemInfo;
 
     /**
      * 录入日期
@@ -162,6 +170,14 @@ public class ItemsInfo implements Serializable {
         return validityTime;
     }
 
+    public String getItemInfo() {
+        return itemInfo;
+    }
+
+    public void setItemInfo(String itemInfo) {
+        this.itemInfo = itemInfo;
+    }
+
     public void setValidityTime(Date validityTime) {
         this.validityTime = validityTime;
     }
@@ -220,6 +236,7 @@ public class ItemsInfo implements Serializable {
                 ", validityTime=" + validityTime +
                 ", isView=" + isView +
                 ", description='" + description + '\'' +
+                ", itemInfo='" + itemInfo + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", spuSaltVolume=" + spuSaltVolume +

@@ -10,7 +10,6 @@ import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.Result;
 import com.cloudbest.common.util.TokenUtil;
-import com.cloudbest.order.controller.SecondarilyController;
 import com.cloudbest.order.entity.ItemEntity;
 import com.cloudbest.order.entity.MainEntity;
 import com.cloudbest.order.entity.SecondarilyEntity;
@@ -243,7 +242,7 @@ public class MainServiceImpl implements MainService {
 
     //支付成功后修改订单状态
     @Override
-    public MainEntity updateOrderAfterPay(String orderId, Integer status) {
+    public MainEntity updateOrderAfterPay(String orderId) {
 
         //修改订单状态
         MainEntity mainEntity = this.mainMapper.selectOne(new LambdaQueryWrapper<MainEntity>().eq(MainEntity::getMainOrderId, orderId));

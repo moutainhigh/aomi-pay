@@ -82,6 +82,37 @@ public class Stock implements Serializable {
     @TableId(value = "usable_stock")
     private Integer usableStock;
 
+
+    public Date getGroudingTime() {
+        return groudingTime;
+    }
+
+    public void setGroudingTime(Date groudingTime) {
+        this.groudingTime = groudingTime;
+    }
+
+    public Date getValidityTime() {
+        return validityTime;
+    }
+
+    public void setValidityTime(Date validityTime) {
+        this.validityTime = validityTime;
+    }
+
+    /**
+     * 商品上架时间
+     */
+    @TableId(value = "grouding_time")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date groudingTime;
+
+    /**
+     * 商品下架时间
+     */
+    @TableId(value = "validity_time")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date validityTime;
+
     /**
      * sku销量
      */
@@ -213,6 +244,8 @@ public class Stock implements Serializable {
                 ", weight=" + weight +
                 ", status=" + status +
                 ", usableStock=" + usableStock +
+                ", groudingTime=" + groudingTime +
+                ", validityTime=" + validityTime +
                 ", skuSaltVolume=" + skuSaltVolume +
                 ", updateTime=" + updateTime +
                 '}';

@@ -1,6 +1,8 @@
 package com.cloudbest.order.service.impl;
 
+
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.cloudbest.common.constants.ScoreSystemConstants;
 import com.cloudbest.common.domain.BusinessException;
@@ -37,8 +39,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,6 +68,9 @@ public class OrderServiceImpl implements OrderService {
     private PayClient payClient;
     @Autowired
     private MainController mainController;
+    @Autowired
+    private HttpServletRequest request;
+
 
 
     private static final String TOKEN_PREFIX ="order:token";
@@ -119,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
 
             Integer skuId = entrySet.getKey();
 
+
             //根据商品id名称查询图片信息
             Result skuImg = itemClient.selecImgBySkuId(skuId);
             String toJSONStringImg = JSON.toJSONString(skuImg.getData());
@@ -172,8 +180,24 @@ public class OrderServiceImpl implements OrderService {
 //            throw new RuntimeException("请不要重复提交！");//暂定异常
 //        }
 
-        // 2 验证价格
+        //验证商品是否在购买时间内
+        //验证商品购买数量
+        List<OrderItemVO> listorderItemVOS = orderSubmitVO.getOrderItemVOS();
+        listorderItemVOS.forEach(orderItemVO -> {
 
+            Integer skuId = orderItemVO.getSkuId();
+            Result stockBySkuId = itemClient.selecStockBySkuId(skuId);//接口已改
+            Map<String,Object> resultData = (Map<String, Object>) stockBySkuId.getData();
+            Map<String,Object> skuMap = (Map<String, Object>) resultData.get("SKU");//获取库存信息
+            String sku= JSON.toJSONString(skuMap);
+            CStock cStock = JSON.parseObject(sku, CStock.class);
+            Integer spuId = cStock.getItemId();
+
+
+        });
+
+
+        // 2 验证价格
 
         BigDecimal totalPrice = orderSubmitVO.getTotalPrice();//订单总额
         BigDecimal deliveryAmount = orderSubmitVO.getDeliveryAmount();//运费
@@ -305,18 +329,160 @@ public class OrderServiceImpl implements OrderService {
     //全积分支付
     @Override
     public void payByScore(MainEntity mainEntity) {
+        MainEntity selectOne = this.mainMapper.selectOne(new LambdaQueryWrapper<MainEntity>().eq(MainEntity::getMainOrderId, mainEntity.getMainOrderId()));
+        BigDecimal costScore = selectOne.getCostScore();
         BigDecimal sumScore = this.sumScore(mainEntity.getUserId());
-        BigDecimal costScore = mainEntity.getCostScore();
         if (sumScore.compareTo(costScore) == -1){
-            throw new BusinessException(CommonErrorCode.FAIL.getCode(),"购物券不足");
+            throw new BusinessException(CommonErrorCode.FAIL.getCode(),"支付失败，购物券不足");
         }
         //扣除积分修改订单状态
         try {
-            this.mainController.updateOrder(mainEntity.getMainOrderId(),mainEntity.getPayStatus());
+            this.mainController.updateOrder(mainEntity.getMainOrderId());
         } catch (BusinessException businessException) {
             throw new BusinessException(CommonErrorCode.FAIL.getCode(),"扣除积分失败");
         }
     }
+
+
+    @Override
+    public OrderSubmitResponseVO submitTwo(OrderSubmitVO orderSubmitVO) {
+        String orderToken = orderSubmitVO.getOrderToken();
+
+//        // 1 验证令牌防止重复提交   使用lua脚本
+//        String orderToken = orderSubmitVO.getOrderToken();
+//        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+//        Long flag = this.redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), Arrays.asList(TOKEN_PREFIX + orderToken), orderToken);
+//        if (flag == 0l) {
+//            throw new RuntimeException("请不要重复提交！");//暂定异常
+//        }
+
+
+        //验证商品是否在购买时间内
+
+        List<OrderItemVO> listorderItemVOS = orderSubmitVO.getOrderItemVOS();
+        listorderItemVOS.forEach(orderItemVO -> {
+            Integer spuId = orderItemVO.getSpuId();
+            Integer skuId = orderItemVO.getSkuId();
+            //查询库存信息
+            Result stockBySkuId = itemClient.selecStockBySkuId(skuId);
+            Map<String,Object> resultData = (Map<String, Object>) stockBySkuId.getData();
+            Map<String,Object> skuMap = (Map<String, Object>) resultData.get("SKU");//获取库存信息
+            String sku = JSON.toJSONString(skuMap);
+            CStock cStock = JSON.parseObject(sku, CStock.class);
+
+
+            Date groudingTime = cStock.getGroudingTime();//sku上架时间
+            Date validityTime = cStock.getValidityTime();//sku下架时间
+            if (groudingTime != null && validityTime != null){
+                //判断商品是否在sku上下架时间内
+                long groudingtime = groudingTime.getTime();
+                long validitytime= validityTime.getTime();
+                Date date = new Date();
+                long current = date.getTime();
+                if (current<groudingtime || current>validitytime){
+                    throw new BusinessException(CommonErrorCode.FAIL.getCode(),"该商品不存在，请刷新");
+                }
+            }
+
+            //判断spu上下架时间是否为空
+            if(groudingTime != null && validityTime != null){
+                Result result = this.itemClient.queryItemsById(spuId);
+                String string = JSON.toJSONString(result.getData());
+                ItemsInfo itemsInfo = JSON.parseObject(string, ItemsInfo.class);
+                long groudingitemsInfotime = itemsInfo.getGroudingTime().getTime();//spu上架时间
+                long validityitemsInfotime = itemsInfo.getValidityTime().getTime();//spu下架时间
+                Date date = new Date();
+                long current = date.getTime();
+                if (current<groudingitemsInfotime || current>validityitemsInfotime){
+                    throw new BusinessException(CommonErrorCode.FAIL.getCode(),"该商品不存在，请刷新");
+                }
+            }
+
+            //验证商品购买数量是否符合限购数量
+           // orderSubmitVO.getUserId();
+
+        });
+
+
+        // 2 验证价格
+
+        BigDecimal totalPrice = orderSubmitVO.getTotalPrice();//订单总额
+        BigDecimal deliveryAmount = orderSubmitVO.getDeliveryAmount();//运费
+        //如果订单总额为判断运费
+        //如果运费为零则设置为全积分支付
+        //如果运费不为零则不做改动
+        if(totalPrice.compareTo(BigDecimal.ZERO)==0){
+            if(deliveryAmount.compareTo(BigDecimal.ZERO)==0){
+                orderSubmitVO.setPayType(4);
+            }
+        }
+        List<OrderItemVO> orderItemVOS = orderSubmitVO.getOrderItemVOS();
+        if (CollectionUtils.isEmpty(orderItemVOS)){
+            throw new  BusinessException(CommonErrorCode.E_901001.getCode(),"请求添加购物项！");//暂定异常
+        }
+
+        //数据库实时价格
+        BigDecimal currentPrice = orderItemVOS.stream().map(orderItemVO -> {
+
+            Result stockBySkuId = itemClient.selecStockBySkuId(orderItemVO.getSkuId());
+            Map<String,Object> resultData = (Map<String, Object>) stockBySkuId.getData();
+
+
+            Map<String,Object> skuMap = (Map<String, Object>) resultData.get("SKU");//获取库存信息
+            String sku= JSON.toJSONString(skuMap);
+            CStock cStock = JSON.parseObject(sku, CStock.class);
+            return cStock.getSalePrice().multiply(new BigDecimal(orderItemVO.getCount()));
+
+        }).reduce((a, b) -> a.add(b)).get();
+
+        //购买的所有商品所允许的总购物券
+        BigDecimal totalScore = orderItemVOS.stream().map(orderItemVO -> {
+            Result stockBySkuId = itemClient.selecStockBySkuId(orderItemVO.getSkuId());
+            Map<String,Object> resultData = (Map<String, Object>) stockBySkuId.getData();
+
+            Map<String,Object> skuMap = (Map<String, Object>) resultData.get("SKU");//获取库存信息
+            String sku= JSON.toJSONString(skuMap);
+            CStock cStock = JSON.parseObject(sku, CStock.class);
+
+            BigDecimal saleMultiply = cStock.getSalePrice().multiply(cStock.getScoreScale());//获取商品最大可用购物券
+            return saleMultiply.multiply(new BigDecimal(orderItemVO.getCount()));
+        }).reduce((a, b) -> a.add(b)).get();
+        BigDecimal userIntegration = orderSubmitVO.getUseIntegration();
+        int r = userIntegration.compareTo(BigDecimal.ZERO);
+        OrderSubmitResponseVO orderSubmitResponseVO = null;
+
+        if ( r == 0 ){
+            //纯价格 支付
+            //验价
+//            if (totalPrice.compareTo(currentPrice)!=0){
+//                throw new  BusinessException(CommonErrorCode.E_300123.getCode(),"请刷新页面后重试");//暂定异常
+//            }
+            orderSubmitResponseVO = this.common(orderSubmitVO);
+        }else {
+
+            //调取用户购物券接口
+            //获取用户的购物券
+            // BigDecimal userAllIntegration = BigDecimal.valueOf(80);//假定
+            BigDecimal userAllIntegration = this.sumScore(orderSubmitVO.getUserId());
+
+//            if (userAllIntegration.compareTo(userIntegration) == -1){
+//                //用户购物券不足,提醒用户，提示页面
+//                throw new  BusinessException(CommonErrorCode.E_300124.getCode(),"购物券不足");//暂定异常
+//            }
+//            //购物券充足  验价                                                  //下单使用的购物券            //下单可使用的最多购物券
+//            if(userIntegration.add(totalPrice).compareTo(currentPrice)!=0 || userIntegration.compareTo(totalScore)>0){
+//
+//                throw new  BusinessException(CommonErrorCode.FAIL.getCode(),"服务器异常，请刷新重试");//暂定异常
+//            }
+            //验库存锁库存
+            orderSubmitResponseVO = this.common(orderSubmitVO);
+        }
+        return orderSubmitResponseVO;
+    }
+
+
+
+
 
 
     @Override
@@ -422,7 +588,12 @@ public class OrderServiceImpl implements OrderService {
         secondarilyMapper.insert(secondarilyEntity);//存入库中
         //应付总额
         BigDecimal totalPrice = orderSubmitVO.getTotalPrice();
-        mainEntity.setPayAmount(deliveryAmount.add(totalPrice));//根据积分计算后，加上运费后计算得到的总额，暂未计算
+        if (orderSubmitVO.getPayType()==4){
+            mainEntity.setPayAmount(BigDecimal.valueOf(0.01));
+            mainEntity.setPayType(1);
+        }else {
+            mainEntity.setPayAmount(deliveryAmount.add(totalPrice));//根据积分计算后，加上运费后计算得到的总额，暂未计算
+        }
         mainMapper.insert(mainEntity);//存入库中
         orderSubmitResponseVO.setSecondarilyEntity(secondarilyEntity);
 

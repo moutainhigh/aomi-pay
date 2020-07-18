@@ -2,34 +2,17 @@ package com.cloudbest.order.otherentity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 public class CStock implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public String toString() {
-        return "CStock{" +
-                "id=" + id +
-                ", itemId=" + itemId +
-                ", itemAttr='" + itemAttr + '\'' +
-                ", repositoryId=" + repositoryId +
-                ", preSalePrice=" + preSalePrice +
-                ", salePrice=" + salePrice +
-                ", lenWidHeight='" + lenWidHeight + '\'' +
-                ", weight=" + weight +
-                ", scoreScale=" + scoreScale +
-                ", city='" + city + '\'' +
-                ", usableStock=" + usableStock +
-                ", skuSaltVolume=" + skuSaltVolume +
-                '}';
-    }
-
     /**
      * sku_id
      */
@@ -67,6 +50,12 @@ public class CStock implements Serializable {
     private BigDecimal salePrice;
 
     /**
+     * 最大可用购物券比例
+     */
+    @TableId(value = "score_scale")
+    private BigDecimal scoreScale;
+
+    /**
      * 长宽高
      */
     @TableId(value = "len_wid_height")
@@ -76,27 +65,13 @@ public class CStock implements Serializable {
      * 重量
      */
     @TableId(value = "weight")
-    private Double weight;
+    private double weight;
 
     /**
-     * 最大可用购物券比例
+     * 状态（0：下架；1：上架；9：逻辑删除）
      */
-    @TableId(value = "score_scale")
-    private BigDecimal scoreScale;
-
-    public BigDecimal getScoreScale() {
-        return scoreScale;
-    }
-
-    public void setScoreScale(BigDecimal scoreScale) {
-        this.scoreScale = scoreScale;
-    }
-
-    /**
-     * 发货城市
-     */
-    @TableId(value = "city")
-    private String city;
+    @TableId(value = "status")
+    private Integer status;
 
     /**
      * 可用库存数（库存总数-占用数量）
@@ -104,15 +79,49 @@ public class CStock implements Serializable {
     @TableId(value = "usable_stock")
     private Integer usableStock;
 
+
+    public Date getGroudingTime() {
+        return groudingTime;
+    }
+
+    public void setGroudingTime(Date groudingTime) {
+        this.groudingTime = groudingTime;
+    }
+
+    public Date getValidityTime() {
+        return validityTime;
+    }
+
+    public void setValidityTime(Date validityTime) {
+        this.validityTime = validityTime;
+    }
+
+    /**
+     * 商品上架时间
+     */
+    @TableId(value = "grouding_time")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date groudingTime;
+
+    /**
+     * 商品下架时间
+     */
+    @TableId(value = "validity_time")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date validityTime;
+
     /**
      * sku销量
      */
     @TableId(value = "sku_salt_volume")
     private Integer skuSaltVolume;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
+    /**
+     * 最后修改时间
+     */
+    @TableId(value = "update_time")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
     public Integer getId() {
         return id;
@@ -162,6 +171,14 @@ public class CStock implements Serializable {
         this.salePrice = salePrice;
     }
 
+    public BigDecimal getScoreScale() {
+        return scoreScale;
+    }
+
+    public void setScoreScale(BigDecimal scoreScale) {
+        this.scoreScale = scoreScale;
+    }
+
     public String getLenWidHeight() {
         return lenWidHeight;
     }
@@ -170,20 +187,12 @@ public class CStock implements Serializable {
         this.lenWidHeight = lenWidHeight;
     }
 
-    public Double getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public Integer getUsableStock() {
@@ -200,5 +209,42 @@ public class CStock implements Serializable {
 
     public void setSkuSaltVolume(Integer skuSaltVolume) {
         this.skuSaltVolume = skuSaltVolume;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", itemId=" + itemId +
+                ", itemAttr='" + itemAttr + '\'' +
+                ", repositoryId=" + repositoryId +
+                ", preSalePrice=" + preSalePrice +
+                ", salePrice=" + salePrice +
+                ", scoreScale=" + scoreScale +
+                ", lenWidHeight='" + lenWidHeight + '\'' +
+                ", weight=" + weight +
+                ", status=" + status +
+                ", usableStock=" + usableStock +
+                ", groudingTime=" + groudingTime +
+                ", validityTime=" + validityTime +
+                ", skuSaltVolume=" + skuSaltVolume +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

@@ -68,17 +68,16 @@ public class MainController {
     //接口方法
     //支付完成后修改订单
     @PostMapping("order/main/updateOrder")
-    public Result updateOrder(@RequestParam("orderId") String orderId,@RequestParam("status") Integer status){
-        log.info("支付成功修改订单操作开始,订单号："+orderId+",状态："+status);
+    public Result updateOrder(@RequestParam("orderId") String orderId/*,@RequestParam("status") Integer status*/){
+//        log.info("支付成功修改订单操作开始,订单号："+orderId+",状态："+status);
         MainEntity mainEntity = new MainEntity();
         try {
-            mainEntity = mainService.updateOrderAfterPay(orderId,status);
+            mainEntity = mainService.updateOrderAfterPay(orderId/*,status*/);
         } catch (BusinessException businessException) {
             return new Result(businessException.getCode(),businessException.getDesc(),false);
         }
         return new Result(CommonErrorCode.SUCCESS,mainEntity);
     }
-
 
 
     //逻辑删除

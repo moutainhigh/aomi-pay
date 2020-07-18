@@ -40,7 +40,7 @@ public interface MainService {
 
     List<MainEntityVO> selectAllStatus(OrderMainVO status, String token);
 
-    MainEntity updateOrderAfterPay(String orderId, Integer status);
+    MainEntity updateOrderAfterPay(String orderId/*, Integer status*/);
 
 
 }

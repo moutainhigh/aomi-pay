@@ -111,14 +111,15 @@ public class OrderController {
     public Result submitTwo(@RequestBody OrderSubmitVO orderSubmitVO,
                          @PathVariable("token") String token){
         log.info("===========================提交订单============================");
+
         try {
-            TokenUtil.getUserId(token);
+            Long userId = TokenUtil.getUserId(token);
         } catch (Exception e) {
             throw  new  RuntimeException("请先登录");//暂定异常
         }
         OrderSubmitResponseVO orderSubmitResponseVO =null;
         try {
-            orderSubmitResponseVO = this.orderService.submit(orderSubmitVO);
+            orderSubmitResponseVO = this.orderService.submitTwo(orderSubmitVO);
             MainEntity mainEntity = orderSubmitResponseVO.getMainEntity();
             //定时关单
             this.NettyTask(mainEntity);
@@ -149,7 +150,8 @@ public class OrderController {
         switch (payType){
             case 1:
                 //调用支付接口 支付订单
-                BigDecimal payAmount = mainEntity.getPayAmount();
+                MainEntity selectOne = this.mainMapper.selectOne(new LambdaQueryWrapper<MainEntity>().eq(MainEntity::getMainOrderId, mainEntity.getMainOrderId()));
+                BigDecimal payAmount = selectOne.getPayAmount();
                 AlipayBean alipayBean = new AlipayBean();
                 alipayBean.setSubject("云上优选 订单号："+mainEntity.getMainOrderId());//   商品的标题/交易标题/订单标题/订单关键字等。
                 alipayBean.setTotalAmount(payAmount.toString());//订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
@@ -169,7 +171,6 @@ public class OrderController {
         }
         return string;
     }
-
 
 
 
@@ -204,7 +205,8 @@ public class OrderController {
         switch (payType){
             case 1:
                 //调用支付接口 支付订单
-                BigDecimal payAmount = mainEntity.getPayAmount();
+                MainEntity selectOne = this.mainMapper.selectOne(new LambdaQueryWrapper<MainEntity>().eq(MainEntity::getMainOrderId, mainEntity.getMainOrderId()));
+                BigDecimal payAmount = selectOne.getPayAmount();
                 AlipayBean alipayBean = new AlipayBean();
                 alipayBean.setSubject("云上优选 订单号："+mainEntity.getMainOrderId());//   商品的标题/交易标题/订单标题/订单关键字等。
                 alipayBean.setTotalAmount(payAmount.toString());//订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]

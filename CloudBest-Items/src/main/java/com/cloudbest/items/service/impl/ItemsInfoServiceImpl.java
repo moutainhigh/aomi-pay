@@ -259,6 +259,12 @@ public class ItemsInfoServiceImpl implements ItemsInfoService {
     }
 
     @Override
+    public ItemsInfo queryItemsById(Integer spuId) {
+        ItemsInfo itemsInfo = this.itemsInfoMapper.selectById(spuId);
+        return itemsInfo;
+    }
+
+    @Override
     public ItemsInfo getItemById(Integer itemId) {
         ItemsInfo item = itemsInfoMapper.selectById(itemId);
         if (null!=item){

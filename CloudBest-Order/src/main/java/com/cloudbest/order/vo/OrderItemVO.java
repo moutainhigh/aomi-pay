@@ -63,6 +63,7 @@ public class OrderItemVO {
         Image = image;
     }
 
+
     public BigDecimal getPrice() {
         return price;
     }

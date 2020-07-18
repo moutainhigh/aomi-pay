@@ -17,6 +17,8 @@ public interface OrderService {
     String crateAliPay();
     void payByScore(MainEntity mainEntity);
 
+    OrderSubmitResponseVO submitTwo(OrderSubmitVO orderSubmitVO);
+
 
 //    void payFail(MainEntity mainEntity);
 //    String crateAliPay();
