@@ -8,7 +8,10 @@ import com.cloudbest.common.constants.ScoreSystemConstants;
 import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.Result;
-import com.cloudbest.common.util.*;
+import com.cloudbest.common.util.DateUtil;
+import com.cloudbest.common.util.RandomUuidUtil;
+import com.cloudbest.common.util.StringUtil;
+import com.cloudbest.common.util.TokenUtil;
 import com.cloudbest.order.controller.MainController;
 import com.cloudbest.order.entity.ItemEntity;
 import com.cloudbest.order.entity.MainEntity;
@@ -28,7 +31,6 @@ import com.cloudbest.order.vo.*;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -182,20 +184,91 @@ public class OrderServiceImpl implements OrderService {
 //        }
 
         //验证商品是否在购买时间内
-        //验证商品购买数量
+
         List<OrderItemVO> listorderItemVOS = orderSubmitVO.getOrderItemVOS();
         listorderItemVOS.forEach(orderItemVO -> {
-
+            Integer spuId = orderItemVO.getSpuId();
             Integer skuId = orderItemVO.getSkuId();
-            Result stockBySkuId = itemClient.selecStockBySkuId(skuId);//接口已改
+            //查询库存信息
+            Result stockBySkuId = itemClient.selecStockBySkuId(skuId);
             Map<String,Object> resultData = (Map<String, Object>) stockBySkuId.getData();
             Map<String,Object> skuMap = (Map<String, Object>) resultData.get("SKU");//获取库存信息
-            String sku= JSON.toJSONString(skuMap);
+            String sku = JSON.toJSONString(skuMap);
             CStock cStock = JSON.parseObject(sku, CStock.class);
-            Integer spuId = cStock.getItemId();
+
+
+            Date groudingTime = cStock.getGroudingTime();//sku上架时间
+            Date validityTime = cStock.getValidityTime();//sku下架时间
+            if (groudingTime != null && validityTime != null){
+                //判断商品是否在sku上下架时间内
+                long groudingtime = groudingTime.getTime();
+                long validitytime= validityTime.getTime();
+                Date date = new Date();
+                long current = date.getTime();
+                if (current<groudingtime || current>validitytime){
+                    throw new BusinessException(CommonErrorCode.FAIL.getCode(),"该商品不存在，请刷新");
+                }
+            }
+
+            //判断spu上下架时间是否为空
+            if(groudingTime != null && validityTime != null){
+                Result result = this.itemClient.queryItemsById(spuId);
+                String string = JSON.toJSONString(result.getData());
+                ItemsInfo itemsInfo = JSON.parseObject(string, ItemsInfo.class);
+                long groudingitemsInfotime = itemsInfo.getGroudingTime().getTime();//spu上架时间
+                long validityitemsInfotime = itemsInfo.getValidityTime().getTime();//spu下架时间
+                Date date = new Date();
+                long current = date.getTime();
+                if (current<groudingitemsInfotime || current>validityitemsInfotime){
+                    throw new BusinessException(CommonErrorCode.FAIL.getCode(),"该商品不存在，请刷新");
+                }
+            }
+
+            //验证是否符合限购规则
+            PurchaseLimitVO purchaseLimitVOParam = new PurchaseLimitVO();
+            purchaseLimitVOParam.setItemId(orderItemVO.getSpuId());
+            purchaseLimitVOParam.setSkuId(orderItemVO.getSkuId());
+            Result purchaseLimitResult = itemClient.getByItemIdSkuId(purchaseLimitVOParam);
+            if(!purchaseLimitResult.isSuccess()){
+                throw new BusinessException(purchaseLimitResult.getCode(),purchaseLimitResult.getMessage());
+            }
+            if(!StringUtils.isEmpty(purchaseLimitResult.getData())){
+                //linkdhashmap转实体
+                JSONObject json = JSONObject.fromObject(purchaseLimitResult.getData());
+                PurchaseLimitVO purchaseLimitVO = (PurchaseLimitVO) JSONObject.toBean(json, PurchaseLimitVO.class);
+
+                if(!StringUtils.isEmpty(purchaseLimitVO)){
+                    //获取限购频率（天数）
+                    int day = purchaseLimitVO.getPurchaseLimitFrequency();
+                    //根据天数计算下单开始时间，结束时间
+                    String nowDateYmdStr = DateUtil.format(DateUtil.getCurrDate(),DateUtil.YYYY_MM_DD);
+                    Date startDateYmd = DateUtil.reduceDay2Date(DateUtil.format(nowDateYmdStr,DateUtil.YYYY_MM_DD_HH_MM_SS),5);
+
+                    String startDateYmdhmsStr = DateUtil.format(startDateYmd,DateUtil.YYYY_MM_DD).concat(" 00:00:00");
+                    Date startDate = DateUtil.format(startDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
+                    //nowDateYmdStr.concat(" 00:00:00");
+                    String endDateYmdhmsStr = nowDateYmdStr.concat(" 23:59:59");
+
+                    Date endDate = DateUtil.format(endDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
+
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("userId",orderSubmitVO.getUserId());
+                    map.put("skuId",orderItemVO.getSkuId());
+                    map.put("itemId",orderItemVO.getSpuId());
+                    map.put("startDate",startDate);
+                    map.put("endDate",endDate);
+
+                    //根据spuid,skuid,userid  where time , 查询限购频率内的购买数量
+                    Integer quantity = mainMapper.selectSumProductQuantity(map);
+                    if(quantity>=purchaseLimitVO.getPurchaseLimitVolume()){
+                        throw new BusinessException(CommonErrorCode.E_901018);
+                    }
+                }
+            }
 
 
         });
+
 
 
         // 2 验证价格
