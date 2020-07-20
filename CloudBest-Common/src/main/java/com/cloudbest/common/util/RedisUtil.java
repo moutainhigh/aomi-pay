@@ -1,5 +1,6 @@
 package com.cloudbest.common.util;
 
+import com.cloudbest.common.constants.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

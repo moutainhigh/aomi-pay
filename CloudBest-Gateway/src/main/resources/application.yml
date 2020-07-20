@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: zuul-server #服务名称
+  main:
+    allow-bean-definition-overriding: true #忽略同名bean
 
 hystrix:
   threadpool:
@@ -56,6 +58,10 @@ zuul:
       path: /brand/**
       serviceId: service-user
       strip-prefix: false
+    search:
+      path: /app/search/**
+      serviceId: service-search
+      strip-prefix: false
 #配置Eureka
 eureka:
   client:
@@ -64,6 +70,7 @@ eureka:
   instance:
     prefer-ip-address: true #使用ip地址注册
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    status-page-url: http://127.0.0.1:8888/doc.html
 
 
 logging:

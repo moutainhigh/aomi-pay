@@ -6,10 +6,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+import org.springframework.cloud.netflix.zuul.filters.Route;
+import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import springfox.documentation.swagger.web.SwaggerResource;
+import springfox.documentation.swagger.web.SwaggerResourcesProvider;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.MultipartConfigElement;
+import java.util.ArrayList;
+import java.util.List;
 
 //import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 //import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -18,6 +28,8 @@ import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
 @EnableZuulProxy
+@EnableSwagger2
+@ComponentScan("com.cloudbest.gateway.config")
 public class ZuulServer {
     public static void main(String[] args) {
         SpringApplication.run(ZuulServer.class,args);
@@ -42,6 +54,56 @@ public class ZuulServer {
         characterEncodingFilter.setEncoding("UTF-8");
         filter.setFilter(characterEncodingFilter);
         return filter;
+    }
+
+    /**
+     * Desc: swagger2 接口文档整合网关
+     * @author : hdq
+     * @date : 2020/7/14 15:37
+     */
+    @Component
+    @Primary
+    class DocumentationConfig implements SwaggerResourcesProvider {
+
+        //TODO  暂延后，后期改
+        private final RouteLocator routeLocator;
+
+        public DocumentationConfig(RouteLocator routeLocator) {
+            this.routeLocator = routeLocator;
+        }
+
+        /*@Override
+        public List<SwaggerResource> get() {
+            List<SwaggerResource> resources = new ArrayList<SwaggerResource>();
+
+            resources.add(swaggerResource("service-search","/search/v2/api-docs","2.0"));
+            resources.add(swaggerResource("service-search1","/search/doc.html","2.0"));
+            resources.add(swaggerResource("service-search2","/service-search/v2/api-docs","2.0"));
+            resources.add(swaggerResource("service-search3","/service-search/doc.html","2.0"));
+            resources.add(swaggerResource("service-search3","/doc.html","2.0"));
+            resources.add(swaggerResource("service-search3","/v2/api-docs","2.0"));
+            //resources.add(swaggerResource("用户服务","/service-user/v2/api-docs","2.0"));
+            //resources.add(swaggerResource("商品服务","/service-items/v2/api-docs","2.0"));
+            return resources;
+        }*/
+
+        @Override
+        public List<SwaggerResource> get() {
+            List<SwaggerResource> resources = new ArrayList<>();
+            List<Route> routes = routeLocator.getRoutes();
+            routes.forEach(route -> {
+                resources.add(swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs"), "1.0"));
+            });
+            return resources;
+        }
+
+        private SwaggerResource swaggerResource(String name, String location, String version) {
+            SwaggerResource swaggerResource = new SwaggerResource();
+            swaggerResource.setName(name);
+            swaggerResource.setLocation(location);
+            swaggerResource.setSwaggerVersion(version);
+            return swaggerResource;
+        }
     }
 
 //    @Bean

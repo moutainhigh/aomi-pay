@@ -124,7 +124,7 @@ public class OrderController {
             //定时关单
             this.NettyTask(mainEntity);
         } catch (BusinessException businessException){
-            return new Result(businessException.getCode(),businessException.getDesc(),false);
+            return new Result(businessException.getErrorCode().getCode(),businessException.getErrorCode().getDesc(),false);
         }
         return new Result(CommonErrorCode.SUCCESS,orderSubmitResponseVO);
     }

@@ -1,5 +1,6 @@
 package com.cloudbest.common.util;
 
+import com.cloudbest.common.constants.CommonConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -393,6 +393,7 @@ public class OrderServiceImpl implements OrderService {
             if(!purchaseLimitResult.isSuccess()){
                 throw new BusinessException(purchaseLimitResult.getCode(),purchaseLimitResult.getMessage());
             }
+            log.info("限购规则记录：{}",purchaseLimitResult.toString());
             if(!StringUtils.isEmpty(purchaseLimitResult.getData())){
                 //linkdhashmap转实体
                 JSONObject json = JSONObject.fromObject(purchaseLimitResult.getData());
@@ -401,29 +402,34 @@ public class OrderServiceImpl implements OrderService {
                 if(!StringUtils.isEmpty(purchaseLimitVO)){
                     //获取限购频率（天数）
                     int day = purchaseLimitVO.getPurchaseLimitFrequency();
-                    //根据天数计算下单开始时间，结束时间
-                    String nowDateYmdStr = DateUtil.format(DateUtil.getCurrDate(),DateUtil.YYYY_MM_DD);
-                    Date startDateYmd = DateUtil.reduceDay2Date(DateUtil.format(nowDateYmdStr,DateUtil.YYYY_MM_DD_HH_MM_SS),5);
 
-                    String startDateYmdhmsStr = DateUtil.format(startDateYmd,DateUtil.YYYY_MM_DD).concat(" 00:00:00");
-                    Date startDate = DateUtil.format(startDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
-                    //nowDateYmdStr.concat(" 00:00:00");
-                    String endDateYmdhmsStr = nowDateYmdStr.concat(" 23:59:59");
+                    if (day > 0) {
+                        //根据天数计算下单开始时间，结束时间
+                        String nowDateYmdStr = DateUtil.format(DateUtil.getCurrDate(),DateUtil.YYYY_MM_DD);
+                        Date startDateYmd = DateUtil.reduceDay2Date(DateUtil.format(nowDateYmdStr, DateUtil.YYYY_MM_DD_HH_MM_SS), day - 1);
 
-                    Date endDate = DateUtil.format(endDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
+                        String startDateYmdhmsStr = DateUtil.format(startDateYmd,DateUtil.YYYY_MM_DD).concat(" 00:00:00");
+                        Date startDate = DateUtil.format(startDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
 
-                    Map<String,Object> map = new HashMap<>();
-                    map.put("userId",orderSubmitVO.getUserId());
-                    map.put("skuId",orderItemVO.getSkuId());
-                    map.put("itemId",orderItemVO.getSpuId());
-                    map.put("startDate",startDate);
-                    map.put("endDate",endDate);
+                        String endDateYmdhmsStr = nowDateYmdStr.concat(" 23:59:59");
 
-                    //根据spuid,skuid,userid  where time , 查询限购频率内的购买数量
-                    Integer quantity = mainMapper.selectSumProductQuantity(map);
-                    if(quantity>=purchaseLimitVO.getPurchaseLimitVolume()){
-                        throw new BusinessException(CommonErrorCode.E_901018);
+                        Date endDate = DateUtil.format(endDateYmdhmsStr,DateUtil.YYYY_MM_DD_HH_MM_SS);
+
+                        Map<String,Object> map = new HashMap<>();
+                        map.put("userId",orderSubmitVO.getUserId());
+                        map.put("skuId",orderItemVO.getSkuId());
+                        map.put("itemId",orderItemVO.getSpuId());
+                        map.put("startDate",startDate);
+                        map.put("endDate",endDate);
+
+                        //根据spuid,skuid,userid  where time , 查询限购频率内的购买数量
+                        Integer quantity = mainMapper.selectSumProductQuantity(map);
+                        log.info("限购频率内已购买数量:{}",quantity);
+                        if(quantity>=purchaseLimitVO.getPurchaseLimitVolume()){
+                            throw new BusinessException(CommonErrorCode.E_901018);
+                        }
                     }
+
                 }
             }
 

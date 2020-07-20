@@ -14,7 +14,7 @@ import java.util.TreeSet;
  * @Package: com.cloudbest.common.domain
  * @ClassName: GeneralConvertor
  * @Author: hdq
- * @Description: dozer 转换器
+ * @Description: dozer 转换器   对象与对象的转换
  * @Date: 2020/7/8 13:30
  * @Version: 1.0
  */
@@ -33,7 +33,6 @@ public class GeneralConvertorUtil {
 
     /**
      * List  实体类 转换器
-     *
      * @param source 原数据
      * @param clz    转换类型
      * @param <T>
@@ -53,7 +52,6 @@ public class GeneralConvertorUtil {
 
     /**
      * Set 实体类 深度转换器
-     *
      * @param source 原数据
      * @param clz    目标对象
      * @param <T>
@@ -73,7 +71,6 @@ public class GeneralConvertorUtil {
 
     /**
      * 实体类 深度转换器
-     *
      * @param source
      * @param clz
      * @param <T>
@@ -91,7 +88,7 @@ public class GeneralConvertorUtil {
         mapper.map(source, object);
     }
 
-    public <T> void copyConvertor(T source, Object object) {
+    public static <T> void copyConvertor(T source, Object object) {
         mapper.map(source, object);
     }
 

@@ -75,6 +75,10 @@ zuul:
       path: /youhui/**
       serviceId: service-user
       strip-prefix: false
+    search:
+      path: /search/**
+      serviceId: service-search
+      strip-prefix: false
 #配置Eureka
 eureka:
   client:

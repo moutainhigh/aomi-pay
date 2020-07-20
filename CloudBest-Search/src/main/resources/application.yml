@@ -1,0 +1,113 @@
+server:
+  port: 9004
+#spring配置
+spring:
+  application:
+    name: service-search #服务名称
+  datasource:
+    #1.JDBC
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.103.1.2:3306/cloudbest_items?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: aomi123!
+    druid:
+      #2.连接池配置
+      #初始化连接池的连接数量 大小，最小，最大
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      #配置获取连接等待超时的时间
+      max-wait: 60000
+      #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 30000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: false
+      # 是否缓存preparedStatement，也就是PSCache  官方建议MySQL下建议关闭   个人建议如果想用SQL防火墙 建议打开
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filter:
+        stat:
+          merge-sql: true
+          slow-sql-millis: 5000
+      #3.基础监控配置
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        #设置不统计哪些URL
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        session-stat-enable: true
+        session-stat-max-count: 100
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        #设置监控页面的登录名和密码
+        login-username: admin
+        login-password: admin
+        allow: 127.0.0.1
+  #ES引擎
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+      cluster-nodes: 127.0.0.1:9300
+      cluster-name: elasticsearch
+      properties:
+        http:
+          enabled: true
+  elasticsearch:
+    rest:
+      uris: ["http://127.0.0.1：9200"]
+# redis配置
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 1000ms
+    lettuce:
+      pool:
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 1000ms
+      shutdown-timeout: 1000ms
+#配置Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka/
+  instance:
+    prefer-ip-address: true #使用ip地址注册
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    status-page-url: http://127.0.0.1:9004/doc.html
+
+
+mybatis‐plus:
+  typeAliasesPackage: com.cloudbest.search.entity
+  mapper‐locations: /**/*Mapper.xml classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+#    global-config:
+#      #逻辑已删除值（默认为1）
+#      logic-delete-value: 1
+#      #逻辑已删除值（默认为0）
+#      logic-not-delete-value: 0
+#    枚举包扫描
+
+
+logging:
+  config: classpath:log4j2.xml
+
+security:
+  basic:
+    enable: true

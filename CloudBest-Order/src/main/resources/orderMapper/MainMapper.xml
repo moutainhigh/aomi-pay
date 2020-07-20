@@ -10,7 +10,7 @@
         where om.user_id =#{param.userId}
         and  oi.product_id = #{param.skuId}
         and  oi.item_id = #{param.itemId}
-        and om.pay_status in (2,3,4)
+        and om.pay_status != 5
         and om.order_time BETWEEN #{param.startDate} and #{param.endDate}
 
     </select>
