@@ -34,7 +34,7 @@ public class PaymentLog implements Serializable {
 
     private Integer status;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
 
     public static long getSerialVersionUID() {

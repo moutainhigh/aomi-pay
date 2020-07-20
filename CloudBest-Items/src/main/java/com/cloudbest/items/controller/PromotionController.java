@@ -1,20 +1,9 @@
 package com.cloudbest.items.controller;
 
-import com.cloudbest.common.domain.BusinessException;
-import com.cloudbest.common.domain.CommonErrorCode;
-import com.cloudbest.common.domain.Result;
-import com.cloudbest.items.entity.ItemsInfo;
 import com.cloudbest.items.service.ItemsInfoService;
-import com.cloudbest.items.vo.ItemsInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -30,6 +19,8 @@ public class PromotionController {
 
     @Autowired
     private ItemsInfoService cItemsInfoService;
+
+    //查询显示抢购的商品
 
 
 }

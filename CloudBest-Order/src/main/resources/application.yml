@@ -66,7 +66,7 @@ eureka:
 
 mybatis‐plus:
   typeAliasesPackage: com.cloudbest.order.entity
-  mapper‐locations: /**/*Mapper.xml
+  mapper‐locations: classpath:orderMapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
     #控制台打印sql语句

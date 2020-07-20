@@ -133,7 +133,6 @@ public class CustomerInfServiceImpl implements CustomerInfService {
         loginMapper.insert(customerLogin);
         //插入用户信息表里面
         customerInf.setMobilePhone(mobile);
-        customerInf.setScreenname(mobile);
         customerInf.setRegisterTime(LocalDateTime.now());
         customerInf.setModifiedTime(LocalDateTime.now());
         customerInfMapper.insert(customerInf);

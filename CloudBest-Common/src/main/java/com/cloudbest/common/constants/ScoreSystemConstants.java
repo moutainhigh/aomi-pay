@@ -12,12 +12,12 @@ public class ScoreSystemConstants {
     /**
      * 积分系统网关   生产环境
      */
-    public static final String SCORE_URL = "http://172.19.73.77:8888";
+    //public static final String SCORE_URL = "http://172.19.73.77:8888";
 
     /**
      * 积分系统网关   本地环境
      */
-    //public static final String SCORE_URL = "http://localhost:8976";
+    public static final String SCORE_URL = "http://localhost:8976";
 
     /**
      * 积分系统接口  查询用户总购物券

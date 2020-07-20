@@ -8,7 +8,10 @@ import com.cloudbest.common.constants.ScoreSystemConstants;
 import com.cloudbest.common.domain.BusinessException;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.Result;
-import com.cloudbest.common.util.*;
+import com.cloudbest.common.util.DateUtil;
+import com.cloudbest.common.util.RandomUuidUtil;
+import com.cloudbest.common.util.StringUtil;
+import com.cloudbest.common.util.TokenUtil;
 import com.cloudbest.order.controller.MainController;
 import com.cloudbest.order.entity.ItemEntity;
 import com.cloudbest.order.entity.MainEntity;
@@ -28,7 +31,6 @@ import com.cloudbest.order.vo.*;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -180,23 +182,7 @@ public class OrderServiceImpl implements OrderService {
 //        if (flag == 0l) {
 //            throw new RuntimeException("请不要重复提交！");//暂定异常
 //        }
-
-        //验证商品是否在购买时间内
-        //验证商品购买数量
-        List<OrderItemVO> listorderItemVOS = orderSubmitVO.getOrderItemVOS();
-        listorderItemVOS.forEach(orderItemVO -> {
-
-            Integer skuId = orderItemVO.getSkuId();
-            Result stockBySkuId = itemClient.selecStockBySkuId(skuId);//接口已改
-            Map<String,Object> resultData = (Map<String, Object>) stockBySkuId.getData();
-            Map<String,Object> skuMap = (Map<String, Object>) resultData.get("SKU");//获取库存信息
-            String sku= JSON.toJSONString(skuMap);
-            CStock cStock = JSON.parseObject(sku, CStock.class);
-            Integer spuId = cStock.getItemId();
-
-
-        });
-
+        
 
         // 2 验证价格
 
