@@ -1,25 +1,17 @@
 package com.cloudbest.search.controller.admin;
 
 
-import com.cloudbest.common.constants.ParamConstans;
 import com.cloudbest.common.domain.*;
-import com.cloudbest.common.util.StringUtil;
 import com.cloudbest.common.util.ValidateUtil;
-import com.cloudbest.search.entity.EsItems;
-import com.cloudbest.search.model.CreateEsItemsByIdRequest;
 import com.cloudbest.search.model.DeleteEsItemsByIdRequest;
 import com.cloudbest.search.model.DeleteEsItemsByIdsRequest;
-import com.cloudbest.search.model.SimpleSearchRequest;
 import com.cloudbest.search.service.EsItemsService;
-import com.cloudbest.search.vo.EsItemsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 搜索商品管理Controller
@@ -43,6 +35,7 @@ public class EsItemsController {
      *
      * @author : hdq
      * @date : 2020/7/12 11:42
+     * @return BaseResponse
      */
     @ApiOperation(value = "导入所有数据库中商品到ES")
     @PostMapping(value = "/importAll")
@@ -56,9 +49,10 @@ public class EsItemsController {
     /**
      * Desc: 根据id删除商品
      *
-     * @param req
+     * @param req<DeleteEsItemsByIdRequest>
      * @author : hdq
      * @date : 2020/7/14 11:16
+     * @return BaseResponse
      */
     @ApiOperation(value = "根据id删除商品")
     @PostMapping(value = "/deleteById")
@@ -78,6 +72,7 @@ public class EsItemsController {
      * @param req
      * @author : hdq
      * @date : 2020/7/15 11:32
+     * @return BaseResponse
      */
     @ApiOperation(value = "根据id批量删除商品")
     @PostMapping(value = "/deleteByIds")

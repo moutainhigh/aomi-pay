@@ -57,20 +57,9 @@ public class AppEsItemsController {
         Integer pageNo = StringUtil.isBlank(param.getPageNo()) ? ParamConstans.PAGE_NO:Integer.parseInt(param.getPageNo());
         Integer pageSize = StringUtil.isBlank(param.getPageSize()) ? ParamConstans.PAGE_SIZE:Integer.parseInt(param.getPageSize());
         PageResult result = esItemsService.search(param.getKeywords(),pageNo,pageSize);
-        //BasePageResponse<EsItemsVO> resp = new BasePageResponse<EsItemsVO>(list,pageNo.toString(),pageSize.toString());
+        BasePageResponse<EsItemsVO> resp = new BasePageResponse<EsItemsVO>(result,pageNo.toString(),pageSize.toString());
 
-        return new BaseResponse<BasePageResponse<EsItemsVO>>(CommonErrorCode.SUCCESS, null);
+        return new BaseResponse<BasePageResponse<EsItemsVO>>(CommonErrorCode.SUCCESS, resp);
     }
 
-    @ApiOperation(value = "简单搜索")
-    @RequestMapping(value = "/search/simple", method = RequestMethod.GET)
-    @ResponseBody
-    public void search(@RequestParam(required = false) String keyword,
-                                                      @RequestParam(required = false, defaultValue = "0") Integer pageNum,
-                                                      @RequestParam(required = false, defaultValue = "5") Integer pageSize) {
-        Page<EsItems> esProductPage = esItemsService.search1(keyword, pageNum, pageSize);
-        List<EsItems> esItemsList = esProductPage.getContent().isEmpty() ? null : esProductPage.getContent();
-        log.info("esProductPage:{}",esProductPage);
-        log.info("esProductPage:{}",esItemsList);
-    }
 }

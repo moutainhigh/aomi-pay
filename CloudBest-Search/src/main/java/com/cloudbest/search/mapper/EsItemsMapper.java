@@ -23,9 +23,7 @@ public interface EsItemsMapper extends BaseMapper<EsItems> {
      * @date : 2020/7/14 11:13
      * @return List<EsItems>
      */
-    default List<EsItems> getAllEsItemsList(@Param("id") Long id) {
-        return null;
-    }
+    List<EsItems> getAllEsItemsList(@Param("id") Long id);
 
 }
 

@@ -49,5 +49,4 @@ public interface EsItemsService {
      */
     PageResult search(String keyword, Integer pageNum, Integer pageSize);
 
-    Page<EsItems> search1(String keyword, Integer pageNum, Integer pageSize);
 }

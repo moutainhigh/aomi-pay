@@ -32,9 +32,9 @@
         cii.grouding_time,
         cii.validity_time,
         cs.id as skuId,
-        cs.item_attr as itemAttr,
-        cs.sku_salt_volume as skuSaltVolume,
-        cs.sale_price as salePrice
+        cs.item_attr,
+        cs.sku_salt_volume,
+        cs.sale_price
         FROM
         c_items_info cii
         LEFT JOIN c_catagory cc1 ON cii.first_category_id = cc1.id
