@@ -19,29 +19,52 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
+    public static final String SWAGGER_SCAN_SEARCH_APP_PACKAGE = "com.cloudbest.search.controller.app";
+
+    public static final String SWAGGER_SCAN_SEARCH_ADMIN_PACKAGE = "com.cloudbest.search.controller.admin";
+
     @Bean
-    public Docket createRestApi(){
+    public Docket createAppRestApi(){
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+                .groupName("app")
+                .apiInfo(apiAppInfo())
                 .select()
                 //为当前包下controller生成API文档
-                .apis(RequestHandlerSelectors.basePackage("com.cloudbest.search.controller"))
-                //为有@Api注解的Controller生成API文档
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                //为有@ApiOperation注解的方法生成API文档
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.basePackage(SWAGGER_SCAN_SEARCH_APP_PACKAGE))
                 .paths(PathSelectors.any())
                 .build();
                 //.groupName("service-search");
     }
 
-    private ApiInfo apiInfo() {
+    private ApiInfo apiAppInfo() {
         return new ApiInfoBuilder()
-                .title("云上优选-搜索服务")
-                .description("云上优选-搜索服务接口文档")
+                .title("云上优选-搜索服务App管理接口")
+                .description("云上优选-搜索服务App接口文档")
                 .contact("hdq")
                 .version("1.0")
                 .build();
     }
 
+    @Bean
+    public Docket createAdminRestApi(){
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("admin")
+                .apiInfo(apiAdminInfo())
+                .select()
+                //为当前包下controller生成API文档
+                .apis(RequestHandlerSelectors.basePackage(SWAGGER_SCAN_SEARCH_ADMIN_PACKAGE))
+                .paths(PathSelectors.any())
+                .build();
+        //.groupName("service-search");
+    }
+
+    private ApiInfo apiAdminInfo() {
+        return new ApiInfoBuilder()
+                .title("云上优选-搜索服务后台管理接口")
+                .description("云上优选-搜索服务后台接口文档")
+                .contact("hdq")
+                .version("1.0")
+                .build();
+    }
 }

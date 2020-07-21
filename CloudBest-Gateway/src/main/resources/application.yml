@@ -24,11 +24,11 @@ hystrix:
           semaphore:
             maxConcurrentRequests: 1000
           thread:
-            timeoutInMilliseconds: 15000
+            timeoutInMilliseconds: 80000
 
 ribbon:
-  ConnectTimeout: 60000
-  ReadTimeout: 60000
+  ConnectTimeout: 20000
+  ReadTimeout: 20000
 zuul:
 #  retryable: true
 #  add-host-header: true

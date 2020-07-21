@@ -63,7 +63,7 @@ spring:
           enabled: true
   elasticsearch:
     rest:
-      uris: ["http://127.0.0.1：9200"]
+      uris: ["http://127.0.0.1:9200"]
 # redis配置
   redis:
     database: 0
@@ -89,12 +89,12 @@ eureka:
   instance:
     prefer-ip-address: true #使用ip地址注册
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
-    status-page-url: http://127.0.0.1:9004/doc.html
+    status-page-url: http://127.0.0.1:8888/doc.html
 
 
 mybatis‐plus:
   typeAliasesPackage: com.cloudbest.search.entity
-  mapper‐locations: /**/*Mapper.xml classpath:mapper/*.xml
+  mapper‐locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 #    global-config:
@@ -111,3 +111,10 @@ logging:
 security:
   basic:
     enable: true
+
+#修改swagger2映射路径
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /search/v2/api-docs

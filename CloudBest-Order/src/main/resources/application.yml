@@ -84,3 +84,10 @@ mybatis‐plus:
 
 logging:
   config: classpath:log4j2.xml
+
+#修改swagger2映射路径
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /order/v2/api-docs

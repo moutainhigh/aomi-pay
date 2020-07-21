@@ -1,13 +1,12 @@
 package com.cloudbest.gateway;
 
 import com.cloudbest.gateway.filters.AuthenticationHeaderFilter;
+import com.cloudbest.gateway.filters.ForwardSwaggerFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
-import org.springframework.cloud.netflix.zuul.filters.Route;
-import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
@@ -40,6 +39,11 @@ public class ZuulServer {
     }
 
     @Bean
+    public ForwardSwaggerFilter forwardSwaggerFilter(){
+        return new ForwardSwaggerFilter();
+    }
+
+    @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setMaxFileSize("12800000KB");
@@ -65,35 +69,15 @@ public class ZuulServer {
     @Primary
     class DocumentationConfig implements SwaggerResourcesProvider {
 
-        //TODO  暂延后，后期改
-        private final RouteLocator routeLocator;
-
-        public DocumentationConfig(RouteLocator routeLocator) {
-            this.routeLocator = routeLocator;
-        }
-
-        /*@Override
+        @Override
         public List<SwaggerResource> get() {
             List<SwaggerResource> resources = new ArrayList<SwaggerResource>();
 
-            resources.add(swaggerResource("service-search","/search/v2/api-docs","2.0"));
-            resources.add(swaggerResource("service-search1","/search/doc.html","2.0"));
-            resources.add(swaggerResource("service-search2","/service-search/v2/api-docs","2.0"));
-            resources.add(swaggerResource("service-search3","/service-search/doc.html","2.0"));
-            resources.add(swaggerResource("service-search3","/doc.html","2.0"));
-            resources.add(swaggerResource("service-search3","/v2/api-docs","2.0"));
-            //resources.add(swaggerResource("用户服务","/service-user/v2/api-docs","2.0"));
-            //resources.add(swaggerResource("商品服务","/service-items/v2/api-docs","2.0"));
-            return resources;
-        }*/
-
-        @Override
-        public List<SwaggerResource> get() {
-            List<SwaggerResource> resources = new ArrayList<>();
-            List<Route> routes = routeLocator.getRoutes();
-            routes.forEach(route -> {
-                resources.add(swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs"), "1.0"));
-            });
+            resources.add(swaggerResource("用户服务","/app/user/v2/api-docs?group=app","2.0"));
+            resources.add(swaggerResource("商品服务","/app/items/v2/api-docs?group=app","2.0"));
+            resources.add(swaggerResource("订单服务","/app/order/v2/api-docs?group=app","2.0"));
+            resources.add(swaggerResource("交易服务","/app/payment/v2/api-docs?group=app","2.0"));
+            resources.add(swaggerResource("搜索服务","/app/search/v2/api-docs?group=app","2.0"));
             return resources;
         }
 
