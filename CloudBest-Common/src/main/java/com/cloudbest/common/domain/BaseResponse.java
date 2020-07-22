@@ -30,8 +30,8 @@ public class BaseResponse<T> implements Serializable {
     /**
      * 状态描述
      **/
-    @ApiModelProperty(value = "返回码描述", name = "msg")
-    private String msg;
+    @ApiModelProperty(value = "返回码描述", name = "message")
+    private String message;
 
     /**
      * 返回数据
@@ -43,24 +43,24 @@ public class BaseResponse<T> implements Serializable {
     public BaseResponse() {
     }
 
-    public BaseResponse(boolean success, int code, String msg) {
+    public BaseResponse(boolean success, int code, String message) {
         super();
         this.success = true;
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
     /**
      * 状态+返回数据
      *
      * @param code  返回码
-     * @param msg     返回描述
+     * @param message     返回描述
      */
-    public BaseResponse(int code, String msg) {
+    public BaseResponse(int code, String message) {
         super();
         this.success = false;
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
     /**
@@ -73,7 +73,7 @@ public class BaseResponse<T> implements Serializable {
         super();
         this.success = true;
         this.code = commonErrorCode.getCode();
-        this.msg = commonErrorCode.getDesc();
+        this.message = commonErrorCode.getDesc();
         this.data = data;
     }
 
@@ -86,7 +86,7 @@ public class BaseResponse<T> implements Serializable {
         super();
         this.success = commonErrorCode.success;
         this.code = commonErrorCode.getCode();
-        this.msg = commonErrorCode.getDesc();
+        this.message = commonErrorCode.getDesc();
     }
 
     public static boolean isSuccess(BaseResponse<?> resp) {
@@ -98,7 +98,7 @@ public class BaseResponse<T> implements Serializable {
 
     public void setBaseResponse(CommonErrorCode commonErrorCode, String errorMsg) {
         this.code = commonErrorCode.getCode();
-        this.msg = errorMsg;
+        this.message = errorMsg;
     }
 
 
@@ -114,16 +114,16 @@ public class BaseResponse<T> implements Serializable {
         return code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
     public void setCode(int code) {
         this.code = code;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public T getData() {
@@ -138,7 +138,7 @@ public class BaseResponse<T> implements Serializable {
     public String toString() {
         return "BaseResponse{" +
                 "code=" + code +
-                ", msg='" + msg + '\'' +
+                ", message='" + message + '\'' +
                 ", data=" + data +
                 '}';
     }

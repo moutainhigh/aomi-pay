@@ -23,19 +23,19 @@ public interface EsItemsService {
 
     /**
      * 根据id删除商品
-     * @param id
+     * @param id 商品spuid
      */
     void deleteById(Integer id);
 
     /**
      * 根据ids删除商品
-     * @param ids
+     * @param ids 商品spuids
      */
     void deleteByIds(List<Integer> ids);
 
     /**
      * 根据id创建商品
-     * @param id
+     * @param id 商品spuid
      * @return EsItems
      */
     EsItems create(Integer id);
@@ -43,10 +43,20 @@ public interface EsItemsService {
     /**
      * 根据关键字搜索商品
      * @param keyword 关键字
-     * @param pageNum
-     * @param pageSize
+     * @param pageNum 页码
+     * @param pageSize 页面大小
      * @return PageResult
      */
     PageResult search(String keyword, Integer pageNum, Integer pageSize);
 
+    /**
+     * 根据关键字搜索商品
+     * @param keyword 关键字
+     * @param categoryId 分类id
+     * @param pageNum 页码
+     * @param pageSize 页面大小
+     * @param sort 排序
+     * @return PageResult
+     */
+    PageResult search(String keyword, Integer categoryId, Integer pageNum, Integer pageSize, Integer sort);
 }

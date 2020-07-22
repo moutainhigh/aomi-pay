@@ -3,6 +3,7 @@ package com.cloudbest.common.util;
 
 import com.cloudbest.common.annotations.Validator;
 import com.cloudbest.common.constants.CommonConstants;
+import com.cloudbest.common.domain.BaseRequest;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.enums.RegexEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,14 @@ public class ValidateUtil {
         return null;
     }
 
-
+    /**
+     * Desc: 通过反射机制获取对象属性进行校验
+     *
+     * @param object 1
+     * @return : void
+     * @author : hdq
+     * @date : 2020/7/22 15:47
+     */
     public static void valid(Object object) throws ValidationException {
         // 获取object的类型
         Class<? extends Object> clazz = object.getClass();
@@ -34,14 +42,45 @@ public class ValidateUtil {
         Field[] fields = clazz.getDeclaredFields();
         // 遍历属性
         for (Field field : fields) {
-            // 对于private私有化的成员变量，通过setAccessible来修改器访问权限
-            field.setAccessible(true);
-            validate(field, object);
-            // 重新设置会私有权限
-            field.setAccessible(false);
+            fieldValidate(field, object);
+            //获取基础请求封装中的param对象成员进行校验
+            if (field.getName().equals("param") && field.getClass() != null) {
+                //Field[] fieldsParam = field.getClass().getDeclaredFields();
+                Field[] fieldsParam = ((BaseRequest) object).getParam().getClass().getDeclaredFields();
+                for (Field fieldParam : fieldsParam) {
+                    //获取封装的参数object
+                    Object objectParam = ((BaseRequest) object).getParam();
+                    fieldValidate(fieldParam, (objectParam));
+                }
+                //获取param父类的对象成员进行校验
+                if (field.getClass().getSuperclass() != null) {
+                    Field[] fieldsParamBasePage = ((BaseRequest) object).getParam().getClass().getSuperclass().getDeclaredFields();
+                    for(Field fieldParamBasePage : fieldsParamBasePage){
+                        fieldValidate(fieldParamBasePage, ((BaseRequest) object).getParam());
+                    }
+                }
+            }
         }
     }
 
+
+    public static void fieldValidate(Field field,Object object) throws ValidationException {
+        // 对于private私有化的成员变量，通过setAccessible来修改器访问权限
+        field.setAccessible(true);
+        validate(field, object);
+        // 重新设置会私有权限
+        field.setAccessible(false);
+    }
+
+    /**
+     * Desc: 获取对象成员的注解信息进行校验
+     *
+     * @param field 1
+     * @param object 2
+     * @return : void
+     * @author : hdq
+     * @date : 2020/7/22 15:48
+     */
     public static void validate(Field field, Object object) throws ValidationException {
         String description;
         Object value=null;

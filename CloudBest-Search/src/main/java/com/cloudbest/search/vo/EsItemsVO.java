@@ -27,7 +27,7 @@ public class EsItemsVO implements Serializable {
     /**
      * 商品id
      */
-    @ApiModelProperty(value = "商品id", name = "skuid")
+    @ApiModelProperty(value = "商品id", name = "spuid")
     private Integer id;
     /**
      * 商品名称
@@ -62,11 +62,13 @@ public class EsItemsVO implements Serializable {
     /**
      * 上架时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "上架时间", name = "groudingTime")
     private Date groudingTime;
     /**
      * 下架时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "下架时间", name = "validityTime")
     private Date validityTime;
     /**

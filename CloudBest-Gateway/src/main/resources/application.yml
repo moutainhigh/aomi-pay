@@ -29,6 +29,10 @@ hystrix:
 ribbon:
   ConnectTimeout: 20000
   ReadTimeout: 20000
+  #zuul懒加载导致第一次请求延迟
+  eager-load:
+    enabled: true
+    clients: service-search
 zuul:
 #  retryable: true
 #  add-host-header: true

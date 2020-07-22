@@ -19,7 +19,7 @@ public class SimpleSearchRequest extends BasePageRequest {
     /**
      * 关键字
      */
-    @Validator(maxLength = 255,description = "关键字")
+    @Validator(maxLength = 255,description = "关键字",isNotNull = true)
     @ApiModelProperty(value="关键字",name="keywords")
     private String keywords;
 

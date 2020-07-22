@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 /**
- * 每天导入商品数据到es的定时器
+ * 导入商品数据到es的定时器
  * @author : hdq
  * @date 2020/7/14 10:50
  */
@@ -15,12 +17,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImportItemsTask {
 
-    @Autowired
+    @Resource
     private EsItemsService esItemsService;
 
     /**
      * cron表达式：Seconds Minutes Hours DayofMonth Month DayofWeek [Year]
-     * 每1分钟扫描一次，扫描设定超时时间之前下的订单，如果没支付则取消该订单
+     * 每天扫描一次
      */
     @Scheduled(cron = "0 0 0 * * ?")
     private void importAll(){
