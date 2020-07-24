@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.ValidationException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * @author hdq
@@ -97,63 +98,25 @@ public class ValidateUtil {
         description = "".equals(dv.description()) ? field.getName() : dv
                 .description();
         /************* 注解解析工作开始 ******************/
+        //null校验
         if (dv.isNotNull()) {
             if (value == null || "".equals(value.toString())) {
                 CommonExceptionUtils.throwParamException(description+ CommonConstants.ERR_DESC_PARAM.NONE_ERROR);
             }
         }
         if (value != null) {
-            if (value.toString().length() > dv.maxLength() && dv.maxLength() != 0) {
-                CommonExceptionUtils.throwParamException(description + "长度不能超过" + dv.maxLength());
-            }
-            if (value.toString().length() < dv.minLength() && dv.minLength() != 0) {
-                CommonExceptionUtils.throwParamException(description + "长度不能小于" + dv.minLength());
-            }
-            if(!StringUtil.isBlank(value.toString())) {
-                if (dv.regexType() != RegexEnum.NONE) {
-                    switch (dv.regexType()) {
-                        case SPECIALCHAR:
-                            if (RegexUtils.hasSpecialChar(value.toString())) {
-                                CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.HAS_SPECIALCHAR_ERROR);
-                            }
-                            break;
-                        case CHINESE:
-                            if (RegexUtils.isChinese2(value.toString())) {
-                                CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.HAS_CHINESE_ERROR);
-                            }
-                            break;
-                        case EMAIL:
-                            if (!RegexUtils.isEmail(value.toString())) {
-                                CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
-                            }
-                            break;
-                        case NUMBER:
-                            if (!RegexUtils.isNumber(value.toString())) {
-                                CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
-                            }
-                            break;
-                        case PHONENUMBER:
-                        case PAGENO:
-                        case PAGESIZE:
-                            if (!RegexUtils.isPhoneNumber(value.toString())) {
-                                CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
-                            }
-                            break;
-                        case TIME:
-                            if (!RegexUtils.isTimeYMDHMS(value.toString())) {
-                                CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+            //如果参数是list,则遍历校验
+            if (value instanceof java.util.List) {
+                if(((List) value).isEmpty()){
+                    CommonExceptionUtils.throwParamException(description+ CommonConstants.ERR_DESC_PARAM.NONE_ERROR);
                 }
-                if (!"".equals(dv.regexExpression())) {
-                    if (!value.toString().matches(dv.regexExpression())) {
-                        CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
-                    }
+                for (Object o : ((List) value)) {
+                    validate(o, dv, description);
                 }
+            } else {
+                validate(value, dv, description);
             }
+
         }
 
         /************* 注解解析工作结束 ******************/
@@ -183,4 +146,65 @@ public class ValidateUtil {
         return sbuilder.toString();
     }
 
+    /**
+     * Desc: 校验复用
+     *
+     * @author : hdq
+     * @date : 2020/7/24 14:53
+     */
+    private static void validate(Object value, Validator dv, String description){
+        //长度校验
+        if (value.toString().length() > dv.maxLength() && dv.maxLength() != 0) {
+            CommonExceptionUtils.throwParamException(description + "长度不能超过" + dv.maxLength());
+        }
+        if (value.toString().length() < dv.minLength() && dv.minLength() != 0) {
+            CommonExceptionUtils.throwParamException(description + "长度不能小于" + dv.minLength());
+        }
+        //正则校验
+        if(!StringUtil.isBlank(value.toString())) {
+            if (dv.regexType() != RegexEnum.NONE) {
+                switch (dv.regexType()) {
+                    case SPECIALCHAR:
+                        if (RegexUtils.hasSpecialChar(value.toString())) {
+                            CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.HAS_SPECIALCHAR_ERROR);
+                        }
+                        break;
+                    case CHINESE:
+                        if (RegexUtils.isChinese2(value.toString())) {
+                            CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.HAS_CHINESE_ERROR);
+                        }
+                        break;
+                    case EMAIL:
+                        if (!RegexUtils.isEmail(value.toString())) {
+                            CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
+                        }
+                        break;
+                    case NUMBER:
+                        if (!RegexUtils.isNumber(value.toString())) {
+                            CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
+                        }
+                        break;
+                    case PHONENUMBER:
+                    case PAGENO:
+                    case PAGESIZE:
+                        if (!RegexUtils.isPhoneNumber(value.toString())) {
+                            CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
+                        }
+                        break;
+                    case TIME:
+                        if (!RegexUtils.isTimeYMDHMS(value.toString())) {
+                            CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (!"".equals(dv.regexExpression())) {
+                if (!value.toString().matches(dv.regexExpression())) {
+                    CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.FORMAT_ERROR);
+                }
+            }
+        }
+    }
 }

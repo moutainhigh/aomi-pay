@@ -72,36 +72,12 @@ public class EsItemsVO implements Serializable {
     @ApiModelProperty(value = "下架时间", name = "validityTime")
     private Date validityTime;
     /**
-     * skuid
+     * 商品折后价格   保留进度输出自动转化json
      */
-    @ApiModelProperty(value = "skuId", name = "skuId")
-    private Integer skuId;
-    /**
-     * 商品属性
-     */
-    @ApiModelProperty(value = "商品属性", name = "itemAttr")
-    private String itemAttr;
-    /**
-     * sku销量
-     */
-    @ApiModelProperty(value = "sku销量", name = "skuSaltVolume")
-    private Integer skuSaltVolume;
-    /**
-     * 商品现价
-     */
-    @ApiModelProperty(value = "商品现价", name = "salePrice")
-    private BigDecimal salePrice;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @ApiModelProperty(value = "商品折后价格", name = "discountedPrice")
+    private BigDecimal discountedPrice;
 
-    /**
-     * 关键字
-     */
-    @ApiModelProperty(value = "关键字", name = "keywords")
-    private String keywords;
-    /**
-     * 商品标题
-     */
-    @ApiModelProperty(value = "商品标题", name = "subTitle")
-    private String subTitle;
     /**
      * 商品描述
      */

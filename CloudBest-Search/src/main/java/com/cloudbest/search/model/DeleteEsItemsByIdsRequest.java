@@ -1,7 +1,7 @@
 package com.cloudbest.search.model;
 
 import com.cloudbest.common.annotations.Validator;
-import com.cloudbest.common.util.RegexUtils;
+import com.cloudbest.common.enums.RegexEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,8 +20,8 @@ public class DeleteEsItemsByIdsRequest {
     /**
      * 商品id
      */
-    @Validator(isNotNull = true,description = "商品ids")
+    @Validator(isNotNull = true,description = "商品ids",regexType = RegexEnum.NUMBER,maxLength = 8)
     @ApiModelProperty(value="商品ids",name="ids",required = true)
-    private List<Integer> ids;
+    private List<String> ids;
 
 }

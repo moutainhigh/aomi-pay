@@ -3,20 +3,17 @@ package com.cloudbest.search.controller.app;
 
 import com.cloudbest.common.constants.ParamConstans;
 import com.cloudbest.common.domain.*;
-import com.cloudbest.common.exception.SystemException;
 import com.cloudbest.common.util.StringUtil;
 import com.cloudbest.common.util.ValidateUtil;
 import com.cloudbest.search.model.*;
 import com.cloudbest.search.service.EsItemsService;
 import com.cloudbest.search.vo.EsItemsVO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.xml.bind.ValidationException;
 
 /**
  * 搜索商品管理Controller APP调用
@@ -78,8 +75,10 @@ public class AppEsItemsController {
         //为空填充默认pageNo,pageSize
         Integer pageNo = StringUtil.isBlank(param.getPageNo()) ? ParamConstans.PAGE_NO:Integer.parseInt(param.getPageNo());
         Integer pageSize = StringUtil.isBlank(param.getPageSize()) ? ParamConstans.PAGE_SIZE:Integer.parseInt(param.getPageSize());
+        Integer categoryId = StringUtil.isBlank(param.getCategoryId()) ? null : Integer.parseInt(param.getCategoryId());
+        Integer sort = StringUtil.isBlank(param.getSort()) ? ParamConstans.SORT_NULL : Integer.parseInt(param.getSort());
 
-        PageResult result = esItemsService.search(param.getKeywords(),Integer.parseInt(param.getCategoryId()), pageNo, pageSize, Integer.parseInt(param.getSort()));
+        PageResult result = esItemsService.search(param.getKeywords(),categoryId, pageNo, pageSize, sort);
         BasePageResponse<EsItemsVO> resp = new BasePageResponse<EsItemsVO>(result, pageNo.toString(), pageSize.toString());
 
         return new BaseResponse<BasePageResponse<EsItemsVO>>(CommonErrorCode.SUCCESS, resp);

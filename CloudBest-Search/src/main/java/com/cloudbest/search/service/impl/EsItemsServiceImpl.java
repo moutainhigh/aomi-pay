@@ -1,5 +1,6 @@
 package com.cloudbest.search.service.impl;
 
+import com.cloudbest.common.constants.ParamConstans;
 import com.cloudbest.common.domain.CommonErrorCode;
 import com.cloudbest.common.domain.PageResult;
 import com.cloudbest.common.util.CommonExceptionUtils;
@@ -17,7 +18,6 @@ import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * 商品搜索管理Service实现类
@@ -42,10 +43,10 @@ import java.util.function.Consumer;
 @Transactional(rollbackFor = Exception.class)
 public class EsItemsServiceImpl implements EsItemsService {
 
-    @Autowired
+    @Resource
     private EsItemsMapper esItemsMapper;
 
-    @Autowired
+    @Resource
     private EsItemsRepository esItemsRepository;
 
 
@@ -58,13 +59,12 @@ public class EsItemsServiceImpl implements EsItemsService {
         if (esItemstList.isEmpty()) {
             return count;
         }
+
         Iterable<EsItems> esProductIterable = esItemsRepository.saveAll(esItemstList);
         log.debug("itemsRepository.saveAll：{}", esItemstList);
-        Iterator<EsItems> iterator = esProductIterable.iterator();
 
-        while (iterator.hasNext()) {
+        for (EsItems esItems : esProductIterable) {
             count++;
-            iterator.next();
         }
         return count;
 
@@ -96,12 +96,15 @@ public class EsItemsServiceImpl implements EsItemsService {
 
     @Override
     public EsItems create(Integer id) {
-        EsItems result = null;
+        EsItems result = new EsItems();
         List<EsItems> esItemsList = esItemsMapper.getAllEsItemsList(id.longValue());
-        if (!esItemsList.isEmpty()) {
+        if (esItemsList.isEmpty()) {
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_ITEMS_IMPORT_ID);
+        }else{
             EsItems esItems = esItemsList.get(0);
             result = esItemsRepository.save(esItems);
         }
+        log.info("导入的单条商品记录:{}",result);
         return result;
     }
 
@@ -109,20 +112,26 @@ public class EsItemsServiceImpl implements EsItemsService {
     public PageResult search(String keyword, Integer pageNum, Integer pageSize) {
         //page是从0开始的，要减1
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
-        //搜索查询
-        Page<EsItems> esItemsPage = esItemsRepository.findByNameOrSubTitleOrKeywords(keyword, keyword, keyword, pageable);
-
-        if (esItemsPage.isEmpty()) {
-            return null;
+        Page<EsItems> esItemsPage = null;
+        try {
+            //搜索查询
+            esItemsPage = esItemsRepository.findByName(keyword, pageable);
+        } catch (Exception e) {
+            CommonExceptionUtils.throwSystemException(CommonErrorCode.E_ITEMS_SEARCH);
         }
+
         PageResult esItemsResult = new PageResult();
+        if (esItemsPage.isEmpty()) {
+            return esItemsResult;
+        }
+
         esItemsResult.setCount(esItemsPage.getTotalElements());
         esItemsResult.setPageNo(String.valueOf(esItemsPage.getNumber()));
         esItemsResult.setPageSize(String.valueOf(esItemsPage.getSize()));
-        List<EsItemsVO> EsItemsVOList = pageToVo(esItemsPage);
+        List<EsItemsVO> esItemsVOList = pageToVo(esItemsPage);
         esItemsResult.setResult(pageToVo(esItemsPage));
 
-        log.info("EsItemsVOList:{}", EsItemsVOList.toString());
+        log.info("EsItemsVOList:{}", esItemsVOList.toString());
         return esItemsResult;
 
     }
@@ -136,7 +145,7 @@ public class EsItemsServiceImpl implements EsItemsService {
         //分页
         nativeSearchQueryBuilder.withPageable(pageable);
         //过滤
-        if (categoryId != null) {
+        if (categoryId != null && categoryId != 0) {
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
             boolQueryBuilder.must(QueryBuilders.termQuery("firstCategoryId", categoryId));
             nativeSearchQueryBuilder.withFilter(boolQueryBuilder);
@@ -159,15 +168,15 @@ public class EsItemsServiceImpl implements EsItemsService {
             nativeSearchQueryBuilder.withQuery(functionScoreQueryBuilder);
         }
         //排序
-        if (sort == 1) {
+        if (sort.equals(ParamConstans.SORT_VOLUME_DESC)) {
             //按销量从高到低
             nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("spuSaltVolume").order(SortOrder.DESC));
-        } else if (sort == 2) {
+        } else if (sort.equals(ParamConstans.SORT_PRICE_ASC)) {
             //按价格从低到高
-            nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("salePrice").order(SortOrder.ASC));
-        } else if (sort == 3) {
+            nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("discountedPrice").order(SortOrder.ASC));
+        } else if (sort.equals(ParamConstans.SORT_ZERO_DESC)) {
             //按价格从高到低
-            nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("salePrice").order(SortOrder.DESC));
+            nativeSearchQueryBuilder.withSort(SortBuilders.fieldSort("discountedPrice").order(SortOrder.DESC));
         } else {
             //按相关度
             nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort().order(SortOrder.DESC));
@@ -175,41 +184,48 @@ public class EsItemsServiceImpl implements EsItemsService {
         nativeSearchQueryBuilder.withSort(SortBuilders.scoreSort().order(SortOrder.DESC));
         NativeSearchQuery searchQuery = nativeSearchQueryBuilder.build();
         log.info("DSL:{}", searchQuery.getQuery().toString());
-        Page<EsItems> esItemsPage = esItemsRepository.search(searchQuery);
 
-        if (esItemsPage.isEmpty()) {
-            return null;
+        Page<EsItems> esItemsPage = null;
+        try {
+            //搜索查询
+            esItemsPage = esItemsRepository.search(searchQuery);
+        } catch (Exception e) {
+            CommonExceptionUtils.throwSystemException(CommonErrorCode.E_ITEMS_SEARCH);
         }
+
         PageResult esItemsResult = new PageResult();
+        if (esItemsPage.isEmpty()) {
+            return esItemsResult;
+        }
         esItemsResult.setCount(esItemsPage.getTotalElements());
         esItemsResult.setPageNo(String.valueOf(esItemsPage.getNumber()));
         esItemsResult.setPageSize(String.valueOf(esItemsPage.getSize()));
-        List<EsItemsVO> EsItemsVOList = pageToVo(esItemsPage);
+        List<EsItemsVO> esItemsVOList = pageToVo(esItemsPage);
         esItemsResult.setResult(pageToVo(esItemsPage));
 
-        log.info("EsItemsVOList:{}", EsItemsVOList.toString());
+        log.info("EsItemsVOList:{}", esItemsVOList.toString());
         return esItemsResult;
     }
 
     /**
-     * Desc:
-     * 〈〉
+     * Desc:page<T> to List<T>
      *
      * @param esItemsPage 1
-     * @return : java.util.List<com.cloudbest.search.vo.EsItemsVO>
+     * @return : List<EsItemsVO>
      * @author : hdq
      * @date : 2020/7/22 18:08
      */
     private List<EsItemsVO> pageToVo(Page<EsItems> esItemsPage) {
         List<EsItems> esItemsList = esItemsPage.getContent();
-        List<EsItemsVO> EsItemsVOList = new LinkedList<EsItemsVO>();
+        List<EsItemsVO> esItemsVOList = new LinkedList<>();
 
         log.info("esItemsList:{}", esItemsList);
         esItemsList.forEach(esItems -> {
             EsItemsVO esItemsVO = GeneralConvertorUtil.convertor(esItems, EsItemsVO.class);
-            EsItemsVOList.add(esItemsVO);
+            esItemsVO.setDiscountedPrice(esItemsVO.getDiscountedPrice().setScale(2,BigDecimal.ROUND_HALF_EVEN));
+            esItemsVOList.add(esItemsVO);
         });
-        return EsItemsVOList;
+        return esItemsVOList;
     }
 }
 

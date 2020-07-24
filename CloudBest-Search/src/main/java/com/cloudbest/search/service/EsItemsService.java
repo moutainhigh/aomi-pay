@@ -34,7 +34,7 @@ public interface EsItemsService {
     void deleteByIds(List<Integer> ids);
 
     /**
-     * 根据id创建商品
+     * 根据id导入商品到es
      * @param id 商品spuid
      * @return EsItems
      */

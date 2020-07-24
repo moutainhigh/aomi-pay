@@ -20,6 +20,6 @@ public class CreateEsItemsByIdRequest {
      */
     @Validator(isNotNull = true,maxLength = 8,regexExpression = RegexUtils.REGEX_NUMBER,description = "商品id")
     @ApiModelProperty(value="商品id",name="id",required = true)
-    private Integer id;
+    private String id;
 
 }

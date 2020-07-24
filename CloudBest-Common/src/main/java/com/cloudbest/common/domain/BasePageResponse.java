@@ -1,5 +1,6 @@
 package com.cloudbest.common.domain;
 
+import com.cloudbest.common.constants.ParamConstans;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -52,15 +53,13 @@ public class BasePageResponse<T> implements Serializable {
 
     public BasePageResponse(PageResult pr, String pageNo, String pageSize) {
         this.list = (List<T>) pr.getResult();
-        this.count = pr.getCount();
+        this.count = pr.getCount() == null ? ParamConstans.PAGE_COUNT_NULL : pr.getCount();
         this.pageNo = pageNo;
         this.pageSize = pageSize;
 
         int items = 0;
-        if (Integer.parseInt(pageSize) > 0) {
+        if (Integer.parseInt(pageSize) > 0 && pr.getCount() != null) {
             items = (int) (pr.getCount() / Integer.parseInt(pageSize) + ((pr.getCount() % Integer.parseInt(pageSize) == 0) ? 0 : 1));
-        } else {
-            items = 0;
         }
         this.pages = items + "";
     }
