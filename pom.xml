@@ -4,23 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cloudbest</groupId>
-    <artifactId>cloudbest</artifactId>
+    <groupId>com.aomi.pay</groupId>
+    <artifactId>aomi-pay</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <!--项目模块-->
     <modules>
-        <module>CloudBest-Eureka</module>
-        <module>CloudBest-Common</module>
-        <module>CloudBest-Items</module>
-        <module>CloudBest-Notice</module>
-        <module>CloudBest-Order</module>
-        <module>CloudBest-Gateway</module>
-        <module>CloudBest-Payment</module>
-        <module>CloudBest-ShoppingCart</module>
-        <module>CloudBest-User</module>
-        <module>CloudBest-BackGateway</module>
-        <module>CloudBest-Search</module>
+        <!--注册中心-->
+        <module>aomi-pay-eureka</module>
+        <!--公共-->
+        <module>aomi-pay-common</module>
+        <!--网关-->
+        <module>aomi-pay-zuul</module>
+        <!--用户服务-->
+        <module>aomi-pay-api</module>
+        <!--<module>aomi-Items</module>-->
     </modules>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -243,6 +244,13 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
                 </includes>
             </resource>
         </resources>
