@@ -69,7 +69,7 @@ public class CommonExceptionUtils {
      * 自定义code  自定义desc
      * @param desc 返回描述
      */
-    public static void throwBusinessException(Integer code, String desc) throws BusinessException {
+    public static void throwBusinessException(String code, String desc) throws BusinessException {
         throw new BusinessException(code, desc);
     }
 
@@ -94,7 +94,7 @@ public class CommonExceptionUtils {
     /**
      * @Desc 对象判空并且抛出业务级别异常返回信息
      */
-    public static void isNull(Serializable s, Integer code, String desc) throws BusinessException {
+    public static void isNull(Serializable s, String code, String desc) throws BusinessException {
         if (s == null) {
             throw new BusinessException(code, desc);
         }
@@ -124,7 +124,7 @@ public class CommonExceptionUtils {
      *
      * @param s errorCode info
      */
-    public static void isNotNull(Serializable s, Integer code, String info) throws BusinessException {
+    public static void isNotNull(Serializable s, String code, String info) throws BusinessException {
         if (s != null) {
             throw new BusinessException(code, info);
         }
@@ -135,7 +135,7 @@ public class CommonExceptionUtils {
      *
      * @param list errorCode info
      */
-    public static void isNotNull(List list, Integer code, String info) throws BusinessException {
+    public static void isNotNull(List list, String code, String info) throws BusinessException {
         if (list != null && !list.isEmpty()) {
             throw new BusinessException(code, info);
         }
@@ -146,7 +146,7 @@ public class CommonExceptionUtils {
      *
      * @param list errorCode info
      */
-    public static void isNull(List list, Integer code, String info) throws Exception {
+    public static void isNull(List list, String code, String info) throws Exception {
         if (list == null || list.isEmpty()) {
             throw new BusinessException(code, info);
         }

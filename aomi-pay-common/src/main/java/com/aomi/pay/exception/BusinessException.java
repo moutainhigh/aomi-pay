@@ -26,7 +26,7 @@ public class BusinessException extends AbstractGenericException {
      * @param code 返回码
      * @param desc 返回描述
      */
-    public BusinessException(Integer code, String desc) {
+    public BusinessException(String code, String desc) {
         super(code, desc);
     }
 
@@ -37,7 +37,7 @@ public class BusinessException extends AbstractGenericException {
      * @param desc 返回描述
      * @param throwable
      */
-    public BusinessException(Integer code, String desc, Throwable throwable) {
+    public BusinessException(String code, String desc, Throwable throwable) {
         super(code, desc, throwable);
     }
 
@@ -47,7 +47,7 @@ public class BusinessException extends AbstractGenericException {
      * @param code 返回码
      * @param throwable
      */
-    public BusinessException(Integer code, Throwable throwable) {
+    public BusinessException(String code, Throwable throwable) {
         super(code, throwable);
     }
 
@@ -57,7 +57,7 @@ public class BusinessException extends AbstractGenericException {
      * @param code 返回码
      * @param arguments
      */
-    public BusinessException(Integer code, Object... arguments) {
+    public BusinessException(String code, Object... arguments) {
         super(code, arguments);
     }
 

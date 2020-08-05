@@ -68,8 +68,8 @@ public class ZuulServer {
             List<SwaggerResource> resources = new ArrayList<SwaggerResource>();
 
             resources.add(swaggerResource("环迅api调用服务","/api/v2/api-docs","2.0"));
-            resources.add(swaggerResource("user服务","/api/v2/api-docs","2.0"));
-            resources.add(swaggerResource("order调用服务","/api/v2/api-docs","2.0"));
+            resources.add(swaggerResource("user服务","/user/v2/api-docs","2.0"));
+            resources.add(swaggerResource("order服务","/order/v2/api-docs","2.0"));
             return resources;
         }
 

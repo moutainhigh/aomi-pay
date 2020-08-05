@@ -62,5 +62,4 @@ mybatis‐plus:
 logging:
   config: classpath:log4j2.xml
 
-test-name: mysql-dev
 

@@ -26,7 +26,7 @@ public class SystemException extends AbstractGenericException {
      * @param code 返回码
      * @param desc 返回描述
      */
-    public SystemException(Integer code, String desc) {
+    public SystemException(String code, String desc) {
         super(code);;
     }
 
@@ -37,7 +37,7 @@ public class SystemException extends AbstractGenericException {
      * @param desc      返回描述
      * @param throwable
      */
-    public SystemException(Integer code, String desc, Throwable throwable) {
+    public SystemException(String code, String desc, Throwable throwable) {
         super(code, desc, throwable);
     }
 
@@ -47,7 +47,7 @@ public class SystemException extends AbstractGenericException {
      * @param code      返回码
      * @param throwable
      */
-    public SystemException(Integer code, Throwable throwable) {
+    public SystemException(String code, Throwable throwable) {
         super(code, throwable);
     }
 
@@ -57,7 +57,7 @@ public class SystemException extends AbstractGenericException {
      * @param code      返回码
      * @param arguments
      */
-    public SystemException(Integer code, Object... arguments) {
+    public SystemException(String code, Object... arguments) {
         super(code, arguments);
     }
 

@@ -21,7 +21,7 @@ public class BaseResponse<T> implements Serializable {
      * 状态码
      **/
     @ApiModelProperty(value = "返回状态码", name = "code")
-    private int code;
+    private String code;
 
     /**
      * 状态描述
@@ -38,7 +38,7 @@ public class BaseResponse<T> implements Serializable {
     public BaseResponse() {
     }
 
-    public BaseResponse(boolean success, int code, String message) {
+    public BaseResponse(boolean success, String code, String message) {
         super();
         this.code = code;
         this.message = message;
@@ -50,7 +50,7 @@ public class BaseResponse<T> implements Serializable {
      * @param code  返回码
      * @param message     返回描述
      */
-    public BaseResponse(int code, String message) {
+    public BaseResponse(String code, String message) {
         super();
         this.code = code;
         this.message = message;
@@ -93,7 +93,7 @@ public class BaseResponse<T> implements Serializable {
     }
 
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
@@ -101,7 +101,7 @@ public class BaseResponse<T> implements Serializable {
         return message;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
