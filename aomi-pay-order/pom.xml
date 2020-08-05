@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>aomi-pay-api</artifactId>
-    <description>api调用服务</description>
+    <artifactId>aomi-pay-order</artifactId>
+    <description>订单服务</description>
 
     <dependencies>
         <dependency>

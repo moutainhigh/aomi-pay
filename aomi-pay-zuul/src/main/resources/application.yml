@@ -38,14 +38,20 @@ zuul:
     socket-timeout-millis: 15000
     connect-timeout-millis: 15000
   routes:
+    api:
+      path: /api/**
+      serviceId: service-api
     user:
-      path: /app/user/**
+      path: /user/**
       serviceId: service-user
+    order:
+      path: /order/**
+      serviceId: service-order
   #zuul懒加载导致第一次请求延迟
   ribbon:
     eager-load:
       enabled: true
-      clients: service-user
+      clients: service-api
 
 #配置Eureka
 eureka:

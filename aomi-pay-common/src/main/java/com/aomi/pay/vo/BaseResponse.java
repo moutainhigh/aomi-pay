@@ -9,18 +9,13 @@ import java.io.Serializable;
 /**
  * @author hdq
  * @Desc 基础返回封装
- * @Date 2020/7/15 15:34
+ * @Date 2020/8/3 15:34
  */
 @ApiModel(value = "基础返回参数")
 public class BaseResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 是否成功
-     **/
-    @ApiModelProperty(value = "是否成功", name = "success")
-    private boolean success;
 
     /**
      * 状态码
@@ -40,13 +35,11 @@ public class BaseResponse<T> implements Serializable {
     @ApiModelProperty(value = "返回内容", name = "data")
     private T data;
 
-
     public BaseResponse() {
     }
 
     public BaseResponse(boolean success, int code, String message) {
         super();
-        this.success = true;
         this.code = code;
         this.message = message;
     }
@@ -59,7 +52,6 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(int code, String message) {
         super();
-        this.success = false;
         this.code = code;
         this.message = message;
     }
@@ -72,7 +64,6 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(CommonErrorCode commonErrorCode, T data) {
         super();
-        this.success = true;
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
         this.data = data;
@@ -85,7 +76,6 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(CommonErrorCode commonErrorCode) {
         super();
-        this.success = commonErrorCode.isSuccess();
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
     }
@@ -102,14 +92,6 @@ public class BaseResponse<T> implements Serializable {
         this.message = errorMsg;
     }
 
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
 
     public int getCode() {
         return code;

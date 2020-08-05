@@ -1,0 +1,38 @@
+server:
+  port: 8301 #端口
+spring:
+  application:
+    name: config-server #服务名称
+  profiles:
+    active: native #设置为本地启动的方式，而不是通过git
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: classpath:/config # 配置文件所在目录，classpath（类路径）和（系统文件路径） file两种
+         #searchLocations: file:///"F:\aomi-pay-config"  TODO 暂时有点问题， 后续改成本地
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+  rabbitmq:
+    host: localhost # 安装rabbitmq的服务器ip
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
+
+#配置Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6969/eureka/
+  instance:
+    prefer-ip-address: true #使用ip地址注册
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}

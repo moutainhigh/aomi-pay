@@ -1,0 +1,42 @@
+#加密秘钥版本号
+key-version: 29
+#调用地址  测试环境
+api-url: https://payapi-sandbox.imipay.com
+#敏感信息加密秘钥
+key: 7kyB+aUhF14f+zbE0ERd4Q==
+#环讯平台分配的应用id
+up-appid: 135459893032255489
+#签名秘钥
+app-secret: f88ebda65bdb4d63ac1194ac7c2af625
+#机构号
+inst-id: 015001
+
+#调用路径
+api_route:
+  #商户入网类接口
+  mcht:
+    #商户图片上传
+    upload_img: /mcht/upload_img
+    #商户信息入网
+    create_org_mcht: /mcht/create_org_mcht
+    #商户入网信息查询
+    query_mcht: /mcht/query_mcht
+    #商户开通产品
+    add_product: /mcht/add_product
+    #修改商户入网信息
+    update_org_mcht: /mcht/update_org_mcht
+    #修改商户状态
+    update_mcht_staus: /mcht/update_mcht_status
+    #修改商户开通产品签约费率
+    update_product_model: /mcht/update_product_model
+    #修改商户结算银行卡信息
+    update_mcht_acct: /mcht/update_mcht_acct
+    #查询商户审核状态
+    query_mcht_audit: /mcht/query_mcht_audit
+  mcht_report:
+    #查询无卡商户报备状态
+    query_register: /mcht/query/register
+
+
+logging:
+  config: classpath:log4j2.xml

@@ -1,6 +1,5 @@
 package com.aomi.pay.exception;
 
-import jodd.util.StringUtil;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -40,13 +39,13 @@ public class AbstractGenericException extends RuntimeException implements Serial
     public AbstractGenericException(Integer code, Throwable throwable) {
         super(String.valueOf(code), throwable);
         this.code = code;
-        this.fullMessage = StringUtil.toString(throwable);
+        this.fullMessage = throwable.toString();
         this.desc = MessageFormat.format(pattern, this.code, desc);
     }
 
     public AbstractGenericException(Integer code, String message, Throwable throwable) {
         super(message, throwable);
-        this.fullMessage = MessageFormat.format(pattern, this.code, message) + StringUtil.toString(throwable);
+        this.fullMessage = MessageFormat.format(pattern, this.code, message) + throwable.toString();
         this.code = code;
         this.desc = message;
     }

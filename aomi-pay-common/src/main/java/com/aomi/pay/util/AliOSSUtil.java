@@ -29,20 +29,20 @@ public class AliOSSUtil {
 //	private String access_key_secret = "YfLz3cYOUN8GjhBDw7vfNLc3hbdZKE";
 //	@Value("${alioss.bucket_name}")
 //	private String bucket_name = "ka-bo-shi";
-	
-	
-	@Value("${alioss.endpoint}")
+
+
+	//@Value("${alioss.endpoint}")
 //	private String endpoint = "https://oss-cn-shanghai-internal.aliyuncs.com";
 	private String endpoint = "https://oss-cn-shanghai.aliyuncs.com";
-	@Value("${alioss.out-endpoint}")
+	//@Value("${alioss.out-endpoint}")
 	private String outEndpoint = "https://oss-cn-shanghai.aliyuncs.com";
-	@Value("${alioss.access_key_id}")
+	//@Value("${alioss.access_key_id}")
 	private String access_key_id = "LTAI4FzVTyi2XjJTKH6cHcWa";
-	@Value("${alioss.access_key_secret}")
+	//@Value("${alioss.access_key_secret}")
 	private String access_key_secret = "AgoNiSSAdZslCHMku53FYNpVxiCaBf";
-	@Value("${alioss.bucket_name}")
+	//@Value("${alioss.bucket_name}")
 	private String bucket_name = "aomi";
-	
+
 
 	
 //	@Value("${alioss.endpoint}")

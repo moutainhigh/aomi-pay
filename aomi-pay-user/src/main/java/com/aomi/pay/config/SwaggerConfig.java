@@ -35,8 +35,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiAppInfo() {
         return new ApiInfoBuilder()
-                .title("支付系统-Api接口调用管理")
-                .description("支付系统-Api接口调用文档")
+                .title("支付系统-user接口管理")
+                .description("支付系统-user接口文档")
                 .contact("hdq")
                 .version("1.0")
                 .build();

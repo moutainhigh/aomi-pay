@@ -52,11 +52,7 @@ public class AuthenticationHeaderFilter extends ZuulFilter {
 		String method = request.getMethod();
 		log.info(String.format("====AuthenticationHeaderFilter.run - %s request to %s", request.getMethod(), uri));
 
-		if(!uri.contains("app")&&!uri.contains("brand")){
-			this.stopZuulRoutingWithError(ctx, HttpStatus.UNAUTHORIZED, "Go out!Allow intranet access only!：(" + request.getRequestURI().toString() + ")");
-			return null;
-		}
-
+		//TODO 后续加api限制
 		return null;
 	}
 	
