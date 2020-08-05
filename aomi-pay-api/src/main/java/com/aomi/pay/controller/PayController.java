@@ -45,8 +45,18 @@ public class PayController {
         log.info("--------扫码支付--------");
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
-        paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
+        //paramsData.put("instId", "015001");
+        //paramsData.put("mchtNo", "015370109123528");
+        paramsData.put("serviceId", "hx.alipay.native");
+        paramsData.put("version", "1.0.0");
+        paramsData.put("isvOrgId", "015001");
+        paramsData.put("productCode", "000001");
+        paramsData.put("settleType", "DREAL");
+        paramsData.put("outTradeNo", "16512315615615132121");
+        paramsData.put("merchantNo", "015370109123528");
+        paramsData.put("subject", "测试");
+        paramsData.put("amount", "0.01");
+        paramsData.put("notifyUrl", "192.168.103.250:8179/order/payment/notify");
         String result = SdkUtil.post(paramsData, routeOnlineTrade);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);

@@ -121,7 +121,7 @@ public class SdkUtil {
         if (!StringUtils.isEmpty(response.body())) {
             JSONObject jsonObject = JSONObject.fromObject(content);
             if (ApiConstans.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstans.RESULT_CODE_NAME))) {
-                CommonExceptionUtils.throwBusinessException(Integer.parseInt(jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
+                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
             }
         }
         return content;

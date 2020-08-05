@@ -27,7 +27,7 @@ public class ParamException extends AbstractGenericException {
      * @param code 返回码
      * @param desc 返回描述
      */
-    public ParamException(Integer code, String desc) {
+    public ParamException(String code, String desc) {
         super(code, desc);
     }
 
@@ -38,7 +38,7 @@ public class ParamException extends AbstractGenericException {
      * @param desc 返回描述
      * @param throwable
      */
-    public ParamException(Integer code, String desc, Throwable throwable) {
+    public ParamException(String code, String desc, Throwable throwable) {
         super(code, desc, throwable);
     }
 
@@ -48,7 +48,7 @@ public class ParamException extends AbstractGenericException {
      * @param code 返回码
      * @param throwable
      */
-    public ParamException(Integer code, Throwable throwable) {
+    public ParamException(String code, Throwable throwable) {
         super(code, throwable);
     }
 
@@ -58,7 +58,7 @@ public class ParamException extends AbstractGenericException {
      * @param code 返回码
      * @param arguments
      */
-    public ParamException(Integer code, Object... arguments) {
+    public ParamException(String code, Object... arguments) {
         super(code, arguments);
     }
 

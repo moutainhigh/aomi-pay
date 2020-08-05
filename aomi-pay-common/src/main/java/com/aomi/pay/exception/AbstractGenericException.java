@@ -15,7 +15,7 @@ public class AbstractGenericException extends RuntimeException implements Serial
 
     private static final long serialVersionUID = -1L;
 
-    protected Integer code;
+    protected String code;
 
     protected String desc;
 
@@ -29,28 +29,28 @@ public class AbstractGenericException extends RuntimeException implements Serial
         this.desc = desc;
     }
 
-    public AbstractGenericException(Integer code, String desc) {
+    public AbstractGenericException(String code, String desc) {
         super(MessageFormat.format(pattern, code, desc));
         this.code = code;
         this.desc = desc;
         this.fullMessage = MessageFormat.format(pattern, this.code, desc);
     }
 
-    public AbstractGenericException(Integer code, Throwable throwable) {
+    public AbstractGenericException(String code, Throwable throwable) {
         super(String.valueOf(code), throwable);
         this.code = code;
         this.fullMessage = throwable.toString();
         this.desc = MessageFormat.format(pattern, this.code, desc);
     }
 
-    public AbstractGenericException(Integer code, String message, Throwable throwable) {
+    public AbstractGenericException(String code, String message, Throwable throwable) {
         super(message, throwable);
         this.fullMessage = MessageFormat.format(pattern, this.code, message) + throwable.toString();
         this.code = code;
         this.desc = message;
     }
 
-    public AbstractGenericException(Integer code, Object... arguments) {
+    public AbstractGenericException(String code, Object... arguments) {
         this.code = code;
         this.arguments = arguments;
     }
