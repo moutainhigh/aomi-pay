@@ -6,7 +6,7 @@ spring:
     name: service-api #服务名称
   cloud:
     config:
-      name: service-api,mysql
+      name: service-api
       discovery:
         enabled: true
         service-id: config-server

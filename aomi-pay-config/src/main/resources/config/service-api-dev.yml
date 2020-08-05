@@ -36,6 +36,9 @@ api_route:
   mcht_report:
     #查询无卡商户报备状态
     query_register: /mcht/query/register
+  pay:
+    #扫码支付
+    online_trade: /online/trade
 
 
 logging:

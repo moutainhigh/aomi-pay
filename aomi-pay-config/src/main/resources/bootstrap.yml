@@ -10,7 +10,7 @@ spring:
       server:
         native:
           searchLocations: classpath:/config # 配置文件所在目录，classpath（类路径）和（系统文件路径） file两种
-         #searchLocations: file:///"F:\aomi-pay-config"  TODO 暂时有点问题， 后续改成本地
+          #searchLocations: file:F:\\aomi-pay-config  #本地绝对路径
     bus:
       enabled: true
       trace:

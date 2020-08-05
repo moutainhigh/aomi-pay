@@ -3,7 +3,7 @@ package com.aomi.pay.controller;
 
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.util.SdkUtil;
-import com.aomi.pay.vo.*;
+import com.aomi.pay.vo.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
- * 商户报备类接口Controller
+ * 交易类(无卡类)接口Controller
  *
  * @author : hdq
  * @date 2020/8/5
@@ -30,32 +28,28 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RefreshScope
-@Api(value = "MerchantReportController", tags = "商户报备类接口管理")
-@RequestMapping("/merchant/report")
-public class MerchantReportController {
+@Api(value = "PayController", tags = "交易类(无卡类)接口管理")
+@RequestMapping("/pay")
+public class PayController {
 
     /**
-     * 查询无卡商户报备状态
+     * 扫码支付
      */
-    @Value("${api_route.mcht_report.query_register}")
-    private String routeQueryRegister;
+    @Value("${api_route.pay.online_trade}")
+    private String routeOnlineTrade;
 
-    @ApiOperation(value = "查询无卡商户报备状态")
-    @PostMapping("/queryRegister")
-    public BaseResponse queryRegister() throws Exception {
-        log.info("--------查询无卡商户报备状态--------");
+
+    @ApiOperation(value = "扫码支付")
+    @PostMapping("/onlineTrade")
+    public BaseResponse onlineTrade() throws Exception {
+        log.info("--------扫码支付--------");
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         paramsData.put("instId", "015001");
         paramsData.put("mchtNo", "015370109123528");
-        String result = SdkUtil.post(paramsData, routeQueryRegister);
+        String result = SdkUtil.post(paramsData, routeOnlineTrade);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
-    @PostMapping("/test")
-    public void test() throws Exception {
-        log.info("--------热刷测试--------");
-        log.info("routeQueryRegister:{}",routeQueryRegister);
-    }
 }
