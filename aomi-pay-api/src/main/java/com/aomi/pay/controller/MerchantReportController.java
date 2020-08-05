@@ -40,6 +40,12 @@ public class MerchantReportController {
     @Value("${api_route.mcht_report.query_register}")
     private String routeQueryRegister;
 
+    /**
+     * 微信子商户配置
+     */
+    @Value("${api_route.mcht_report.config_echat_submcht}")
+    private String routeConfigWechatSubmcht;
+
     @ApiOperation(value = "查询无卡商户报备状态")
     @PostMapping("/queryRegister")
     public BaseResponse queryRegister() throws Exception {
@@ -49,6 +55,21 @@ public class MerchantReportController {
         paramsData.put("instId", "015001");
         paramsData.put("mchtNo", "015370109123528");
         String result = SdkUtil.post(paramsData, routeQueryRegister);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    }
+
+    @ApiOperation(value = "微信子商户配置")
+    @PostMapping("/configWechatSubmcht")
+    public BaseResponse configWechatSubmcht() throws Exception {
+        log.info("--------微信子商户配置--------");
+        Map<String, Object> paramsData = new HashMap<>();
+        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
+        paramsData.put("instId", "015001");
+        paramsData.put("mchtNo", "015370109123528");
+        paramsData.put("appid", "154344164291514368");
+        paramsData.put("subscribeAppid", "154344164291514368");
+        String result = SdkUtil.post(paramsData, routeConfigWechatSubmcht);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }

@@ -140,7 +140,10 @@ public class SdkUtil {
         return result;
     }
 
-    public static void main(String[] args) {
+    /**
+     * @desc  各种测试节省时间
+     **/
+    public static void main(String[] args) throws Exception{
      /*   String encrypt = SecretUtil
                 .encrypt("430981199403131717", "7kyB+aUhF14f+zbE0ERd4Q==", SecretType.AES);
 
@@ -149,7 +152,7 @@ public class SdkUtil {
         String decrypt = SecretUtil
                 .decrypt("qqHxg/8yoZDIyZigXTD3O9GBLuAjz47IVyP8ueWMsdU=", "7kyB+aUhF14f+zbE0ERd4Q==", SecretType.AES);
 */
-        String decrypt = SecretUtil
+        /*String decrypt = SecretUtil
                 .decrypt("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=", KEY, SecretType.AES);
         String decrypt1 = SecretUtil
                 .decrypt("GD2miQARzl1DpNlKSRHrc9lDoXUTDGtHgytmaXl2371PQpe78I9K/NhKYHP9cTCG", "7kyB+aUhF14f+zbE0ERd4Q==", SecretType.AES);
@@ -158,7 +161,54 @@ public class SdkUtil {
 
         System.out.println(decrypt);
         System.out.println(decrypt1);
-        System.out.println(decrypt2);
+        System.out.println(decrypt2);*/
+
+        Map<String, Object> paramsData = new HashMap<>();
+        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
+        //paramsData.put("instId", "015001");
+        //paramsData.put("mchtNo", "015370109123528");
+        paramsData.put("serviceId", "hx.alipay.jspay");
+        paramsData.put("version", "1.0.0");
+        paramsData.put("isvOrgId", "015001");
+        paramsData.put("productCode", "100001");
+        paramsData.put("settleType", "DREAL");
+        paramsData.put("outTradeNo", "16512315615615132121");
+        paramsData.put("merchantNo", "015370109123528");
+        paramsData.put("subject", "测试");
+        paramsData.put("amount", "0.01");
+        paramsData.put("userId", "1234567890");
+        paramsData.put("notifyUrl", "192.168.103.250:8179/order/payment/notify");
+
+        log.info("---------接口调用---------");
+        // map存放请求参数
+        Map<String, String> params = new HashMap<>();
+        params.put("data", JSON.toJSONString(paramsData));
+        params.put("key-version", "29");
+        // 对请求参数进行签名，返回的map包含验证所需的公共参数
+        params = SignUtil.sign(params, "135459893032255489", "f88ebda65bdb4d63ac1194ac7c2af625", SignType.MD5);
+        //忽略SSL认证调用接口
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS).sslSocketFactory(SSLSocketClientUtil.getSSLSocketFactory()).hostnameVerifier(SSLSocketClientUtil.getHostnameVerifier()).build();
+
+        Request.Builder builder = new Request.Builder();
+        Request request = builder.post(okhttp3.RequestBody.create(MediaType.parse("application/json"), JSON.toJSONString(params))).url("https://payapi-sandbox.imipay.com".concat("/online/trade")).build();
+        log.info("params:{}", JSON.toJSONString(params));
+        Response response = okHttpClient.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            log.info("error:接口请求失败");
+            CommonExceptionUtils.throwSystemException(CommonErrorCode.UNKNOWN);
+        }
+        log.info("response:{}", StringUtils.isEmpty(response) ? null : response.toString());
+        String content =  response.body().string();
+        log.info("response.body:{}", StringUtils.isEmpty(response.body()) ? null : content);
+        if (!StringUtils.isEmpty(response.body())) {
+            JSONObject jsonObject = JSONObject.fromObject(content);
+            if (ApiConstans.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstans.RESULT_CODE_NAME))) {
+                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
+            }
+        }
+
+        JSONObject jsonObject = JSONObject.fromObject(content);
+
     }
 
 }

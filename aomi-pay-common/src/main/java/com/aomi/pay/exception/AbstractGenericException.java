@@ -1,6 +1,7 @@
 package com.aomi.pay.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
@@ -10,6 +11,7 @@ import java.text.MessageFormat;
  * @Date 2020/7/15 14:36
  * @Description 异常类
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class AbstractGenericException extends RuntimeException implements Serializable {
 
