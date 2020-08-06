@@ -1,5 +1,6 @@
 package com.aomi.pay.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class MchtMedia {
 
     private String certFront;

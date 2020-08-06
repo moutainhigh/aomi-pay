@@ -1,0 +1,23 @@
+zuul:
+  #  retryable: true
+  #  add-host-header: true
+  ignoredServices: "*"
+  #  sensitiveHeaders: "*"
+  host:
+    socket-timeout-millis: 15000
+    connect-timeout-millis: 15000
+  routes:
+    api:
+      path: /api/**
+      serviceId: service-api
+    user:
+      path: /user/**
+      serviceId: service-user
+    order:
+      path: /order/**
+      serviceId: service-order
+
+
+
+logging:
+  config: classpath:log4j2.xml

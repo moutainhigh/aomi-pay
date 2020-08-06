@@ -1,0 +1,3 @@
+#配置swagger在生产环境不启用
+swagger:
+  enable: false
