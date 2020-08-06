@@ -6,7 +6,7 @@ spring:
     name: service-user #服务名称
   cloud:
     config:
-      name: service-user,mysql
+      name: service-user,mysql,common,swagger
       discovery:
         enabled: true
         service-id: config-server

@@ -46,6 +46,18 @@ public class MerchantReportController {
     @Value("${api_route.mcht_report.config_echat_submcht}")
     private String routeConfigWechatSubmcht;
 
+    /**
+     * 微信子商户配置
+     */
+    @Value("${api_route.mcht_report.config_echat_submcht_query}")
+    private String routeConfigWechatSubmchtQuery;
+
+    /**
+     * 查询微信子商户配置
+     */
+    @Value("${api_route.mcht_report.query_unionpay}")
+    private String routeQueryUnionpay;
+
     @ApiOperation(value = "查询无卡商户报备状态")
     @PostMapping("/queryRegister")
     public BaseResponse queryRegister() throws Exception {
@@ -70,6 +82,17 @@ public class MerchantReportController {
         paramsData.put("appid", "154344164291514368");
         paramsData.put("subscribeAppid", "154344164291514368");
         String result = SdkUtil.post(paramsData, routeConfigWechatSubmcht);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    }
+
+    @ApiOperation(value = "查询微信子商户配置")
+    @PostMapping("/configWechatSubmchtQuery")
+    public BaseResponse configWechatSubmchtQuery() throws Exception {
+        log.info("--------查询微信子商户配置--------");
+        Map<String, Object> paramsData = new HashMap<>();
+
+        String result = SdkUtil.post(paramsData, routeConfigWechatSubmchtQuery);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }

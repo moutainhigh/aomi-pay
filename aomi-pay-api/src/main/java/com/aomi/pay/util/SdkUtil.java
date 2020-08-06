@@ -163,21 +163,10 @@ public class SdkUtil {
         System.out.println(decrypt1);
         System.out.println(decrypt2);*/
 
-        Map<String, Object> paramsData = new HashMap<>();
-        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
-        //paramsData.put("instId", "015001");
-        //paramsData.put("mchtNo", "015370109123528");
-        paramsData.put("serviceId", "hx.alipay.jspay");
-        paramsData.put("version", "1.0.0");
-        paramsData.put("isvOrgId", "015001");
-        paramsData.put("productCode", "100001");
-        paramsData.put("settleType", "DREAL");
-        paramsData.put("outTradeNo", "16512315615615132121");
-        paramsData.put("merchantNo", "015370109123528");
-        paramsData.put("subject", "测试");
-        paramsData.put("amount", "0.01");
-        paramsData.put("userId", "1234567890");
-        paramsData.put("notifyUrl", "192.168.103.250:8179/order/payment/notify");
+        Map<String, Object> paramsData = setMap2();
+        //String route = "/online/trade";
+        //String route = "/mcht/add_product";
+        String route = "/online/query";
 
         log.info("---------接口调用---------");
         // map存放请求参数
@@ -190,7 +179,7 @@ public class SdkUtil {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS).sslSocketFactory(SSLSocketClientUtil.getSSLSocketFactory()).hostnameVerifier(SSLSocketClientUtil.getHostnameVerifier()).build();
 
         Request.Builder builder = new Request.Builder();
-        Request request = builder.post(okhttp3.RequestBody.create(MediaType.parse("application/json"), JSON.toJSONString(params))).url("https://payapi-sandbox.imipay.com".concat("/online/trade")).build();
+        Request request = builder.post(okhttp3.RequestBody.create(MediaType.parse("application/json"), JSON.toJSONString(params))).url("https://payapi-sandbox.imipay.com".concat(route)).build();
         log.info("params:{}", JSON.toJSONString(params));
         Response response = okHttpClient.newCall(request).execute();
         if (!response.isSuccessful()) {
@@ -211,4 +200,62 @@ public class SdkUtil {
 
     }
 
+    //测试商户开通产品
+    public static Map<String,Object> setMap(){
+        Map<String, Object> paramsData = new HashMap<>();
+        paramsData.put("instId", "015001");
+        paramsData.put("mchtNo", "015370109123528");
+        //paramsData.put("productCode", "100010");//支付宝
+        //paramsData.put("modelId", "MHN90144");
+        //paramsData.put("productCode", "100011");//微信
+        //paramsData.put("modelId", "MHN11201");
+        paramsData.put("productCode", "100018");//银联
+        paramsData.put("modelId", "MHN11201");
+        return paramsData;
+    }
+
+    //测试h5支付
+    public Map<String,Object> setMap1(){
+        Map<String, Object> paramsData = new HashMap<>();
+
+        paramsData.put("serviceId", "hx.wechat.jspay");//微信
+        paramsData.put("version", "1.0.0");
+        paramsData.put("isvOrgId", "015001");
+        paramsData.put("productCode", "100010");//支付宝
+        //paramsData.put("productCode", "100011");//微信
+        paramsData.put("settleType", "DREAL");
+        paramsData.put("outTradeNo", "16512315615615132127");
+        paramsData.put("merchantNo", "015440309175982");
+        paramsData.put("subject", "测试");
+        paramsData.put("amount", "1");
+        paramsData.put("userId", "2021001168632988");
+        //paramsData.put("userId", "2088831769455774");
+        //paramsData.put("userId", "oXpzSv9AcnTkxsErnGUKCDzZIZBs");
+        //paramsData.put("subAppid", "wx57f9d11132fc79c1");
+        paramsData.put("notifyUrl", "192.168.103.250:8179/order/payment/notify");
+        return paramsData;
+    }
+
+    //测试订单查询
+    public static Map<String,Object> setMap2(){
+        Map<String, Object> paramsData = new HashMap<>();
+
+        paramsData.put("serviceId", "hx.unified.query");
+        paramsData.put("version", "1.0.0");
+        paramsData.put("isvOrgId", "015001");
+        paramsData.put("tradeType", "31");
+        paramsData.put("outTradeNo", "16512315615615132125");
+        //paramsData.put("merchantNo", "015370109123528");
+        paramsData.put("merchantNo", "015440309175982");
+        return paramsData;
+    }
+
+    //测试查询商户入网信息
+    public static Map<String,Object> setMap3(){
+        Map<String, Object> paramsData = new HashMap<>();
+        paramsData.put("instId", "015001");
+        paramsData.put("mchtNo", "015370109123528");
+        paramsData.put("instMchtNo", "test100000002");
+        return paramsData;
+    }
 }

@@ -1,12 +1,13 @@
 server:
-  port: 9100
-#spring配置
+  port: 8179 #端口
 spring:
   application:
-    name: service-api #服务名称
+    name: zuul-server #服务名称
+  main:
+    allow-bean-definition-overriding: true #忽略同名bean
   cloud:
     config:
-      name: service-api,common,swagger
+      name: zuul-server,swagger
       discovery:
         enabled: true
         service-id: config-server
@@ -18,3 +19,7 @@ eureka:
   instance:
     prefer-ip-address: true #使用ip地址注册
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    status-page-url: http://127.0.0.1:8179/doc.html
+
+
+

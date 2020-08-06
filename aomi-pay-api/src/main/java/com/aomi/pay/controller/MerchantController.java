@@ -65,6 +65,11 @@ public class MerchantController {
     @Value("${api_route.mcht.query_mcht_audit}")
     private String routeQueryMchtAudit;
 
+    /**
+     * 查询商户审核状态路径
+     */
+    @Value("${api_route.mcht.add_product}")
+    private String routeAddProduct;
 
     @ApiOperation(value = "商户上传图片")
     @PostMapping("/uploadImg")
@@ -162,6 +167,25 @@ public class MerchantController {
         paramsData.put("mchtNo", "015370109123528");
         paramsData.put("instMchtNo", "test100000002");
         String result = SdkUtil.post(paramsData, routeQueryMcht);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    }
+
+    @ApiOperation(value = "商户开通产品")
+    @PostMapping("/addProduct")
+    public BaseResponse addProduct() throws Exception {
+        log.info("--------商户开通产品--------");
+        Map<String, Object> paramsData = new HashMap<>();
+        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
+        paramsData.put("instId", "015001");
+        paramsData.put("mchtNo", "015370109123528");
+        //paramsData.put("productCode", "100011");//微信
+        //paramsData.put("modelId", "MPN10003");
+        paramsData.put("productCode", "100010");//支付宝
+        paramsData.put("modelId", "MHN90143");
+        //paramsData.put("productCode", "100004");//银联
+        //paramsData.put("modelId", "MHN20003");
+        String result = SdkUtil.post(paramsData, routeAddProduct);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }

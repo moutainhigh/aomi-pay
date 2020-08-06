@@ -1,9 +1,10 @@
 package com.aomi.pay.vo;
 
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @lombok.Data
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class Data {
 
     private MchtBase mchtBase;

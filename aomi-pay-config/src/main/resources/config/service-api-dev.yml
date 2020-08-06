@@ -23,6 +23,8 @@ api_route:
     query_mcht: /mcht/query_mcht
     #商户开通产品
     add_product: /mcht/add_product
+    #修改商户开通产品签约费率
+    update_product: /mcht/update_product_model
     #修改商户入网信息
     update_org_mcht: /mcht/update_org_mcht
     #修改商户状态
@@ -38,10 +40,12 @@ api_route:
     query_register: /mcht/query/register
     #微信子商户配置
     config_echat_submcht: /mcht/config/wechat/submcht
+    #查询微信子商户配置
+    config_echat_submcht_query: /mcht/config/wechat/submcht/query
+    #查询商户银联信息
+    query_unionpay: /mcht/query/unionpay
   pay:
     #扫码支付
     online_trade: /online/trade
-
-
-logging:
-  config: classpath:log4j2.xml
+    #订单查询
+    online_query: /online/query

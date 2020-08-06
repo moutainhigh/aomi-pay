@@ -1,5 +1,6 @@
 package com.aomi.pay.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -20,10 +21,18 @@ public class SwaggerConfig {
 
     public static final String SWAGGER_SCAN_SEARCH_PACKAGE = "com.aomi.pay.controller";
 
+    /**
+     * @author  hdq
+     * @desc swagger是否启用开关
+     **/
+    @Value("${swagger.enable}")
+    private boolean enableSwagger;
+
     @Bean
     public Docket createAppRestApi(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiAppInfo())
+                .enable(enableSwagger)
                 .select()
                 //为当前包下controller生成API文档
                 .apis(RequestHandlerSelectors.basePackage(SWAGGER_SCAN_SEARCH_PACKAGE))
