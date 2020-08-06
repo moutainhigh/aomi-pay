@@ -65,6 +65,7 @@ public class MerchantController {
     @Value("${api_route.mcht.query_mcht_audit}")
     private String routeQueryMchtAudit;
 
+
     @ApiOperation(value = "商户上传图片")
     @PostMapping("/uploadImg")
     public BaseResponse uploadImg() throws Exception {

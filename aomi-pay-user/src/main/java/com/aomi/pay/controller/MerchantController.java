@@ -1,13 +1,19 @@
 package com.aomi.pay.controller;
 
+import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.service.MerchantService;
 import com.aomi.pay.vo.BaseResponse;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import vo.MerchantInfoVO;
+import vo.PictureVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,55 +25,54 @@ import javax.servlet.http.HttpServletRequest;
 public class MerchantController {
 
     @Autowired
-    private MerchantService userService;
+    private MerchantService  merchantService;
 
     /**
-     * 添加商品图片(上传图片)
+     * 商户信息入网
      */
-    @PostMapping(value = "/user/add/uploadImg")
-    public BaseResponse uploadImg(HttpServletRequest request) {
-//        userService.uploadImg(request);
-//        String imgurls="";
-//        try{
-//            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-//            List<MultipartFile> files = multipartRequest.getFiles("image");
-//            if(files==null||files.size()==0){
-//                throw new BusinessException(CommonErrorCode.FAIL.getCode(),"请上传至少一张图片");
-//            }
-//
-//            String ossObjectNamePrefix = AliOSSUtil.APP_SYS_IMAGETEXT+ "-";
-//            String ossObjectName = "";
-//
-//            int i=1;
-//
-//            if(files!=null&&files.size()>0){
-//                for (MultipartFile file : files) {
-//
-//                    String fileName = file.getOriginalFilename();
-//                    String prefix=fileName.substring(fileName.lastIndexOf("."));
-//                    fileName = System.currentTimeMillis()+i+prefix;
-//
-//                    ossObjectName = ossObjectNamePrefix + fileName;
-//                    AliOSSUtil aliOSSUtil = new AliOSSUtil();
-//                    try {
-//                        aliOSSUtil.uploadStreamToOss(ossObjectName,file.getInputStream());
-//                    } catch (IOException e1) {
-//                        e1.printStackTrace();
-//                    }
-//                    String fileUrl = aliOSSUtil.getFileUrl(ossObjectName);
-//                    if (i==1){
-//                        imgurls = imgurls + fileUrl.substring(0,fileUrl.lastIndexOf("?"));
-//                    }else {
-//                        imgurls = imgurls + "," + fileUrl.substring(0,fileUrl.lastIndexOf("?"));
-//                    }
-//                    i++;
-//                }
-//            }
-//        }catch (BusinessException businessException){
-//            return new BaseResponse(CommonErrorCode.E_301001.getCode(),"上传图片失败");
-//        }
-//        return new BaseResponse(CommonErrorCode.SUCCESS,imgurls);
-//    }
-        return null;
+    @ApiOperation(value = "商户信息入网")
+    @PostMapping("/merchant/merchantInfo/create")
+    public BaseResponse create(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
+        JSONObject jsonObject = merchantService.create(merchantInfoVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
     }
+
+    /**
+     * 上传图片到环迅平台
+     */
+    @ApiOperation(value = "商户上传图片")
+    @PostMapping("/uploadImg")
+    public BaseResponse uploadImg(HttpServletRequest request, @RequestBody PictureVO pictureVO) throws Exception {
+        JSONObject jsonObject = merchantService.uploadImg(request,pictureVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+    }
+
+
+
+
+    /**
+     * 商户入网信息查询
+     */
+    @ApiOperation(value = "商户入网信息查询")
+    @PostMapping("/queryMcht")
+    public BaseResponse queryMcht(@RequestBody JSONObject str) throws Exception {
+        String id = str.getString("id");
+        JSONObject jsonObject = merchantService.queryMcht(id);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    }
+
+
+    /**
+     * 查询商户审核状态
+     */
+    @ApiOperation(value = "查询商户审核状态")
+    @PostMapping("/queryMchtAudit")
+    public BaseResponse queryMchtAudit(@RequestBody JSONObject str) throws Exception {
+        String id = str.getString("id");
+        JSONObject jsonObject = merchantService.queryMchtAudit(id);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    }
+
+
+
 }
