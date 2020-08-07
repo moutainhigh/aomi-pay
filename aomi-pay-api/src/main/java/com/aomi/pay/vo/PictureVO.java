@@ -1,8 +1,9 @@
-package vo;
+package com.aomi.pay.vo;
 
 import lombok.Data;
 
 import java.io.Serializable;
+
 @Data
 public class PictureVO implements Serializable {
 

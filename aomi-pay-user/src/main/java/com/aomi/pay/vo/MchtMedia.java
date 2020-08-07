@@ -28,7 +28,7 @@ public class MchtMedia {
     private String agenIdCardBackPic;
     private String agentCardId;
     private String agentProtocol;
-    
+
     private List<String> industryLicenses;
     private List<String> extraPics;
 

@@ -1,7 +1,6 @@
 package com.aomi.pay.vo;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -10,16 +9,16 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class MchtAcct {
 
-    private String acctZbankNo;
     private String acctProxy;
-    private String acctNo;
+    private String agentCardNo;
+    private String agentCardDate;
     private String acctType;
-    private String acctZbankCode;
+    private String acctNo;
     private String acctName;
     private String acctBankNo;
-    private String agentCardNo;
+    private String acctZbankCode;
+    private String acctZbankNo;
 
 }

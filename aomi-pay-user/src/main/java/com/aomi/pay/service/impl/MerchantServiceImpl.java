@@ -4,22 +4,23 @@ import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.entity.MerchantImg;
 import com.aomi.pay.entity.MerchantInfo;
 import com.aomi.pay.exception.BusinessException;
+import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.MerchantImgMapper;
 import com.aomi.pay.mapper.MerchantInfoMapper;
 import com.aomi.pay.service.MerchantService;
 import com.aomi.pay.util.AliOSSUtil;
 import com.aomi.pay.util.SdkUtil;
+import com.aomi.pay.vo.*;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import vo.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 //@RefreshScope
 public class MerchantServiceImpl implements MerchantService {
 
@@ -39,93 +41,23 @@ public class MerchantServiceImpl implements MerchantService {
     private MerchantInfoMapper merchantInfoMapper;
     @Autowired
     private MerchantImgMapper merchantImgMapper;
-
-    /**
-     * 机构id
-     */
-    private static String INST_ID;
-
-    @Value("${inst-id}")
-    public void setKeyVersion(String instId) {
-        INST_ID = instId;
-    }
-
-    /**
-     * 商户图片上传路径
-     */
-    @Value("${api_route.mcht.upload_img}")
-    private String routeUploadImg;
-
-    /**
-     * 商户信息入网路径
-     */
-    @Value("${api_route.mcht.create_org_mcht}")
-    private String routeCreateOrgMcht;
-
-    /**
-     * 商户信息入网路径
-     */
-    @Value("${api_route.mcht.query_mcht}")
-    private String routeQueryMcht;
-
-    /**
-     * 查询商户审核状态路径
-     */
-    @Value("${api_route.mcht.query_mcht_audit}")
-    private String routeQueryMchtAudit;
-
-    /**
-     * 商户上传图片
-     */
-    @Override
-    public JSONObject uploadImg(HttpServletRequest request,PictureVO pictureVO) throws IOException {
-        log.info("--------商户上传图片--------");
-        MerchantImg merchantImg = new MerchantImg();
-        pictureVO.getPicName();
-        String url = this.uploadImgOss(request);
-        byte[] bytes = url.getBytes("utf-8");
-        String pic = Base64.getEncoder().encode(bytes).toString();
-
-        pictureVO.setInstId(INST_ID);
-        pictureVO.setPic(pic);
-        pictureVO.setPicName(pictureVO.getPicName());
-        pictureVO.setPicType(pictureVO.getPicType());
-
-        String result = null;
-        try {
-            result = SdkUtil.post(pictureVO, routeUploadImg);
-        } catch (BusinessException businessException) {
-            throw new BusinessException(CommonErrorCode.E_301002);//暂定
-        }
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        String imgCode = jsonObject.get("imgCode").toString();
-
-        merchantImg.setImgCode(imgCode);
-        merchantImg.setImgUrl(url);
-        merchantImg.setPlatform("hx");
-        merchantImg.setType(pictureVO.getPicType());
-        merchantImg.setUserId(pictureVO.getUserId());
-        merchantImg.setImgName(pictureVO.getPicName());
-        merchantImg.setUpdateTime(LocalDateTime.now());
-        merchantImgMapper.insert(merchantImg);
-
-        return  jsonObject;
-    }
+    @Autowired
+    private ApiClient apiClient;
 
     /**
      * 商户信息入网
      */
     @Override
-    public JSONObject create(MerchantInfoVO merchantInfoVO) throws IOException{
+    public JSONObject create(MerchantInfoVO merchantInfoVO) throws Exception {
         MerchantInfo merchantInfo = new MerchantInfo();
-        String id = "AM"+IdWorker.getTimeId().substring(0, 23);
+        String substring = IdWorker.getTimeId().substring(0, 20);
+        Long id = Long.parseLong(substring);
         merchantInfo.setSn(merchantInfoVO.getSn());
         merchantInfo.setSnModelId(merchantInfoVO.getSnModelId());
         merchantInfo.setServiceType(merchantInfoVO.getServiceType());
         merchantInfo.setId(id);
-        merchantInfoVO.setInstId(id);
+        merchantInfoVO.setInstId(substring);
         merchantInfo.setStatus("1");
-        merchantInfo.setInstId(INST_ID);
 
         MchtBase mchtBase = merchantInfoVO.getMchtBase();
         merchantInfo.setMerchantName(mchtBase.getMchtName());
@@ -161,27 +93,78 @@ public class MerchantServiceImpl implements MerchantService {
         merchantInfo.setLicenseNo(mchtComp.getLicenseNo());
         merchantInfo.setLicenseType(mchtComp.getLicenseType());
 
+        MchtMedia mchtMedia = merchantInfoVO.getMchtMedia();
+
         //todo 修改
         Map<String, String> product = merchantInfoVO.getProduct();
         merchantInfo.setProductCode(product.keySet().toString());
         merchantInfo.setModelId(product.values().toString());
 
-        String result = null;
         try {
-            result = SdkUtil.post(merchantInfoVO, routeCreateOrgMcht);
+            Object data = apiClient.createOrgMcht(merchantInfoVO).getData();
+            //todo 行否？
+            JSONObject jsonObject = JSONObject.fromObject(data);
+            if (jsonObject.get("resultCode").equals("1")){
+                String mchtNo = jsonObject.get("mchtNo").toString();
+                merchantInfo.setPlatformId(Long.parseLong(mchtNo));
+                String unionPayMchtNo = jsonObject.get("unionPayMchtNo").toString();
+                if (StringUtils.isNotEmpty(unionPayMchtNo)){
+                    merchantInfo.setUnionPayMchtNo(unionPayMchtNo);
+                }
+                merchantInfoMapper.insert(merchantInfo);
+                return jsonObject;
+            }
+            throw new BusinessException(CommonErrorCode.FAIL.getDesc(),"信息入网失败");//暂定
         } catch (BusinessException businessException) {
             throw new BusinessException(CommonErrorCode.E_301002);//暂定
         }
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        String mchtNo = jsonObject.get("mchtNo").toString();
-        merchantInfo.setPlatformId(mchtNo);
-        String unionPayMchtNo = jsonObject.get("unionPayMchtNo").toString();
-        if (StringUtils.isNotEmpty(unionPayMchtNo)){
-            merchantInfo.setUnionPayMchtNo(unionPayMchtNo);
-        }
-        merchantInfoMapper.insert(merchantInfo);
-        return jsonObject;
     }
+
+
+    /**
+     * 商户上传图片
+     */
+    @Override
+    public JSONObject uploadImg(HttpServletRequest request,PictureVO pictureVO) throws Exception {
+        log.info("--------商户上传图片--------");
+        MerchantImg merchantImg = new MerchantImg();
+        pictureVO.getPicName();
+        String url = this.uploadImgOss(request);
+        byte[] bytes = url.getBytes("utf-8");
+        String pic = Base64.getEncoder().encode(bytes).toString();
+
+        pictureVO.setPic(pic);
+
+
+//        String result = null;
+//        try {
+//            result = SdkUtil.post(pictureVO, routeUploadImg);
+//        } catch (BusinessException businessException) {
+//            throw new BusinessException(CommonErrorCode.E_301002);//暂定
+//        }
+
+        try {
+            Object data = apiClient.uploadImg(pictureVO).getData();
+
+        } catch (BusinessException businessException) {
+            throw new BusinessException(CommonErrorCode.E_301002);//暂定
+        }
+
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        String imgCode = jsonObject.get("imgCode").toString();
+
+        merchantImg.setImgCode(imgCode);
+        merchantImg.setImgUrl(url);
+        merchantImg.setPlatform("hx");
+        merchantImg.setType(pictureVO.getPicType());
+        merchantImg.setUserId(pictureVO.getUserId());
+        merchantImg.setImgName(pictureVO.getPicName());
+        merchantImg.setUpdateTime(LocalDateTime.now());
+        merchantImgMapper.insert(merchantImg);
+
+        return  jsonObject;
+    }
+
 
     /**
      * 商户入网信息查询

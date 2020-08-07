@@ -1,6 +1,5 @@
 package com.aomi.pay.vo;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -9,7 +8,6 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class MchtComp {
 
     private String licenseType;

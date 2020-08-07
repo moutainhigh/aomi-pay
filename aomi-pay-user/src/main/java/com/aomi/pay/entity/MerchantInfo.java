@@ -26,7 +26,7 @@ public class MerchantInfo implements Serializable {
      * 商户id（机构）
      */
     @TableId(value = "id", type = IdType.ID_WORKER)
-    private String id;
+    private Long id;
 
     /**
      * 商户名称
@@ -191,11 +191,6 @@ B2-个体工商户或企业
     private String channelKind;
 
     /**
-     * 机构编号
-     */
-    private String instId;
-
-    /**
      * 终端号
      */
     private String sn;
@@ -216,8 +211,10 @@ B2-个体工商户或企业
      * 0－正常 1－商户新增保存 2－提交待审核 3－商户停用 4－商户注销 5－拒绝待修改',
      * */
     private String status;
-    private String platformId;
+    private Long platformId;
     private String unionPayMchtNo;
+    private Integer salesmanId;
+    private Long password;
 
 
 }

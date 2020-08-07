@@ -1,4 +1,4 @@
-package vo;
+package com.aomi.pay.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
