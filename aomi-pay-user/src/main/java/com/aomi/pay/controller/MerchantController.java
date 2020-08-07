@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 
 @Slf4j
 @CrossOrigin
@@ -56,16 +54,16 @@ public class MerchantController {
 
 
 
-    /**
-     * 上传图片到环迅平台
-     */
-    @ApiOperation(value = "商户上传图片")
-    @PostMapping("merchant/merchantInfo/uploadImg")
-    public BaseResponse uploadImg(HttpServletRequest request, @RequestBody PictureVO pictureVO) throws Exception {
-        JSONObject jsonObject = merchantService.uploadImg(request,pictureVO);
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
-    }
-
+//    /**
+//     * 上传图片到环迅平台
+//     */
+//    @ApiOperation(value = "商户上传图片")
+//    @PostMapping("merchant/merchantInfo/uploadImg")
+//    public BaseResponse uploadImg(HttpServletRequest request, @RequestBody PictureVO pictureVO) throws Exception {
+//        JSONObject jsonObject = merchantService.uploadImg(request,pictureVO);
+//        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+//    }
+//
 
 
 //
@@ -81,28 +79,28 @@ public class MerchantController {
 //    }
 
 
-    /**
-     * 查询商户审核状态
-     */
-    @ApiOperation(value = "查询商户审核状态")
-    @PostMapping("/queryMchtAudit")
-    public BaseResponse queryMchtAudit(@RequestBody JSONObject str) throws Exception {
-        String id = str.getString("id");
-        JSONObject jsonObject = merchantService.queryMchtAudit(id);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
-    }
-
-    /**
-     * 商户开通产品
-     */
-    @ApiOperation(value = "商户开通产品")
-    @PostMapping("/merchant/open/product")
-    public BaseResponse queryMcht(@RequestBody JSONObject str) throws Exception {
-        String id = str.getString("id");
-        JSONObject jsonObject = merchantService.queryMcht(id);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
-    }
-
+//    /**
+//     * 查询商户审核状态
+//     */
+//    @ApiOperation(value = "查询商户审核状态")
+//    @PostMapping("/queryMchtAudit")
+//    public BaseResponse queryMchtAudit(@RequestBody JSONObject str) throws Exception {
+//        String id = str.getString("id");
+//        JSONObject jsonObject = merchantService.queryMchtAudit(id);
+//        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+//    }
+//
+//    /**
+//     * 商户开通产品
+//     */
+//    @ApiOperation(value = "商户开通产品")
+//    @PostMapping("/merchant/open/product")
+//    public BaseResponse queryMcht(@RequestBody JSONObject str) throws Exception {
+//        String id = str.getString("id");
+//        JSONObject jsonObject = merchantService.queryMcht(id);
+//        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+//    }
+//
 
 
 }
