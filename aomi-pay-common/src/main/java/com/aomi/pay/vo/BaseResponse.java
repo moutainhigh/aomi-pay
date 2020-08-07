@@ -3,6 +3,7 @@ package com.aomi.pay.vo;
 import com.aomi.pay.domain.CommonErrorCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -11,11 +12,18 @@ import java.io.Serializable;
  * @Desc 基础返回封装
  * @Date 2020/8/3 15:34
  */
+@Data
 @ApiModel(value = "基础返回参数")
 public class BaseResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+    /**
+     * 是否成功
+     **/
+    @ApiModelProperty(value = "是否成功", name = "success")
+    private boolean success;
 
     /**
      * 状态码
@@ -40,6 +48,7 @@ public class BaseResponse<T> implements Serializable {
 
     public BaseResponse(boolean success, String code, String message) {
         super();
+        this.success = success;
         this.code = code;
         this.message = message;
     }
@@ -47,11 +56,12 @@ public class BaseResponse<T> implements Serializable {
     /**
      * 状态+返回数据
      *
-     * @param code  返回码
-     * @param message     返回描述
+     * @param code    返回码
+     * @param message 返回描述
      */
     public BaseResponse(String code, String message) {
         super();
+        this.success = false;
         this.code = code;
         this.message = message;
     }
@@ -64,6 +74,7 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(CommonErrorCode commonErrorCode, T data) {
         super();
+        this.success = true;
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
         this.data = data;
@@ -74,8 +85,9 @@ public class BaseResponse<T> implements Serializable {
      *
      * @param commonErrorCode
      */
-    public BaseResponse(CommonErrorCode commonErrorCode) {
+    public BaseResponse(CommonErrorCode commonErrorCode, boolean success) {
         super();
+        this.success = success;
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
     }
@@ -92,38 +104,5 @@ public class BaseResponse<T> implements Serializable {
         this.message = errorMsg;
     }
 
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseResponse{" +
-                "code=" + code +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                '}';
-    }
 
 }
