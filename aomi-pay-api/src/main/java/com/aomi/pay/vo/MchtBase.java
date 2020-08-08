@@ -20,6 +20,7 @@ public class MchtBase {
      * 机构方商户号
      */
     private String instMchtNo;
+    private String mchtNo;
     private String address;
     private String mchtName;
     private String simpleName;

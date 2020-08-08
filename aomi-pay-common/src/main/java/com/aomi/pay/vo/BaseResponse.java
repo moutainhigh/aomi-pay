@@ -83,20 +83,17 @@ public class BaseResponse<T> implements Serializable {
     /**
      * 状态
      *
-     * @param commonErrorCode
+     * @param commonErrorCode 公共异常编码
      */
-    public BaseResponse(CommonErrorCode commonErrorCode, boolean success) {
+    public BaseResponse(CommonErrorCode commonErrorCode) {
         super();
-        this.success = success;
+        this.success = commonErrorCode.isSuccess();
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
     }
 
     public static boolean isSuccess(BaseResponse<?> resp) {
-        if (resp != null && CommonErrorCode.SUCCESS.getCode() == resp.getCode()) {
-            return true;
-        }
-        return false;
+        return resp != null && CommonErrorCode.SUCCESS.getCode().equals(resp.getCode());
     }
 
     public void setBaseResponse(CommonErrorCode commonErrorCode, String errorMsg) {

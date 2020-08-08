@@ -71,6 +71,12 @@ public class MerchantController {
     @Value("${api_route.mcht.add_product}")
     private String routeAddProduct;
 
+    /**
+     * 查询商户审核状态路径
+     */
+    @Value("${api_route.mcht.update_org_mcht}")
+    private String routeUpdateProduct;
+
     @ApiOperation(value = "商户上传图片")
     @PostMapping("/uploadImg")
     public BaseResponse uploadImg() throws Exception {
@@ -99,36 +105,37 @@ public class MerchantController {
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         MchtBase mchtBase = new MchtBase();
         mchtBase.setMchtScope("173");
-        mchtBase.setMchtKind("B1");
-        mchtBase.setInstMchtNo("test100000002");
-        mchtBase.setAddress("E/NMOdUvpT7mxuBoFqFCG9ecase2fJ21k4IXyGqA2H/jHRUZ0zR5vDi3UuugvUq6");
-        mchtBase.setMchtName("3DZburLpyTBSi4b64LnTl8i7/785UHBkB3efQ03ynZk=");
-        mchtBase.setSimpleName("dEZUiYp/DZ14YnabEAyb4A==");
-        mchtBase.setAreaNo("370126");
+        mchtBase.setMchtKind("B2");
+        mchtBase.setInstMchtNo("10000000001");
+        mchtBase.setAddress(SdkUtil.encrypt("上海市崇明区堡镇堡镇南路58号15幢2楼227-3室"));
+        mchtBase.setMchtName(SdkUtil.encrypt("上海引线物联科技有限公司"));
+        mchtBase.setSimpleName(SdkUtil.encrypt("上海引线物联"));
+        mchtBase.setAreaNo("310112");
         mchtBase.setMchtType("0");
-        mchtBase.setStorePhone("7bkQa7RulKi1CjSxhMhKuA==");
+        mchtBase.setStorePhone(SdkUtil.encrypt("021-2358996"));
 
         MchtUser mchtUser = new MchtUser();
-        mchtUser.setPhone("t6yaFJjAouRiamR7iDfWmQ==");
-        mchtUser.setName("woedubWd3WTfZ/jZ0jnQvA==");
+        mchtUser.setPhone(SdkUtil.encrypt("13032100263"));
+        mchtUser.setName(SdkUtil.encrypt("谢军清"));
         //mchtUser.setCardNo("eUXo2ePvDBmmjon4vvCzNGs45ZcQ7GDK60UO/cFufSg=");
-        mchtUser.setCardNo(SdkUtil.encrypt("430981199403131717"));
-        mchtUser.setEmail("IuwYW+1WKOWmSACCpmpmT2xy8YrcfxQlbST+WLq6fsE=");
+        mchtUser.setCardNo(SdkUtil.encrypt("362531197706090296"));
+        //mchtUser.setCardDate(SdkUtil.encrypt("362531197706090296"));
+        //mchtUser.setEmail("IuwYW+1WKOWmSACCpmpmT2xy8YrcfxQlbST+WLq6fsE=");
 
         MchtComp mchtComp = new MchtComp();
         mchtComp.setLicenseType("1");
-        mchtComp.setLicenseNo("3PnWEbcj2sYQx8g4VSILrg==");
-        mchtComp.setLicenseDate("20150125");
+        mchtComp.setLicenseNo(SdkUtil.encrypt("91310230MA1JYU6M1J"));
+        //mchtComp.setLicenseDate("20150125");
 
         MchtAcct mchtAcct = new MchtAcct();
-        mchtAcct.setAcctProxy("0");
-        mchtAcct.setAcctNo("wXMBt7NyoUI5nzUrrmGtCnS1d4xmJFTbLOijuYnwWBU=");
-        mchtAcct.setAcctType("1");
+        mchtAcct.setAcctProxy("1");
+        mchtAcct.setAcctNo(SdkUtil.encrypt("1001213909200209221"));
+        mchtAcct.setAcctType("0");
         mchtAcct.setAcctZbankCode("520102");
         mchtAcct.setAcctZbankNo("403711001013");
-        mchtAcct.setAcctName("ktYiMDj4zpPPit8wsuY/tQ==");
-        mchtAcct.setAcctBankNo("15731922");
-        mchtAcct.setAgentCardNo("TPu2cNtqsN5/gFcSrNjmmeje2Ac1xcDbZkJFHehr0aM=");
+        mchtAcct.setAcctName(SdkUtil.encrypt("谢军清"));
+        mchtAcct.setAcctBankNo("102290021393");
+        //mchtAcct.setAgentCardNo("TPu2cNtqsN5/gFcSrNjmmeje2Ac1xcDbZkJFHehr0aM=");
 
         MchtMedia mchtMedia = new MchtMedia();
         mchtMedia.setCertFront("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
@@ -142,21 +149,25 @@ public class MerchantController {
         mchtMedia.setHandheld("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
         mchtMedia.setCertReverse("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
 
+        Product product = new Product();
+
+        Map<String,String> productMap = new HashMap<>();
+        productMap.put("100010","MHN90144");
+        productMap.put("100011","MHN11201");
+
         paramsData.put("mchtBase", mchtBase);
         paramsData.put("mchtUser", mchtUser);
         paramsData.put("mchtComp", mchtComp);
         paramsData.put("mchtAcct", mchtAcct);
         paramsData.put("mchtMedia", mchtMedia);
+        paramsData.put("product", productMap);
         paramsData.put("instId", "015001");
         paramsData.put("key-version", "29");
-
-        //paramsData.put("up-appId", "135459893032255489");
 
         String result = SdkUtil.post(paramsData, routeCreateOrgMcht);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
-
     @ApiOperation(value = "商户入网信息查询")
     @PostMapping("/queryMcht")
     public BaseResponse queryMcht() throws Exception {
@@ -164,8 +175,8 @@ public class MerchantController {
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
-        paramsData.put("instMchtNo", "test100000002");
+        paramsData.put("mchtNo", "015310109123536");
+        paramsData.put("instMchtNo", "10000000001");
         String result = SdkUtil.post(paramsData, routeQueryMcht);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
@@ -197,8 +208,83 @@ public class MerchantController {
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
+        paramsData.put("mchtNo", "015310109123536");
         String result = SdkUtil.post(paramsData, routeQueryMchtAudit);
+        JSONObject jsonObject = JSONObject.fromObject(result);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    }
+
+    @ApiOperation(value = "修改商户信息入网")
+    @PostMapping("/updateOrgMcht")
+    public BaseResponse 修改商户信息入网() throws Exception {
+        log.info("--------商户信息入网--------");
+        Map<String, Object> paramsData = new HashMap<>();
+        Data data = new Data();
+        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
+        MchtBase mchtBase = new MchtBase();
+        mchtBase.setMchtScope("173");
+        mchtBase.setMchtKind("B2");
+        //mchtBase.setInstMchtNo("10000000001");
+        mchtBase.setMchtNo("015310109123536");
+        mchtBase.setAddress(SdkUtil.encrypt("上海市崇明区堡镇堡镇南路58号15幢2楼227-3室"));
+        mchtBase.setMchtName(SdkUtil.encrypt("上海引线物联科技有限公司"));
+        mchtBase.setSimpleName(SdkUtil.encrypt("上海引线物联"));
+        mchtBase.setAreaNo("310112");
+        mchtBase.setMchtType("0");
+        mchtBase.setStorePhone(SdkUtil.encrypt("021-2358996"));
+
+        MchtUser mchtUser = new MchtUser();
+        mchtUser.setPhone(SdkUtil.encrypt("13032100263"));
+        mchtUser.setName(SdkUtil.encrypt("徐光寅"));
+        //mchtUser.setCardNo("eUXo2ePvDBmmjon4vvCzNGs45ZcQ7GDK60UO/cFufSg=");
+        mchtUser.setCardNo(SdkUtil.encrypt("31011019861015323X"));
+        //mchtUser.setCardDate(SdkUtil.encrypt("362531197706090296"));
+        //mchtUser.setEmail("IuwYW+1WKOWmSACCpmpmT2xy8YrcfxQlbST+WLq6fsE=");
+
+        MchtComp mchtComp = new MchtComp();
+        mchtComp.setLicenseType("1");
+        mchtComp.setLicenseNo(SdkUtil.encrypt("91310230MA1JYU6M1J"));
+        //mchtComp.setLicenseDate("20150125");
+
+        MchtAcct mchtAcct = new MchtAcct();
+        mchtAcct.setAcctProxy("0");
+        mchtAcct.setAcctNo(SdkUtil.encrypt("1001213909200209221"));
+        mchtAcct.setAcctType("0");
+        mchtAcct.setAcctZbankCode("520102");
+        mchtAcct.setAcctZbankNo("403711001013");
+        mchtAcct.setAcctName(SdkUtil.encrypt("上海引线物联科技有限公司"));
+        mchtAcct.setAcctBankNo("102290021393");
+        //mchtAcct.setAgentCardNo("TPu2cNtqsN5/gFcSrNjmmeje2Ac1xcDbZkJFHehr0aM=");
+
+        MchtMedia mchtMedia = new MchtMedia();
+        mchtMedia.setCertFront("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
+        List<String> indestruLicenses = new LinkedList<String>();
+        indestruLicenses.add("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
+        indestruLicenses.add("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
+        indestruLicenses.add("VfQY65Q0OPO40V9PuGp6Qi7mK49nW23kzxnfXw26XK23hTiJACAE1ss6lZf8QgLG");
+        indestruLicenses.add("GD2miQARzl1DpNlKSRHrc9lDoXUTDGtHgytmaXl2371PQpe78I9K/NhKYHP9cTCG");
+        mchtMedia.setIndustryLicenses(indestruLicenses);
+        mchtMedia.setBankCardPositive("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
+        mchtMedia.setHandheld("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
+        mchtMedia.setCertReverse("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
+
+        Product product = new Product();
+
+        Map<String,String> productMap = new HashMap<>();
+        productMap.put("100010","MHN90144");
+        productMap.put("100011","MHN11201");
+
+        paramsData.put("mchtBase", mchtBase);
+        paramsData.put("mchtUser", mchtUser);
+        paramsData.put("mchtComp", mchtComp);
+        paramsData.put("mchtAcct", mchtAcct);
+        paramsData.put("mchtMedia", mchtMedia);
+        //paramsData.put("product", productMap);
+        paramsData.put("instId", "015001");
+        paramsData.put("key-version", "29");
+
+
+        String result = SdkUtil.post(paramsData, routeUpdateProduct);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }

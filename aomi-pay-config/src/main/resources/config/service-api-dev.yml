@@ -8,8 +8,10 @@ key: 7kyB+aUhF14f+zbE0ERd4Q==
 up-appid: 135459893032255489
 #签名秘钥
 app-secret: f88ebda65bdb4d63ac1194ac7c2af625
-#机构号
-inst-id: 015001
+#机构应用id
+inst-id: '015001'
+#版本号
+version: 1.0.0
 
 #调用路径
 api_route:

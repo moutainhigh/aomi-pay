@@ -60,9 +60,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @Description 全局异常处理
      * @author hdq
      */
-    @ExceptionHandler
+    @ExceptionHandler(Exception.class)
     public BaseResponse exceptionHandler(Exception e, HttpServletResponse response) {
         log.error("全局异常处理:", e);
-        return new BaseResponse(CommonErrorCode.FAIL,false);
+        return new BaseResponse(CommonErrorCode.FAIL);
     }
 }

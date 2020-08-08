@@ -1,5 +1,6 @@
 server:
   port: 9100
+
 #spring配置
 spring:
   application:

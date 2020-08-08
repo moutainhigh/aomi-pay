@@ -16,4 +16,5 @@ public class MchtUser {
     private String name;
     private String cardNo;
     private String email;
+    private String cardDate;
 }

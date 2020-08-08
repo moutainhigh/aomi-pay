@@ -65,7 +65,8 @@ public class MerchantReportController {
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
+        //paramsData.put("mchtNo", "015370109123528");
+        paramsData.put("mchtNo", "015310109123536");
         String result = SdkUtil.post(paramsData, routeQueryRegister);
         JSONObject jsonObject = JSONObject.fromObject(result);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
