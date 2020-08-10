@@ -211,10 +211,10 @@ B2-个体工商户或企业
      * 0－正常 1－商户新增保存 2－提交待审核 3－商户停用 4－商户注销 5－拒绝待修改',
      * */
     private String status;
-    private Long platformId;
+
+    private String platformId;
     private String unionPayMchtNo;
     private Integer salesmanId;
-    private Long password;
-
+    private String password;
 
 }

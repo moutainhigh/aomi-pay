@@ -2,21 +2,23 @@ package com.aomi.pay.controller;
 
 
 import com.aomi.pay.domain.CommonErrorCode;
-import com.aomi.pay.util.SdkUtil;
-import com.aomi.pay.vo.*;
+import com.aomi.pay.service.MerchantService;
+import com.aomi.pay.vo.BaseResponse;
+import com.aomi.pay.vo.MerchantInfoVO;
+import com.aomi.pay.vo.PictureVO;
+import com.aomi.pay.vo.ProductVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * 商户入网类接口Controller
@@ -32,134 +34,57 @@ import java.util.Map;
 @RequestMapping("/merchant")
 public class MerchantController {
 
-
-    /**
-     * 机构id
-     */
-    private static String INST_ID;
-
-    @Value("${inst-id}")
-    public void setKeyVersion(String instId) {
-        INST_ID = instId;
-    }
-
-    /**
-     * 商户图片上传路径
-     */
-    @Value("${api_route.mcht.upload_img}")
-    private String routeUploadImg;
-
-    /**
-     * 商户信息入网路径
-     */
-    @Value("${api_route.mcht.create_org_mcht}")
-    private String routeCreateOrgMcht;
-
-    /**
-     * 商户信息入网路径
-     */
-    @Value("${api_route.mcht.query_mcht}")
-    private String routeQueryMcht;
-
-    /**
-     * 查询商户审核状态路径
-     */
-    @Value("${api_route.mcht.query_mcht_audit}")
-    private String routeQueryMchtAudit;
-
-    /**
-     * 查询商户审核状态路径
-     */
-    @Value("${api_route.mcht.add_product}")
-    private String routeAddProduct;
-
-    @ApiOperation(value = "商户信息入网")
-    @PostMapping("/createOrgMcht")
-    public BaseResponse createOrgMcht(MerchantInfoVO  merchantInfoVO) throws Exception {
-        log.info("--------商户信息入网--------");
-
-        MchtBase mchtBase = merchantInfoVO.getMchtBase();
-        String mchtName = mchtBase.getMchtName();
-        String simpleName = mchtBase.getSimpleName();
-        String address = mchtBase.getAddress();
-        String storePhone = mchtBase.getStorePhone();
-
-        MchtUser mchtUser = merchantInfoVO.getMchtUser();
-        String cardNo = mchtUser.getCardNo();
-        String email = mchtUser.getEmail();
-        String name = mchtUser.getName();
-        String phone = mchtUser.getPhone();
-
-        MchtAcct mchtAcct = merchantInfoVO.getMchtAcct();
-        String agentCardNo = mchtAcct.getAgentCardNo();
-        String acctNo = mchtAcct.getAcctNo();
-        String acctName = mchtAcct.getAcctName();
-
-        MchtComp mchtComp = merchantInfoVO.getMchtComp();
-        String licenseNo = mchtComp.getLicenseNo();
-
-        String result = SdkUtil.post(merchantInfoVO, routeCreateOrgMcht);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
-    }
+    @Autowired
+    private MerchantService merchantService;
 
     @ApiOperation(value = "商户上传图片")
     @PostMapping("/uploadImg")
-    public BaseResponse uploadImg(PictureVO pictureVO) throws Exception {
-        log.info("--------商户上传图片--------");
-
-        String result = SdkUtil.post(pictureVO, routeUploadImg);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        //TODO 结果暂时看的日志，后续补齐
+    public BaseResponse uploadImg(PictureVO pictureVO) throws IOException {
+        JSONObject jsonObject = merchantService.uploadImg(pictureVO);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
 
-    @ApiOperation(value = "商户入网信息查询")
-    @PostMapping("/queryMcht")
-    public BaseResponse queryMcht() throws Exception {
-        log.info("--------商户入网信息查询--------");
-        Map<String, Object> paramsData = new HashMap<>();
-        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
-        paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
-        paramsData.put("instMchtNo", "test100000002");
-        String result = SdkUtil.post(paramsData, routeQueryMcht);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    @ApiOperation(value = "商户信息入网")
+    @PostMapping("/createOrgMcht")
+    public BaseResponse createOrgMcht(MerchantInfoVO merchantInfoVO) throws Exception {
+        JSONObject resultJson = this.merchantService.createOrgMcht(merchantInfoVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS,resultJson);
     }
 
     @ApiOperation(value = "商户开通产品")
     @PostMapping("/addProduct")
-    public BaseResponse addProduct() throws Exception {
-        log.info("--------商户开通产品--------");
-        Map<String, Object> paramsData = new HashMap<>();
-        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
-        paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
-        //paramsData.put("productCode", "100011");//微信
-        //paramsData.put("modelId", "MPN10003");
-        paramsData.put("productCode", "100010");//支付宝
-        paramsData.put("modelId", "MHN90143");
-        //paramsData.put("productCode", "100004");//银联
-        //paramsData.put("modelId", "MHN20003");
-        String result = SdkUtil.post(paramsData, routeAddProduct);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+    public BaseResponse addProduct(ProductVO productVO) throws Exception {
+        this.merchantService.addProduct(productVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS);
     }
 
-    @ApiOperation(value = "查询商户审核状态")
-    @PostMapping("/queryMchtAudit")
-    public BaseResponse queryMchtAudit() throws Exception {
-        log.info("--------查询商户审核状态--------");
-        Map<String, Object> paramsData = new HashMap<>();
-        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
-        paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
-        String result = SdkUtil.post(paramsData, routeQueryMchtAudit);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
-    }
+//    @ApiOperation(value = "商户入网信息查询")
+//    @PostMapping("/queryMcht")
+//    public BaseResponse queryMcht() throws Exception {
+//        log.info("--------商户入网信息查询--------");
+//        Map<String, Object> paramsData = new HashMap<>();
+//        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
+//        paramsData.put("instId", "015001");
+//        paramsData.put("mchtNo", "015370109123528");
+//        paramsData.put("instMchtNo", "test100000002");
+//        String result = SdkUtil.post(paramsData, routeQueryMcht);
+//        JSONObject jsonObject = JSONObject.fromObject(result);
+//        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+//    }
+
+//    @ApiOperation(value = "查询商户审核状态")
+//    @PostMapping("/queryMchtAudit")
+//    public BaseResponse queryMchtAudit() throws Exception {
+//        log.info("--------查询商户审核状态--------");
+//        Map<String, Object> paramsData = new HashMap<>();
+//        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
+//        paramsData.put("instId", "015001");
+//        paramsData.put("mchtNo", "015370109123528");
+//        String result = SdkUtil.post(paramsData, routeQueryMchtAudit);
+//        JSONObject jsonObject = JSONObject.fromObject(result);
+//        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+//    }
 }
 
 //@ApiOperation(value = "商户上传图片")
@@ -228,6 +153,7 @@ public class MerchantController {
 //        indestruLicenses.add("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
 //        indestruLicenses.add("VfQY65Q0OPO40V9PuGp6Qi7mK49nW23kzxnfXw26XK23hTiJACAE1ss6lZf8QgLG");
 //        indestruLicenses.add("GD2miQARzl1DpNlKSRHrc9lDoXUTDGtHgytmaXl2371PQpe78I9K/NhKYHP9cTCG");
+
 //        mchtMedia.setIndustryLicenses(indestruLicenses);
 //        mchtMedia.setBankCardPositive("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
 //        mchtMedia.setHandheld("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
