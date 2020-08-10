@@ -67,9 +67,8 @@ public class MerchantReportController {
         paramsData.put("instId", "015001");
         //paramsData.put("mchtNo", "015370109123528");
         paramsData.put("mchtNo", "015310109123536");
-        String result = SdkUtil.post(paramsData, routeQueryRegister);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeQueryRegister);
+        return new BaseResponse(CommonErrorCode.SUCCESS,result);
     }
 
     @ApiOperation(value = "微信子商户配置")
@@ -82,9 +81,8 @@ public class MerchantReportController {
         paramsData.put("mchtNo", "015370109123528");
         paramsData.put("appid", "154344164291514368");
         paramsData.put("subscribeAppid", "154344164291514368");
-        String result = SdkUtil.post(paramsData, routeConfigWechatSubmcht);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeConfigWechatSubmcht);
+        return new BaseResponse(CommonErrorCode.SUCCESS,result);
     }
 
     @ApiOperation(value = "查询微信子商户配置")
@@ -93,9 +91,8 @@ public class MerchantReportController {
         log.info("--------查询微信子商户配置--------");
         Map<String, Object> paramsData = new HashMap<>();
 
-        String result = SdkUtil.post(paramsData, routeConfigWechatSubmchtQuery);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeConfigWechatSubmchtQuery);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
 
     @PostMapping("/test")

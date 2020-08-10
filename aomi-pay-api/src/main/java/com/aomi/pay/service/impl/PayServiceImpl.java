@@ -1,6 +1,5 @@
 package com.aomi.pay.service.impl;
 
-import com.aomi.pay.constants.ApiConstans;
 import com.aomi.pay.constants.ApiPayConstans;
 import com.aomi.pay.constants.PayConstans;
 import com.aomi.pay.dto.JsPayDTO;
@@ -10,14 +9,10 @@ import com.aomi.pay.util.GeneralConvertorUtil;
 import com.aomi.pay.util.SdkUtil;
 import com.aomi.pay.vo.JsPayVO;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 订单交易管理Service实现类
@@ -27,7 +22,6 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class)
 @RefreshScope
 public class PayServiceImpl implements PayService {
 
@@ -60,12 +54,9 @@ public class PayServiceImpl implements PayService {
      */
     @Override
     public Object onlineTrade(JsPayDTO jsPayDTO) throws Exception {
-        Map<String, Object> paramsData = new HashMap<>();
         JsPayVO jsPayVO = JsDTOCopyVO(jsPayDTO);
-        //接口调用
-        String result = SdkUtil.post(jsPayVO, routeOnlineTrade);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return jsonObject.get(ApiConstans.ERROR_DESC_DATA);
+        //h5支付接口调用
+        return SdkUtil.post(jsPayVO, routeOnlineTrade);
     }
 
     /**

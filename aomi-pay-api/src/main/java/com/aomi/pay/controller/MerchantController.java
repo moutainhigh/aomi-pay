@@ -90,10 +90,8 @@ public class MerchantController {
         paramsData.put("pikName", "hahaha");
         //paramsData.put("key-version","29");
 
-        String result = SdkUtil.post(paramsData, routeUploadImg);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        //TODO 结果暂时看的日志，后续补齐
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeUploadImg);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
 
     @ApiOperation(value = "商户信息入网")
@@ -164,9 +162,8 @@ public class MerchantController {
         paramsData.put("instId", "015001");
         paramsData.put("key-version", "29");
 
-        String result = SdkUtil.post(paramsData, routeCreateOrgMcht);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeCreateOrgMcht);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
     @ApiOperation(value = "商户入网信息查询")
     @PostMapping("/queryMcht")
@@ -177,9 +174,8 @@ public class MerchantController {
         paramsData.put("instId", "015001");
         paramsData.put("mchtNo", "015310109123536");
         paramsData.put("instMchtNo", "10000000001");
-        String result = SdkUtil.post(paramsData, routeQueryMcht);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeQueryMcht);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
 
     @ApiOperation(value = "商户开通产品")
@@ -209,9 +205,8 @@ public class MerchantController {
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         paramsData.put("instId", "015001");
         paramsData.put("mchtNo", "015310109123536");
-        String result = SdkUtil.post(paramsData, routeQueryMchtAudit);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeQueryMchtAudit);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
 
     @ApiOperation(value = "修改商户信息入网")
@@ -284,8 +279,7 @@ public class MerchantController {
         paramsData.put("key-version", "29");
 
 
-        String result = SdkUtil.post(paramsData, routeUpdateProduct);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeUpdateProduct);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
 }

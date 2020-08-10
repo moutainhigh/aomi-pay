@@ -103,8 +103,8 @@ public class SdkUtil {
      * @date 2020/8/4
      * @desc 统一接口调用
      **/
-    public static String post(Object object, String route) throws IOException {
-        log.info("---------接口调用---------");
+    public static Object post(Object object, String route) throws IOException {
+        log.info("---------接口调用开始---------");
         // map存放请求参数
         Map<String, String> params = new HashMap<>();
         params.put("data", JSON.toJSONString(object));
@@ -124,7 +124,6 @@ public class SdkUtil {
         }
         log.info("response:{}", StringUtils.isEmpty(response) ? null : response.toString());
         String content =  response.body().string();
-        log.info("response.body:{}", StringUtils.isEmpty(response.body()) ? null : content);
         if (!StringUtils.isEmpty(response.body())) {
             JSONObject jsonObject = JSONObject.fromObject(content);
             //当接口返回resultCode为不1 或者 errorCode 不为空时 抛出异常信息
@@ -132,7 +131,10 @@ public class SdkUtil {
                 CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
             }
         }
-        return content;
+        log.info("response.body:{}", StringUtils.isEmpty(response.body()) ? null : content);
+        JSONObject jsonObject = JSONObject.fromObject(content);
+        log.info("---------接口调用结束---------");
+        return jsonObject.get(ApiConstans.ERROR_DESC_DATA);
     }
 
     /**
