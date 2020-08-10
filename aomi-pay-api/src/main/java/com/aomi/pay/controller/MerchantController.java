@@ -192,9 +192,8 @@ public class MerchantController {
         paramsData.put("modelId", "MHN90143");
         //paramsData.put("productCode", "100004");//银联
         //paramsData.put("modelId", "MHN20003");
-        String result = SdkUtil.post(paramsData, routeAddProduct);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        Object result = SdkUtil.post(paramsData, routeAddProduct);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
 
     @ApiOperation(value = "查询商户审核状态")
