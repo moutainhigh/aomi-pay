@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author : hdq
- * @date 2020/7/14 14:52
+ * @date 2020/8/10
  */
 @Configuration
 @EnableSwagger2
@@ -42,8 +42,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiAppInfo() {
         return new ApiInfoBuilder()
-                .title("支付系统-Api接口调用管理")
-                .description("支付系统-环迅Api接口调用文档")
+                .title("支付系统-dictionary接口管理")
+                .description("支付系统-数据字典接口文档")
                 .contact("hdq")
                 .version("1.0")
                 .build();

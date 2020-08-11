@@ -44,8 +44,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiAppInfo() {
         return new ApiInfoBuilder()
-                .title("支付系统-oder接口管理")
-                .description("支付系统-order接口文档")
+                .title("支付系统-order接口管理")
+                .description("支付系统-订单交易接口文档")
                 .contact("hdq")
                 .version("1.0")
                 .build();

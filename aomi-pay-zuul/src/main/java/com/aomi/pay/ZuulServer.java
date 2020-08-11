@@ -70,6 +70,7 @@ public class ZuulServer {
             resources.add(swaggerResource("环迅api调用服务","/api/v2/api-docs","2.0"));
             resources.add(swaggerResource("user服务","/user/v2/api-docs","2.0"));
             resources.add(swaggerResource("order服务","/order/v2/api-docs","2.0"));
+            resources.add(swaggerResource("dictionary服务","/dictionary/v2/api-docs","2.0"));
             return resources;
         }
 

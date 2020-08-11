@@ -60,5 +60,4 @@ public class JsonUtil {
         return list;
     }
 
-
 }

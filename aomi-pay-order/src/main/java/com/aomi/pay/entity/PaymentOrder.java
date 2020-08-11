@@ -79,16 +79,7 @@ public class PaymentOrder implements Serializable {
      */
     @TableField("settle_type")
     private Integer settleType;
-    /**
-     * userId
-     */
-    @TableField("user_id")
-    private String userId;
-    /**
-     * 子商户微信公众号appid
-     */
-    @TableField("sub_appid")
-    private String subAppid;
+
     /**
      * 支付方式  0 支付宝 1微信 2银联
      */

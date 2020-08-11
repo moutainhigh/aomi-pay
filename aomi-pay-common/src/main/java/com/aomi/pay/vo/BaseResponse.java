@@ -13,6 +13,7 @@ import java.io.Serializable;
  * @Date 2020/8/3 15:34
  */
 @Data
+@SuppressWarnings(value={"unchecked","rawtypes"})
 @ApiModel(value = "基础返回参数")
 public class BaseResponse<T> implements Serializable {
 

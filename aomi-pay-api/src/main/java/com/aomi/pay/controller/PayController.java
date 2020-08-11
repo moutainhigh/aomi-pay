@@ -28,7 +28,6 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin
 @RestController
-@RefreshScope
 @Api(value = "PayController", tags = "交易类(无卡类)接口管理")
 @RequestMapping("/pay")
 public class PayController {

@@ -16,6 +16,9 @@ zuul:
     order:
       path: /order/**
       serviceId: service-order
+    dictionary:
+      path: /dictionary/**
+      serviceId: service-dictionary
 
 ribbon:
   ReadTimeout: 1000
@@ -23,7 +26,7 @@ ribbon:
   eager-load:
     #取消懒加载
     enabled: true
-    clients: service-api, service-order, service-user
+    clients: service-api, service-order, service-user,service-dictionary
 
 hystrix:
   threadpool:

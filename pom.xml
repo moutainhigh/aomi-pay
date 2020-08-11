@@ -32,6 +32,8 @@
         <module>aomi-pay-user</module>
         <!--订单-->
         <module>aomi-pay-order</module>
+        <!--数据字典-->
+        <module>aomi-pay-dictionary</module>
     </modules>
 
     <!--版本控制-->
