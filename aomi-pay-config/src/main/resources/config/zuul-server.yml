@@ -1,11 +1,11 @@
 zuul:
   #  retryable: true
   #  add-host-header: true
-  ignoredServices: "*"
+  # ignoredServices: "*"
   #  sensitiveHeaders: "*"
   host:
-    socket-timeout-millis: 15000
-    connect-timeout-millis: 15000
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 30000
   routes:
     api:
       path: /api/**
@@ -17,7 +17,33 @@ zuul:
       path: /order/**
       serviceId: service-order
 
+ribbon:
+  ReadTimeout: 1000
+  ConnectTimeout: 10000
+  eager-load:
+    #取消懒加载
+    enabled: true
+    clients: service-api, service-order, service-user
 
+hystrix:
+  threadpool:
+    default:
+      coreSize: 300
+      maxQueueSize: 200
+      queueSizeRejectionThreshold: 150
+  command:
+    default:
+      circuitBreaker:
+        requestVolumeThreshold: 50
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          strategy: THREAD
+          semaphore:
+            maxConcurrentRequests: 1000
+          thread:
+            timeoutInMilliseconds: 40000
 
 logging:
   config: classpath:log4j2.xml

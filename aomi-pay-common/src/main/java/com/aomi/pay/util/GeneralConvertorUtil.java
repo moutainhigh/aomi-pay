@@ -24,7 +24,8 @@ public class GeneralConvertorUtil {
     @Resource
     public static final Mapper mapper = DozerBeanMapperBuilder.buildDefault();
 
-    /*如果需要转换的对象属性与被转换的对象属性不同，则在被转换的实体类的属性上加 @Mapper("属性名")
+    /**
+     * 如果需要转换的对象属性与接收的对象属性不同，则在被转换的实体类的属性上加 @Mapper("属性名")
      *  比如User 转成 UserVo
      *  User中为name   UserVo中为userName
      *  要把name转成userName  则在User中name属性上加 @Mapping("userName")

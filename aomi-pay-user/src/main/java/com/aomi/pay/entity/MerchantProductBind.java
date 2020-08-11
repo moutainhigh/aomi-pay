@@ -1,5 +1,6 @@
 package com.aomi.pay.entity;
 
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,9 +8,17 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * <p>
+ * 商户产品利率绑定关系表
+ * </p>
+ *
+ * @author author
+ * @since 2020-08-11
+ */
 @Data
-@TableName("t_merchant_product")
-public class MerchantProduct implements Serializable {
+@TableName("t_merchant_product_bind")
+public class MerchantProductBind implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,25 +29,14 @@ public class MerchantProduct implements Serializable {
     private Integer id;
 
     /**
-     * 产品编码值
+     * 机构商户id
      */
-    private String productCode;
+    private String merchantId;
 
     /**
-     * 签约费率id值
+     * 产品id
      */
-    private String modelId;
-
-    /**
-     * 产品描述
-     */
-    private String note;
-
-    /**
-     * 平台标识(hx)
-     */
-    private String platformTag;
+    private Integer productId;
 
 
 }
-

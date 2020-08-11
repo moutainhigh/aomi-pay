@@ -1,7 +1,5 @@
 package com.aomi.pay.config;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author : hdq
- * @date 2020/7/14 14:52
+ * @date 2020/8/3
  */
 @Configuration
 @EnableSwagger2

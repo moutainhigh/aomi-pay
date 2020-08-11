@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class MchtMedia {
 
+    //imgCode
     private String certFront;
     private String certReverse;
     private String handheld;

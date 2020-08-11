@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -39,7 +36,7 @@ public class MerchantController {
 
     @ApiOperation(value = "商户上传图片")
     @PostMapping("/uploadImg")
-    public BaseResponse uploadImg(PictureVO pictureVO) throws IOException {
+    public BaseResponse uploadImg(@RequestBody PictureVO pictureVO) throws IOException {
         JSONObject jsonObject = merchantService.uploadImg(pictureVO);
         return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
@@ -47,16 +44,17 @@ public class MerchantController {
 
     @ApiOperation(value = "商户信息入网")
     @PostMapping("/createOrgMcht")
-    public BaseResponse createOrgMcht(MerchantInfoVO merchantInfoVO) throws Exception {
+    public BaseResponse createOrgMcht(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
         JSONObject resultJson = this.merchantService.createOrgMcht(merchantInfoVO);
         return new BaseResponse(CommonErrorCode.SUCCESS,resultJson);
     }
 
+
     @ApiOperation(value = "商户开通产品")
     @PostMapping("/addProduct")
-    public BaseResponse addProduct(ProductVO productVO) throws Exception {
-        this.merchantService.addProduct(productVO);
-        return new BaseResponse(CommonErrorCode.SUCCESS);
+    public BaseResponse addProduct(@RequestBody ProductVO productVO) throws Exception {
+       JSONObject jsonObject = this.merchantService.addProduct(productVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
     }
 
 //    @ApiOperation(value = "商户入网信息查询")
@@ -85,10 +83,40 @@ public class MerchantController {
 //        JSONObject jsonObject = JSONObject.fromObject(result);
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
 //    }
-}
 
-//@ApiOperation(value = "商户上传图片")
-//    @PostMapping("/uploadImg")
+
+
+//    @Value("${api_route.mcht.add_product}")
+//    private String routeAddProduct;
+//
+//    @ApiOperation(value = "商户开通产品")
+//    @PostMapping("/addProduct/test")
+//    public BaseResponse addProduct() throws Exception {
+//        log.info("--------商户开通产品--------");
+//        Map<String, Object> paramsData = new HashMap<>();
+//        //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
+//        paramsData.put("instId", "015001");
+//        paramsData.put("mchtNo", "015370109123550");
+//        //paramsData.put("productCode", "100011");//微信
+//        //paramsData.put("modelId", "MPN10003");
+//        paramsData.put("productCode", "100010");//支付宝
+//        paramsData.put("modelId", "MHN90143");
+//        //paramsData.put("productCode", "100004");//银联
+//        //paramsData.put("modelId", "MHN20003");
+//        Object result = SdkUtil.post(paramsData, routeAddProduct);
+//        JSONObject jsonObject = JSONObject.fromObject(result);
+//        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+//    }
+
+}
+//    /**
+//     * 商户图片上传路径
+//     */
+//    @Value("${api_route.mcht.upload_img}")
+//    private String routeUploadImg;
+//
+//    @ApiOperation(value = "商户上传图片测试")
+//    @PostMapping("/uploadImg/test")
 //    public BaseResponse uploadImg() throws Exception {
 //        log.info("--------商户上传图片--------");
 //        Map<String, Object> paramsData = new HashMap<>();
@@ -99,15 +127,50 @@ public class MerchantController {
 //        paramsData.put("instId", "015001");
 //        paramsData.put("pikName", "hahaha");
 //        //paramsData.put("key-version","29");
-//
-//        String result = SdkUtil.post(paramsData, routeUploadImg);
-//        JSONObject jsonObject = JSONObject.fromObject(result);
+//        Object post = SdkUtil.post(paramsData, routeUploadImg);
+//        JSONObject jsonObject = JSONObject.fromObject(post);
 //        //TODO 结果暂时看的日志，后续补齐
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
 //    }
+
+//    /**
+//     * 机构id
+//     */
+//    private static String INST_ID;
+//
+//    @Value("${inst-id}")
+//    public void setKeyVersion(String instId) {
+//        INST_ID = instId;
+//    }
+//
+//
+//    /**
+//     * 商户信息入网路径
+//     */
+//    @Value("${api_route.mcht.create_org_mcht}")
+//    private String routeCreateOrgMcht;
+//
+//    /**
+//     * 商户信息入网路径
+//     */
+//    @Value("${api_route.mcht.query_mcht}")
+//    private String routeQueryMcht;
+//
+//    /**
+//     * 查询商户审核状态路径
+//     */
+//    @Value("${api_route.mcht.query_mcht_audit}")
+//    private String routeQueryMchtAudit;
+//
+//    /**
+//     * 查询商户审核状态路径
+//     */
+//    @Value("${api_route.mcht.add_product}")
+//    private String routeAddProduct;
+
 //
 //    @ApiOperation(value = "商户信息入网")
-//    @PostMapping("/createOrgMcht")
+//    @PostMapping("/createOrgMcht/test")
 //    public BaseResponse createOrgMcht() throws Exception {
 //        log.info("--------商户信息入网--------");
 //        Map<String, Object> paramsData = new HashMap<>();
@@ -116,7 +179,7 @@ public class MerchantController {
 //        MchtBase mchtBase = new MchtBase();
 //        mchtBase.setMchtScope("173");
 //        mchtBase.setMchtKind("B1");
-//        mchtBase.setInstMchtNo("test100000002");
+//        mchtBase.setInstMchtNo("test100000003");
 //        mchtBase.setAddress("E/NMOdUvpT7mxuBoFqFCG9ecase2fJ21k4IXyGqA2H/jHRUZ0zR5vDi3UuugvUq6");
 //        mchtBase.setMchtName("3DZburLpyTBSi4b64LnTl8i7/785UHBkB3efQ03ynZk=");
 //        mchtBase.setSimpleName("dEZUiYp/DZ14YnabEAyb4A==");
@@ -153,7 +216,7 @@ public class MerchantController {
 //        indestruLicenses.add("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
 //        indestruLicenses.add("VfQY65Q0OPO40V9PuGp6Qi7mK49nW23kzxnfXw26XK23hTiJACAE1ss6lZf8QgLG");
 //        indestruLicenses.add("GD2miQARzl1DpNlKSRHrc9lDoXUTDGtHgytmaXl2371PQpe78I9K/NhKYHP9cTCG");
-
+//
 //        mchtMedia.setIndustryLicenses(indestruLicenses);
 //        mchtMedia.setBankCardPositive("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
 //        mchtMedia.setHandheld("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
@@ -169,11 +232,14 @@ public class MerchantController {
 //
 //        //paramsData.put("up-appId", "135459893032255489");
 //
-//        String result = SdkUtil.post(paramsData, routeCreateOrgMcht);
-//        JSONObject jsonObject = JSONObject.fromObject(result);
+//        Object post = SdkUtil.post(paramsData, routeCreateOrgMcht);
+//        JSONObject jsonObject = JSONObject.fromObject(post);
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
-//    }
-//
+
+
+
+
+
 //    @ApiOperation(value = "商户入网信息查询")
 //    @PostMapping("/queryMcht")
 //    public BaseResponse queryMcht() throws Exception {
@@ -202,11 +268,11 @@ public class MerchantController {
 //        paramsData.put("modelId", "MHN90143");
 //        //paramsData.put("productCode", "100004");//银联
 //        //paramsData.put("modelId", "MHN20003");
-//        String result = SdkUtil.post(paramsData, routeAddProduct);
+//        Object result = SdkUtil.post(paramsData, routeAddProduct);
 //        JSONObject jsonObject = JSONObject.fromObject(result);
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
 //    }
-//
+
 //    @ApiOperation(value = "查询商户审核状态")
 //    @PostMapping("/queryMchtAudit")
 //    public BaseResponse queryMchtAudit() throws Exception {

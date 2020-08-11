@@ -1,7 +1,5 @@
 package com.aomi.pay.service.impl;
 
-import com.aomi.pay.domain.CommonErrorCode;
-import com.aomi.pay.exception.BusinessException;
 import com.aomi.pay.service.MerchantService;
 import com.aomi.pay.util.SdkUtil;
 import com.aomi.pay.vo.*;
@@ -64,18 +62,22 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public JSONObject uploadImg(PictureVO pictureVO) throws IOException {
-        JSONObject imgObject = null;
         log.info("--------商户上传图片--------");
+        PictureInfoVO pictureInfoVO = new PictureInfoVO();
+
         String imagStr = pictureVO.getImagStr();
         //加密后的图片
         String encrypt = SdkUtil.encrypt(imagStr);
-        pictureVO.setPic(encrypt);
-        pictureVO.setInstId(INST_ID);
+
+        pictureInfoVO.setInstId(INST_ID);
+        pictureInfoVO.setPicName(pictureVO.getPicName());
+        pictureInfoVO.setPicType(pictureVO.getPicType());
+        pictureInfoVO.setPic(encrypt);
+
+        JSONObject imgObject = new JSONObject();
         imgObject.put("encrypt",encrypt);
-
-        String result = SdkUtil.post(pictureVO, routeUploadImg);
-        JSONObject jsonObject = JSONObject.fromObject(result);
-
+        Object post = SdkUtil.post(pictureInfoVO, routeUploadImg);
+        JSONObject jsonObject = JSONObject.fromObject(post);
         String imgCode = jsonObject.getString("imgCode");
         imgObject.put("imgCode",imgCode);
         return imgObject;
@@ -152,28 +154,30 @@ public class MerchantServiceImpl implements MerchantService {
             }).collect(Collectors.toList());
             mchtMedia.setExtraPics(collectExtraPics);
         }
-        JSONObject resultJson = null;
+
+        JSONObject resultJson = new JSONObject();
         //todo 处理返回值
-        String result = SdkUtil.post(merchantInfoVO, routeCreateOrgMcht);
-        JSONObject jsonObject = JSONObject.fromObject(result);
+        Object post = SdkUtil.post(merchantInfoVO, routeCreateOrgMcht);
+        JSONObject jsonObject = JSONObject.fromObject(post);
         String mchtNo = jsonObject.getString("mchtNo");
         String unionPayMchtNo = jsonObject.getString("unionPayMchtNo");
         resultJson.put("mchtNo",mchtNo);
-        if (StringUtils.isNotEmpty(unionPayMchtNo)){
-            resultJson.put("unionPayMchtNo",unionPayMchtNo);
-        }
+        resultJson.put("unionPayMchtNo",unionPayMchtNo);
         return resultJson;
     }
 
     @Override
-    public void addProduct(ProductVO productVO) throws IOException {
+    public JSONObject addProduct(ProductVO productVO) throws IOException {
         log.info("--------商户开通产品--------");
-        productVO.setInstId(INST_ID);
-        try {
-            SdkUtil.post(productVO, routeAddProduct);
-        } catch (BusinessException businessException) {
-            throw new BusinessException(CommonErrorCode.E_301004);//暂定
-        }
+
+        JSONObject productJson = new JSONObject();
+        productJson.put("instId",INST_ID);
+        productJson.put("mchtNo",productVO.getMchtNO());
+        productJson.put("productCode",productVO.getProductCode());
+        productJson.put("modelId",productVO.getModelId());
+        Object post = SdkUtil.post(productJson, routeAddProduct);
+        JSONObject jsonObject = JSONObject.fromObject(post);
+        return  jsonObject;
     }
 }
 

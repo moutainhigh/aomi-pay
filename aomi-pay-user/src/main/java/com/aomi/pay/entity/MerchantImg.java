@@ -26,7 +26,7 @@ public class MerchantImg implements Serializable {
     /**
      * 图片id
      */
-    @TableId(value = "id", type = IdType.ID_WORKER)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**

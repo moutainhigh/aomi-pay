@@ -1,5 +1,6 @@
 package com.aomi.pay.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * @Desc  商户基本信息
  */
 @Data
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class MchtBase {
 
 

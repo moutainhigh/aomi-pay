@@ -4,8 +4,6 @@ import com.aomi.pay.vo.MerchantInfoVO;
 import com.aomi.pay.vo.ProductVO;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Service
 public interface UserService {
 
@@ -14,7 +12,7 @@ public interface UserService {
 
      void openMcht(ProductVO productVO) throws Exception;
 
-     String uploadImg(HttpServletRequest request, String picType, String picName, String userId) throws Exception;
+     String uploadImg(String imageUrl, String picType, String picName, String userId,String imageStr) throws Exception;
 //
 //    JSONObject queryMcht(String id) throws IOException;
 //

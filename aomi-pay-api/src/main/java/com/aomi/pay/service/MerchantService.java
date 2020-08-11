@@ -14,5 +14,5 @@ public interface MerchantService {
 
     JSONObject createOrgMcht(MerchantInfoVO merchantInfoVO) throws IOException;
 
-    void addProduct(ProductVO productVO) throws IOException;
+    JSONObject addProduct(ProductVO productVO) throws IOException;
 }

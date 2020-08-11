@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -23,24 +24,33 @@ public class MerchantInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 商户id（机构）
+     * 商户id（机构）账户
      */
     @TableId(value = "id", type = IdType.ID_WORKER)
-    private Long id;
+    private String id;
+
+    /**
+     * 密码
+     */
+    private String password;
+
+    /**
+     * 平台生成的商户号
+     */
+    private String platformId;
 
     /**
      * 商户名称
      */
     private String merchantName;
-
     /**
      * 商户简称
      */
     private String simpleName;
 
     /**
-     * 商户种类   B1-个人 
-B2-个体工商户或企业
+     * 商户种类   B1-个人
+     B2-个体工商户或企业
      */
     private String merchantKind;
 
@@ -66,14 +76,14 @@ B2-个体工商户或企业
 
     /**
      * 是否是特约用户    0-否
-1-是
+     1-是
 
      */
     private String merchantType;
 
     /**
      * 是否一户一码    0-否
-1-是
+     1-是
 
      */
     private String unionpayMerchant;
@@ -105,7 +115,7 @@ B2-个体工商户或企业
 
     /**
      * 是否为代理清算账户   0-否
-1-是
+     1-是
 
      */
     private String acctProxy;
@@ -163,30 +173,21 @@ B2-个体工商户或企业
 
     /**
      * 营业执照类型     商户种类为B2时为必填
-0-企业法人营业执照
-1-个体工商户营业执照
+     0-企业法人营业执照
+     1-个体工商户营业执照
      */
     private String licenseType;
 
     /**
-     * 产品编码值
-     */
-    private String productCode;
-
-    /**
-     * 签约费率id值
-     */
-    private String modelId;
-
-    /**
-     * 通道类型      10-环刷商户
-11-讯POS个人
-12-环POS个人  
-20-企业商户
-21-讯POS企业
-22-环POS企业
-1A- 机构合作商户个人
-2A-机构合作商户企业
+     * 通道类型
+     10-环刷商户
+     11-讯POS个人
+     12-环POS个人
+     20-企业商户
+     21-讯POS企业
+     22-环POS企业
+     1A- 机构合作商户个人
+     2A-机构合作商户企业
      */
     private String channelKind;
 
@@ -201,20 +202,38 @@ B2-个体工商户或企业
     private String snModelId;
 
     /**
-     * 服务类型  01–机构入网,无sn,无snModelId
-02-机构入网, 有sn,无snModelId
-03-机构入网, 有sn,有snModelId
+     * 服务类型
+     01–机构入网,无sn,无snModelId
+     02-机构入网, 有sn,无snModelId
+     03-机构入网, 有sn,有snModelId
      */
     private String serviceType;
 
     /**
-     * 0－正常 1－商户新增保存 2－提交待审核 3－商户停用 4－商户注销 5－拒绝待修改',
-     * */
+     * 仅开通银联刷卡类型时返回
+     */
+    private String unionPayMchtNo;
+
+    /**
+     * 商户状态    0－正常
+     1－商户新增保存
+     2－提交待审核
+     3－商户停用
+     4－商户注销
+     5－拒绝待修改
+     */
     private String status;
 
-    private String platformId;
-    private String unionPayMchtNo;
+    /**
+     * 代理商下业务员id
+     */
     private Integer salesmanId;
-    private String password;
+
+    /**
+     * 商户创建时间
+     */
+    private LocalDateTime createTime;
+
+
 
 }
