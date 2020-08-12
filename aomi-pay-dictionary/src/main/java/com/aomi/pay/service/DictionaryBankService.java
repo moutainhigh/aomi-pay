@@ -17,6 +17,6 @@ public interface DictionaryBankService {
     /**
      * 获取所有银行区域编码信息
      */
-    List<DictionaryBankVO> getAllBankArea();
+    List<DictionaryBankVO> getAllBank();
 
 }

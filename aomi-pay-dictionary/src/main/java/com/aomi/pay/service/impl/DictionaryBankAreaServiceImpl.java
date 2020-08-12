@@ -30,7 +30,7 @@ public class DictionaryBankAreaServiceImpl implements DictionaryBankAreaService 
     private DictionaryBankAreaMapper dictionaryBankAreaMapper;
 
     /**
-     * 获取所有银行编码信息
+     * 获取所有银行区域编码信息
      */
     @Cacheable(value = "bankAreaCache", key = "'all'")
     @Override
