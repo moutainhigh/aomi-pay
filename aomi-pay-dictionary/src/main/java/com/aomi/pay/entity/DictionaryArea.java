@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 银行区域编码字典表
+ * 区域编码字典表
  * </p>
  *
  * @author hdq
@@ -22,8 +22,8 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_dictionary_bank_area")
-public class DictionaryBankArea implements Serializable {
+@TableName("t_dictionary_area")
+public class DictionaryArea implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

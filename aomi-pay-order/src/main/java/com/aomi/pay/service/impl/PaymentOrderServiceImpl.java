@@ -105,6 +105,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         BaseResponse response = apiClient.onlineTrade(jsPayDTO);
         log.info("环迅api：{}", response);
         JSONObject jsonObject = JSONObject.fromObject(response.getData());
+        //TODO  code不为100000
         //实体转化
         PaymentOrder paymentOrder = GeneralConvertorUtil.convertor(jsPayDTO, PaymentOrder.class);
         paymentOrder.setMerchantId(merchantId);//机构商户号

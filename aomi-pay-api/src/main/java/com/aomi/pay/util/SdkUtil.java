@@ -124,14 +124,17 @@ public class SdkUtil {
         }
         log.info("response:{}", StringUtils.isEmpty(response) ? null : response.toString());
         String content =  response.body().string();
+        log.info("response.body:{}", StringUtils.isEmpty(response.body()) ? null : content);
         if (!StringUtils.isEmpty(response.body())) {
             JSONObject jsonObject = JSONObject.fromObject(content);
             //当接口返回resultCode为不1 或者 errorCode 不为空时 抛出异常信息
             if (ApiConstans.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstans.RESULT_CODE_NAME))) {
                 CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
             }
+            if(jsonObject.has(ApiConstans.ERROR_CODE_NAME)){
+                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
+            }
         }
-        log.info("response.body:{}", StringUtils.isEmpty(response.body()) ? null : content);
         JSONObject jsonObject = JSONObject.fromObject(content);
         log.info("---------接口调用结束---------");
         return jsonObject.get(ApiConstans.ERROR_DESC_DATA);

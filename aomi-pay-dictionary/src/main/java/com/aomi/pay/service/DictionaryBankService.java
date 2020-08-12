@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 银行区域编码字典Service
+ * 银行编码字典Service
  *
  * @author : hdq
  * @date 2020/8/11
@@ -15,7 +15,7 @@ import java.util.List;
 public interface DictionaryBankService {
 
     /**
-     * 获取所有银行区域编码信息
+     * 获取所有银行编码信息
      */
     List<DictionaryBankVO> getAllBank();
 

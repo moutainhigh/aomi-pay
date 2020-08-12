@@ -7,7 +7,6 @@ import com.aomi.pay.domain.CommonErrorCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
@@ -102,37 +101,37 @@ public class MerchantController {
         Data data = new Data();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         MchtBase mchtBase = new MchtBase();
-        mchtBase.setMchtScope("173");
-        mchtBase.setMchtKind("B2");
-        mchtBase.setInstMchtNo("10000000001");
-        mchtBase.setAddress(SdkUtil.encrypt("上海市崇明区堡镇堡镇南路58号15幢2楼227-3室"));
-        mchtBase.setMchtName(SdkUtil.encrypt("上海引线物联科技有限公司"));
-        mchtBase.setSimpleName(SdkUtil.encrypt("上海引线物联"));
-        mchtBase.setAreaNo("310112");
-        mchtBase.setMchtType("0");
-        mchtBase.setStorePhone(SdkUtil.encrypt("021-2358996"));
+        mchtBase.setMchtScope("42");
+        mchtBase.setMchtKind("B2");//商户种类 1个人  2个体工商、企业
+        mchtBase.setInstMchtNo("10000000005");//商户号
+        mchtBase.setAddress(SdkUtil.encrypt("上海市闵行区紫星路588号2幢2349室"));//商户地址
+        mchtBase.setMchtName(SdkUtil.encrypt("上海熬米网络科技有限公司"));//商户名称
+        mchtBase.setSimpleName(SdkUtil.encrypt("上海熬米网络"));//商户简称
+        mchtBase.setAreaNo("33");//经营区域码
+        mchtBase.setMchtType("0");//是否特约
+        mchtBase.setStorePhone(SdkUtil.encrypt("021-2358996"));//店铺联系电话
 
         MchtUser mchtUser = new MchtUser();
-        mchtUser.setPhone(SdkUtil.encrypt("13032100263"));
-        mchtUser.setName(SdkUtil.encrypt("谢军清"));
+        mchtUser.setPhone(SdkUtil.encrypt("13032100263"));//法人电话
+        mchtUser.setName(SdkUtil.encrypt("俞江龙"));//用户名称
         //mchtUser.setCardNo("eUXo2ePvDBmmjon4vvCzNGs45ZcQ7GDK60UO/cFufSg=");
-        mchtUser.setCardNo(SdkUtil.encrypt("362531197706090296"));
-        //mchtUser.setCardDate(SdkUtil.encrypt("362531197706090296"));
-        //mchtUser.setEmail("IuwYW+1WKOWmSACCpmpmT2xy8YrcfxQlbST+WLq6fsE=");
+        mchtUser.setCardNo(SdkUtil.encrypt("362531197706090296"));//证件号码
+        mchtUser.setCardDate("20170310-20220310");//身份证有效期
+        mchtUser.setEmail(SdkUtil.encrypt("aominet@qq.com"));//法人email
 
         MchtComp mchtComp = new MchtComp();
         mchtComp.setLicenseType("1");
-        mchtComp.setLicenseNo(SdkUtil.encrypt("91310230MA1JYU6M1J"));
+        mchtComp.setLicenseNo(SdkUtil.encrypt("91310230MA1JYU6M1J"));//营业执照号码
         //mchtComp.setLicenseDate("20150125");
 
         MchtAcct mchtAcct = new MchtAcct();
-        mchtAcct.setAcctProxy("1");
-        mchtAcct.setAcctNo(SdkUtil.encrypt("1001213909200209221"));
-        mchtAcct.setAcctType("0");
-        mchtAcct.setAcctZbankCode("520102");
-        mchtAcct.setAcctZbankNo("403711001013");
-        mchtAcct.setAcctName(SdkUtil.encrypt("谢军清"));
-        mchtAcct.setAcctBankNo("102290021393");
+        mchtAcct.setAcctProxy("1");//是否代理清算账户
+        mchtAcct.setAcctNo(SdkUtil.encrypt("8888888173851567"));//银行卡号
+        mchtAcct.setAcctType("0");//账户类型 0对公 1对私
+        mchtAcct.setAcctZbankCode("33");//支行区域编码
+        mchtAcct.setAcctZbankNo("323331000001");//支行编码
+        mchtAcct.setAcctName(SdkUtil.encrypt("上海熬米网络科技有限公司"));//账户姓名
+        mchtAcct.setAcctBankNo("323331000001");//开户行编码
         //mchtAcct.setAgentCardNo("TPu2cNtqsN5/gFcSrNjmmeje2Ac1xcDbZkJFHehr0aM=");
 
         MchtMedia mchtMedia = new MchtMedia();
@@ -150,8 +149,10 @@ public class MerchantController {
         Product product = new Product();
 
         Map<String,String> productMap = new HashMap<>();
-        productMap.put("100010","MHN90144");
-        productMap.put("100011","MHN11201");
+        productMap.put("100043","MHN10563");
+        productMap.put("100044","MHN10563");
+        productMap.put("100042","MHN10563");
+        //productMap.put("100011","MHN11201");
 
         paramsData.put("mchtBase", mchtBase);
         paramsData.put("mchtUser", mchtUser);
@@ -159,7 +160,7 @@ public class MerchantController {
         paramsData.put("mchtAcct", mchtAcct);
         paramsData.put("mchtMedia", mchtMedia);
         paramsData.put("product", productMap);
-        paramsData.put("instId", "015001");
+        paramsData.put("instId", INST_ID);
         paramsData.put("key-version", "29");
 
         Object result = SdkUtil.post(paramsData, routeCreateOrgMcht);

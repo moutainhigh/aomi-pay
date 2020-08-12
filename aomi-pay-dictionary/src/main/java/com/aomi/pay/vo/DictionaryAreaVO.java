@@ -9,15 +9,15 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 银行区域编码字典表
+ * 区域编码字典表
  * </p>
  *
  * @author hdq
  * @since 2020-08-11
  */
 @Data
-@ApiModel(value = "银行区域编码接口返回封装")
-public class DictionaryBankAreaVO implements Serializable {
+@ApiModel(value = "区域编码接口返回封装")
+public class DictionaryAreaVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

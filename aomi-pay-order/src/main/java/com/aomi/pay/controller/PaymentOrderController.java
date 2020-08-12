@@ -10,6 +10,8 @@ import com.aomi.pay.util.ValidateUtil;
 import com.aomi.pay.vo.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,9 @@ public class PaymentOrderController {
     private PaymentOrderService paymentOrderService;
 
     @ApiOperation(value = "h5支付")
+    /*@ApiResponses({
+            @ApiResponse(code=200,message="成功",response= DictListResp.class),
+    })*/
     @PostMapping("/jsPay")
     public BaseResponse jsPay(@RequestBody JsPayRequest req) throws Exception {
         log.info("--------h5支付开始--------req:{}",req);
