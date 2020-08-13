@@ -19,6 +19,7 @@ public class MchtBase {
      */
     private String instMchtNo;
     private String mchtName;
+    private String mchtNo;
     private String simpleName;
     private String mchtKind;
     private String areaNo;
@@ -26,6 +27,7 @@ public class MchtBase {
     private String storePhone;
     private String mchtScope;
     private String mchtType;
+    private String status;
     private String nuionpayMacht;
 
 }

@@ -1,6 +1,7 @@
 package com.aomi.pay.vo;
 
 import lombok.Data;
+import net.sf.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class MerchantInfoVO implements Serializable {
     private String snModelId;
     private String serviceType;
     private Map<String,String> product;
-    private String extras;
+    private JSONObject extras;
     private String channelKind;
 
 

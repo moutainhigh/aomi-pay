@@ -11,7 +11,7 @@ import lombok.Data;
 public class Product {
 
     private String instId;
-    private String mchtNO;//平台商户号
+    private String mchtNo;//平台商户号
     private String productCode;//产品类型
     private String modelId;//签约费率id
 }

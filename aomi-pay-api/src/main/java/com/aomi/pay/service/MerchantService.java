@@ -12,7 +12,13 @@ import java.io.IOException;
 public interface MerchantService {
     JSONObject uploadImg(PictureVO pictureVO) throws IOException;
 
-    JSONObject createOrgMcht(MerchantInfoVO merchantInfoVO) throws IOException;
+    JSONObject createOrgMcht(MerchantInfoVO merchantInfoVO) throws Exception;
 
     JSONObject addProduct(ProductVO productVO) throws IOException;
+
+    MerchantInfoVO queryMcht(JSONObject str) throws Exception;
+
+    JSONObject queryMchtAudit(JSONObject str) throws IOException;
+
+    JSONObject updateMchtInfo(MerchantInfoVO merchantInfoVO) throws IOException;
 }

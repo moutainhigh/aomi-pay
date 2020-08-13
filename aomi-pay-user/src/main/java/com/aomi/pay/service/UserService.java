@@ -2,19 +2,26 @@ package com.aomi.pay.service;
 
 import com.aomi.pay.vo.MerchantInfoVO;
 import com.aomi.pay.vo.ProductVO;
+import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public interface UserService {
 
 
-     void create(MerchantInfoVO merchantInfoVO) throws Exception;
+     String create(MerchantInfoVO merchantInfoVO) throws Exception;
 
      void openMcht(ProductVO productVO) throws Exception;
 
-     String uploadImg(String imageUrl, String picType, String picName, String userId,String imageStr) throws Exception;
-//
-//    JSONObject queryMcht(String id) throws IOException;
-//
-//    JSONObject queryMchtAudit(String id) throws IOException;
+     String uploadImg(HttpServletRequest request,String picType,String userId) throws Exception;
+
+     MerchantInfoVO queryMcht(JSONObject str) throws Exception;
+
+     JSONObject queryMchtAudit(JSONObject str) throws Exception;
+
+     JSONObject updateInfo(MerchantInfoVO merchantInfoVO) throws Exception;
+
+     JSONObject  addMerchant(String userPhone);
 }

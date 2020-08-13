@@ -151,6 +151,19 @@ public class SdkUtil {
     }
 
     /**
+     * @author hdq
+     * @date 2020/8/4
+     * @desc 敏感信息加密
+     **/
+    public static String decrypt(String content) {
+        String result = "";
+        if (StringUtil.isNotBlank(content)) {
+            result = SecretUtil.decrypt(content, KEY, SecretType.AES);
+        }
+        return result;
+    }
+
+    /**
      * @desc  各种测试节省时间
      **/
     public static void main(String[] args) throws Exception{
