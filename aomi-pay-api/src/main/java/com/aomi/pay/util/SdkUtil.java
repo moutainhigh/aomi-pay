@@ -12,7 +12,7 @@
 package com.aomi.pay.util;
 
 import com.alibaba.fastjson.JSON;
-import com.aomi.pay.constants.ApiConstans;
+import com.aomi.pay.constants.ApiConstants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.iboxpay.open.security.constant.SecretType;
 import com.iboxpay.open.security.constant.SignType;
@@ -128,16 +128,16 @@ public class SdkUtil {
         if (!StringUtils.isEmpty(response.body())) {
             JSONObject jsonObject = JSONObject.fromObject(content);
             //当接口返回resultCode为不1 或者 errorCode 不为空时 抛出异常信息
-            if (ApiConstans.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstans.RESULT_CODE_NAME))) {
-                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
+            if (ApiConstants.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstants.RESULT_CODE_NAME))) {
+                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstants.ERROR_CODE_NAME)), "api接口返回异常信息：".concat(jsonObject.getString(ApiConstants.ERROR_DESC_NAME)));
             }
-            if(jsonObject.has(ApiConstans.ERROR_CODE_NAME)){
-                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
+            if(jsonObject.has(ApiConstants.ERROR_CODE_NAME)){
+                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstants.ERROR_CODE_NAME)), "api接口返回异常信息：".concat(jsonObject.getString(ApiConstants.ERROR_DESC_NAME)));
             }
         }
         JSONObject jsonObject = JSONObject.fromObject(content);
         log.info("---------接口调用结束---------");
-        return jsonObject.get(ApiConstans.ERROR_DESC_DATA);
+        return jsonObject.get(ApiConstants.ERROR_DESC_DATA);
     }
 
     /**
@@ -149,6 +149,19 @@ public class SdkUtil {
         String result = "";
         if (StringUtil.isNotBlank(content)) {
             result = SecretUtil.encrypt(content, KEY, SecretType.AES);
+        }
+        return result;
+    }
+
+    /**
+     * @author hdq
+     * @date 2020/8/4
+     * @desc 敏感信息加密
+     **/
+    public static String decrypt(String content) {
+        String result = "";
+        if (StringUtil.isNotBlank(content)) {
+            result = SecretUtil.decrypt(content, KEY, SecretType.AES);
         }
         return result;
     }
@@ -206,8 +219,8 @@ public class SdkUtil {
         log.info("response.body:{}", StringUtils.isEmpty(response.body()) ? null : content);
         if (!StringUtils.isEmpty(response.body())) {
             JSONObject jsonObject = JSONObject.fromObject(content);
-            if (ApiConstans.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstans.RESULT_CODE_NAME))) {
-                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstans.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstans.ERROR_DESC_NAME)));
+            if (ApiConstants.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstants.RESULT_CODE_NAME))) {
+                CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstants.ERROR_CODE_NAME)), "api接口调用失败：".concat(jsonObject.getString(ApiConstants.ERROR_DESC_NAME)));
             }
         }
 

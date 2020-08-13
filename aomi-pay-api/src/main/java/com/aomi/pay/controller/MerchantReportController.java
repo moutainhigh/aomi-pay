@@ -35,6 +35,12 @@ import java.util.Map;
 public class MerchantReportController {
 
     /**
+     * 机构id
+     */
+    @Value("${inst-id}")
+    private String intsId;
+
+    /**
      * 查询无卡商户报备状态
      */
     @Value("${api_route.mcht_report.query_register}")
@@ -64,9 +70,9 @@ public class MerchantReportController {
         log.info("--------查询无卡商户报备状态--------");
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
-        paramsData.put("instId", "015001");
+        paramsData.put("instId", intsId);
         //paramsData.put("mchtNo", "015370109123528");
-        paramsData.put("mchtNo", "015310109123536");
+        paramsData.put("mchtNo", "027310103382119");
         Object result = SdkUtil.post(paramsData, routeQueryRegister);
         return new BaseResponse(CommonErrorCode.SUCCESS,result);
     }
@@ -77,10 +83,10 @@ public class MerchantReportController {
         log.info("--------微信子商户配置--------");
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
-        paramsData.put("instId", "015001");
-        paramsData.put("mchtNo", "015370109123528");
-        paramsData.put("appid", "154344164291514368");
-        paramsData.put("subscribeAppid", "154344164291514368");
+        paramsData.put("instId", intsId);
+        paramsData.put("mchtNo", "027310103382119");
+        paramsData.put("appid", "wxeb1b1558437e9b12");
+        //paramsData.put("subscribeAppid", "154344164291514368");
         Object result = SdkUtil.post(paramsData, routeConfigWechatSubmcht);
         return new BaseResponse(CommonErrorCode.SUCCESS,result);
     }

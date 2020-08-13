@@ -2,7 +2,7 @@
 pay:
   hx:
     #支付回调地址
-    notify_url: 192.168.103.250:8179/order/payment/notify
+    notify_url: https://pay.cloudbest.shop/order/payment/notify
     #结算周期
     settle_type: 0
     #订单失效时间 分钟

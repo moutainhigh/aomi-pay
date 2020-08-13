@@ -1,26 +1,20 @@
 package com.aomi.pay.controller;
 
 
-import com.aomi.pay.constants.ApiConstans;
+import com.aomi.pay.constants.ApiConstants;
 import com.aomi.pay.domain.CommonErrorCode;
-import com.aomi.pay.entity.PaymentOrder;
 import com.aomi.pay.model.JsPayRequest;
 import com.aomi.pay.service.PaymentOrderService;
 import com.aomi.pay.util.ValidateUtil;
 import com.aomi.pay.vo.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * 交易类(无卡类)接口Controller
@@ -57,10 +51,10 @@ public class PaymentOrderController {
     public void payNotify(HttpServletRequest request) throws Exception {
         log.info("------------支付回调开始------------");
         //获取通知信息
-        String tradeStatus = new String(request.getParameter(ApiConstans.TRADE_STATUS_NAME).getBytes("ISO-8859-1"), "UTF-8");
-        String platformMerchantId = new String(request.getParameter(ApiConstans.MERCHANT_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
-        String tradeNo = new String(request.getParameter(ApiConstans.TEADE_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
-        String outTradeNo = new String(request.getParameter(ApiConstans.OUT_TRADE_NO).getBytes("ISO-8859-1"), "UTF-8");
+        String tradeStatus = new String(request.getParameter(ApiConstants.TRADE_STATUS_NAME).getBytes("ISO-8859-1"), "UTF-8");
+        String platformMerchantId = new String(request.getParameter(ApiConstants.MERCHANT_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
+        String tradeNo = new String(request.getParameter(ApiConstants.TEADE_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
+        String outTradeNo = new String(request.getParameter(ApiConstants.OUT_TRADE_NO).getBytes("ISO-8859-1"), "UTF-8");
         paymentOrderService.payNotify(tradeStatus,platformMerchantId,tradeNo,outTradeNo);
         log.info("--------支付回调结束--------");
     }

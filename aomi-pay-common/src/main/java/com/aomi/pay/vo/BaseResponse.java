@@ -13,18 +13,10 @@ import java.io.Serializable;
  * @Date 2020/8/3 15:34
  */
 @Data
-@SuppressWarnings(value={"unchecked","rawtypes"})
 @ApiModel(value = "基础返回参数")
 public class BaseResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-
-    /**
-     * 是否成功
-     **/
-    @ApiModelProperty(value = "是否成功", name = "success")
-    private boolean success;
 
     /**
      * 状态码
@@ -47,13 +39,6 @@ public class BaseResponse<T> implements Serializable {
     public BaseResponse() {
     }
 
-    public BaseResponse(boolean success, String code, String message) {
-        super();
-        this.success = success;
-        this.code = code;
-        this.message = message;
-    }
-
     /**
      * 状态+返回数据
      *
@@ -62,7 +47,6 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(String code, String message) {
         super();
-        this.success = false;
         this.code = code;
         this.message = message;
     }
@@ -75,7 +59,6 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(CommonErrorCode commonErrorCode, T data) {
         super();
-        this.success = true;
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
         this.data = data;
@@ -88,19 +71,8 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(CommonErrorCode commonErrorCode) {
         super();
-        this.success = commonErrorCode.isSuccess();
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
     }
-
-    public static boolean isSuccess(BaseResponse<?> resp) {
-        return resp != null && CommonErrorCode.SUCCESS.getCode().equals(resp.getCode());
-    }
-
-    public void setBaseResponse(CommonErrorCode commonErrorCode, String errorMsg) {
-        this.code = commonErrorCode.getCode();
-        this.message = errorMsg;
-    }
-
 
 }

@@ -63,6 +63,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public BaseResponse exceptionHandler(Exception e, HttpServletResponse response) {
         log.error("全局异常处理:", e);
-        return new BaseResponse(CommonErrorCode.FAIL,false);
+        return new BaseResponse(CommonErrorCode.FAIL);
     }
 }

@@ -1,0 +1,6 @@
+server:
+  jsp-servlet:
+    init-parameters:
+      development: true
+  tomcat:
+    uri: UTF-8

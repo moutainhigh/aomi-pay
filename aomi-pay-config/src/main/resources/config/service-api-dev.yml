@@ -1,15 +1,14 @@
 #加密秘钥版本号
-key-version: 29
-#调用地址  测试环境
-api-url: https://payapi-sandbox.imipay.com
+key-version: AES.1
+#调用地址
+api-url: https://payapi.imipay.com
 #敏感信息加密秘钥
-key: 7kyB+aUhF14f+zbE0ERd4Q==
+key: DhkBuSzwoA2gwusyl4LdsQ==
 #环讯平台分配的应用id
-up-appid: 135459893032255489
+up-appid: 7133020439161736211
 #签名秘钥
-app-secret: f88ebda65bdb4d63ac1194ac7c2af625
+app-secret: V6jLaak932pBK7CxtQJQ4IREi3M5LZqB
 #机构应用id
-#inst-id: '015001' 测试使用的机构id
 inst-id: '027011'
 #版本号
 version: 1.0.0

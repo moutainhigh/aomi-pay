@@ -19,7 +19,10 @@ zuul:
     dictionary:
       path: /dictionary/**
       serviceId: service-dictionary
-
+    h5:
+      path: /h5/**
+      serviceId: service-h5
+suce
 ribbon:
   ReadTimeout: 1000
   ConnectTimeout: 10000

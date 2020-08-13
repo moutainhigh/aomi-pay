@@ -1,7 +1,7 @@
 package com.aomi.pay.service.impl;
 
-import com.aomi.pay.constants.ApiConstans;
-import com.aomi.pay.constants.PayConstans;
+import com.aomi.pay.constants.ApiConstants;
+import com.aomi.pay.constants.PayConstants;
 import com.aomi.pay.dto.hx.JsPayDTO;
 import com.aomi.pay.entity.PaymentOrder;
 import com.aomi.pay.feign.ApiClient;
@@ -66,15 +66,14 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
      */
     @Override
     public String jsPay(Long merchantId, BigDecimal amount, int payType) throws Exception {
+
+        //AlipayClient alipayClient = new DefaultAlipayClient(URL, APP_ID, APP_PRIVATE_KEY,FORMAT , CHARSET, ALIPAY_PUBLIC_KEY,SIGN_TYPE); //获得初始化的AlipayClient
+
         //根据商户号获取需要的商户信息 TODO 暂时写死  redis
-        String subAppid = "wx57f9d11132fc79c1";
-        String userId = "oXpzSv9AcnTkxsErnGUKCDzZIZBs";//测试用 微信
-        //String userId = "2021001168632988";//测试用 微信
-        String platformMerchantId = "015440309175982";
+        String subAppid = "wxeb1b1558437e9b12";
+        String platformMerchantId = "027310103382119";//平台商户号
         String subject = "test华一炒粉---收款";//TODO  商户名+收款
-        String merchantNo = "015440309175982";
-        Integer productCode = 100011;//微信
-        //String productCode = "100010";//支付宝
+        String merchantNo = "10000000005";//机构商户号
         Long agentId = Long.valueOf("10000000001");//TODO 商户下有地推人员id，根据地推人员id 查询
 
         //生成交易订单号
@@ -86,16 +85,17 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         jsPayDTO.setPayType(payType);
         jsPayDTO.setPlatformMerchantId(merchantNo);
         //产品费率编码  //TODO 暂时先写死  查商户开通了哪些产品 根据支付类型选择  取出redis 或者 查询环迅平台接口
-        if (payType == PayConstans.PAY_TYPE_ZFB) {
-            jsPayDTO.setProductCode(productCode);
-        } else if (payType == PayConstans.PAY_TYPE_WX) {
-            jsPayDTO.setProductCode(productCode);
+        if (payType == PayConstants.PAY_TYPE_ZFB) {
+            jsPayDTO.setProductCode(100043);
+            jsPayDTO.setUserId("2088802566981962");
+        } else if (payType == PayConstants.PAY_TYPE_WX) {
+            jsPayDTO.setProductCode(100042);
             //微信需要传subAppid
             jsPayDTO.setSubAppid(subAppid);
-        } else if (payType == PayConstans.PAY_TYPE_YL) {
-            jsPayDTO.setProductCode(productCode);
+            jsPayDTO.setUserId("oXpzSv9AcnTkxsErnGUKCDzZIZBs");
+        } else if (payType == PayConstants.PAY_TYPE_YL) {
+            jsPayDTO.setProductCode(100044);
         }
-        jsPayDTO.setUserId(userId);
         jsPayDTO.setExprice(exprice);
         jsPayDTO.setPlatformMerchantId(platformMerchantId);//平台商户号
         jsPayDTO.setNotifyUrl(notifyUrl);
@@ -116,7 +116,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         //插入订单交易记录
         paymentOrderMapper.insert(paymentOrder);
 
-        return paymentOrder.getPayInfo();
+        return JSONObject.fromObject(paymentOrder.getPayInfo()).toString();
     }
 
     /**
@@ -125,19 +125,19 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
      * @desc 实体转化
      **/
     private PaymentOrder objectToPaymenOrder(PaymentOrder paymentOrder, JSONObject jsonObject) {
-        paymentOrder.setPlatformMerchantId(jsonObject.getString(ApiConstans.MERCHANT_NO_NAME));//平台商户号
-        if (jsonObject.has(ApiConstans.TEADE_NO_NAME) && StringUtil.isNotBlank(jsonObject.getString(ApiConstans.TEADE_NO_NAME))) {
-            paymentOrder.setPlatformOrderId(jsonObject.getString(ApiConstans.TEADE_NO_NAME));//平台订单号
+        paymentOrder.setPlatformMerchantId(jsonObject.getString(ApiConstants.MERCHANT_NO_NAME));//平台商户号
+        if (jsonObject.has(ApiConstants.TEADE_NO_NAME) && StringUtil.isNotBlank(jsonObject.getString(ApiConstants.TEADE_NO_NAME))) {
+            paymentOrder.setPlatformOrderId(jsonObject.getString(ApiConstants.TEADE_NO_NAME));//平台订单号
         }
         //平台支付状态转换系统支付状态
-        if (jsonObject.has(ApiConstans.TRADE_STATUS_NAME)) {
-            paymentOrder.setPayStatus(tradeStatusToPayStatus(jsonObject.getString(ApiConstans.TRADE_STATUS_NAME)));
+        if (jsonObject.has(ApiConstants.TRADE_STATUS_NAME)) {
+            paymentOrder.setPayStatus(tradeStatusToPayStatus(jsonObject.getString(ApiConstants.TRADE_STATUS_NAME)));
         }
-        if (jsonObject.has(ApiConstans.TRADE_TIME_NAME)) {
-            paymentOrder.setCreateTime(DateUtil.format(jsonObject.getString(ApiConstans.TRADE_TIME_NAME), DateUtil.YYYYMMDDHHMMSS));
+        if (jsonObject.has(ApiConstants.TRADE_TIME_NAME)) {
+            paymentOrder.setCreateTime(DateUtil.format(jsonObject.getString(ApiConstants.TRADE_TIME_NAME), DateUtil.YYYYMMDDHHMMSS));
         }
-        if (jsonObject.has(ApiConstans.PAY_INFO_NAME)) {
-            paymentOrder.setPayInfo(jsonObject.getString(ApiConstans.PAY_INFO_NAME));
+        if (jsonObject.has(ApiConstants.PAY_INFO_NAME)) {
+            paymentOrder.setPayInfo(jsonObject.getString(ApiConstants.PAY_INFO_NAME));
         }
         return paymentOrder;
     }
@@ -148,25 +148,25 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
      * @desc 平台支付状态转换系统支付状态
      **/
     private int tradeStatusToPayStatus(String tradeStatus) {
-        int payStatus = PayConstans.PAY_STATUS_TO_BE_PAY;//默认待支付
+        int payStatus = PayConstants.PAY_STATUS_TO_BE_PAY;//默认待支付
         switch (tradeStatus) {
-            case ApiConstans.TRADE_STATUS_SUCCESS:
-                payStatus = PayConstans.PAY_STATUS_SUCCESS;
+            case ApiConstants.TRADE_STATUS_SUCCESS:
+                payStatus = PayConstants.PAY_STATUS_SUCCESS;
                 break;
-            case ApiConstans.TRADE_STATUS_PROCESSING:
-                payStatus = PayConstans.PAY_STATUS_TO_BE_PAY;
+            case ApiConstants.TRADE_STATUS_PROCESSING:
+                payStatus = PayConstants.PAY_STATUS_TO_BE_PAY;
                 break;
-            case ApiConstans.TRADE_STATUS_FAIL:
-                payStatus = PayConstans.PAY_STATUS_FAIL;
+            case ApiConstants.TRADE_STATUS_FAIL:
+                payStatus = PayConstants.PAY_STATUS_FAIL;
                 break;
-            case ApiConstans.TRADE_STATUS_CLOSE:
-                payStatus = PayConstans.PAY_STATUS_CLOSE;
+            case ApiConstants.TRADE_STATUS_CLOSE:
+                payStatus = PayConstants.PAY_STATUS_CLOSE;
                 break;
-            case ApiConstans.TRADE_STATUS_REFUND:
-                payStatus = PayConstans.PAY_STATUS_REFUND;
+            case ApiConstants.TRADE_STATUS_REFUND:
+                payStatus = PayConstants.PAY_STATUS_REFUND;
                 break;
             default:
-                payStatus = PayConstans.PAY_STATUS_TO_BE_PAY;
+                payStatus = PayConstants.PAY_STATUS_TO_BE_PAY;
         }
         return payStatus;
     }
