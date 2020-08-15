@@ -4,20 +4,15 @@ package com.aomi.pay.controller;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.dto.JsPayDTO;
 import com.aomi.pay.service.PayService;
-import com.aomi.pay.util.SdkUtil;
 import com.aomi.pay.vo.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jdk.nashorn.internal.ir.annotations.Reference;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 交易类(无卡类)接口Controller
@@ -28,6 +23,7 @@ import java.util.Map;
 @Slf4j
 @CrossOrigin
 @RestController
+@RefreshScope
 @Api(value = "PayController", tags = "交易类(无卡类)接口管理")
 @RequestMapping("/pay")
 public class PayController {

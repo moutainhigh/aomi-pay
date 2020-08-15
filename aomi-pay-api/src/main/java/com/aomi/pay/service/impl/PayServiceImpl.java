@@ -1,7 +1,7 @@
 package com.aomi.pay.service.impl;
 
 import com.aomi.pay.constants.ApiPayConstans;
-import com.aomi.pay.constants.PayConstants;
+import com.aomi.pay.constants.PayConstans;
 import com.aomi.pay.dto.JsPayDTO;
 import com.aomi.pay.service.PayService;
 import com.aomi.pay.util.AmountUtil;
@@ -66,24 +66,30 @@ public class PayServiceImpl implements PayService {
     private JsPayVO JsDTOCopyVO(JsPayDTO jsPayDTO) {
         JsPayVO jsPayVO = GeneralConvertorUtil.convertor(jsPayDTO, JsPayVO.class);
         //根据支付方式的不同调用支付接口
-        if (jsPayDTO.getPayType() == PayConstants.PAY_TYPE_ZFB) {
+        if (jsPayDTO.getPayType() == PayConstans.PAY_TYPE_ZFB) {
             jsPayVO.setServiceId(ApiPayConstans.SERVICE_ID_ZFB);
-        } else if (jsPayDTO.getPayType() == PayConstants.PAY_TYPE_WX) {
+        } else if (jsPayDTO.getPayType() == PayConstans.PAY_TYPE_WX) {
             jsPayVO.setServiceId(ApiPayConstans.SERVICE_ID_WX);
+            //subAppid 只有微信支付是用到
+            //TODO  subAppid暂时写死
+            jsPayVO.setSubAppid("wx57f9d11132fc79c1");//测试用的微信 subAppid
+            //jsPayVO.setSubAppid("wx57f9d11132fc79c1");//服务号appid
         }
         jsPayVO.setVersion(version);
+        //TODO  userId暂时写死
+        jsPayVO.setUserId("oXpzSv9AcnTkxsErnGUKCDzZIZBs");//测试用的微信  userid
         //结算周期转换
         switch (jsPayDTO.getSettleType()) {
-            case PayConstants.SETTLE_TYPE_T1:
+            case PayConstans.SETTLE_TYPE_T1:
                 jsPayVO.setSettleType(ApiPayConstans.SETTLE_TYPE_T1);
                 break;
-            case PayConstants.SETTLE_TYPE_T0:
+            case PayConstans.SETTLE_TYPE_T0:
                 jsPayVO.setSettleType(ApiPayConstans.SETTLE_TYPE_T0);
                 break;
-            case PayConstants.SETTLE_TYPE_S0:
+            case PayConstans.SETTLE_TYPE_S0:
                 jsPayVO.setSettleType(ApiPayConstans.SETTLE_TYPE_S0);
                 break;
-            case PayConstants.SETTLE_TYPE_D0:
+            case PayConstans.SETTLE_TYPE_D0:
                 jsPayVO.setSettleType(ApiPayConstans.SETTLE_TYPE_D0);
                 break;
             default:

@@ -1,14 +1,13 @@
 package com.aomi.pay.util;
 
-import com.aomi.pay.vo.BaseRequest;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @ProjectName: aomi
@@ -92,27 +91,6 @@ public class GeneralConvertorUtil {
 
     public static <T> void copyConvertor(T source, Object object) {
         mapper.map(source, object);
-    }
-
-    /**
-     * @author hdq
-     * @date 2020/8/11
-     * @Param list<T> keywords 匹配关键字  指定匹配的属性名
-     * @desc 在List<T>里边过滤出模糊匹配到的List<T>并返回
-     **/
-    public static <T> List<T> fuzzyQuery(List<T> list, String keywords, String name) throws Exception {
-        List<T> fuzzyQuery = new LinkedList<>();
-        //大小写不敏感的时候，多加一个条件
-        Pattern pattern = Pattern.compile(keywords, Pattern.CASE_INSENSITIVE);
-        for (T t : list) {
-            String value = t.getClass().getMethod(name).invoke(t).toString();
-            Matcher matcher = pattern.matcher(value);
-            if (matcher.find()) {
-                fuzzyQuery.add(t);
-            }
-        }
-
-        return fuzzyQuery;
     }
 
 }

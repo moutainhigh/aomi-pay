@@ -1,6 +1,6 @@
 package com.aomi.pay.vo;
 
-import com.aomi.pay.constants.ParamConstants;
+import com.aomi.pay.constants.ParamConstans;
 import com.aomi.pay.domain.PageResult;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -54,7 +54,7 @@ public class BasePageResponse<T> implements Serializable {
 
     public BasePageResponse(PageResult pr, String pageNo, String pageSize) {
         this.list = (List<T>) pr.getResult();
-        this.count = pr.getCount() == null ? ParamConstants.PAGE_COUNT_NULL : pr.getCount();
+        this.count = pr.getCount() == null ? ParamConstans.PAGE_COUNT_NULL : pr.getCount();
         this.pageNo = pageNo;
         this.pageSize = pageSize;
 

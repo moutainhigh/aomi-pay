@@ -1,8 +1,9 @@
 server:
   port: 9100
-
 #spring配置
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: service-api #服务名称
   cloud:

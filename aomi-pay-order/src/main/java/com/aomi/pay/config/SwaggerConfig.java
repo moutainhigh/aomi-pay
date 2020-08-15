@@ -1,7 +1,5 @@
 package com.aomi.pay.config;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,8 +42,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiAppInfo() {
         return new ApiInfoBuilder()
-                .title("支付系统-order接口管理")
-                .description("支付系统-订单交易接口文档")
+                .title("支付系统-oder接口管理")
+                .description("支付系统-order接口文档")
                 .contact("hdq")
                 .version("1.0")
                 .build();
