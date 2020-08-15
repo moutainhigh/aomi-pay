@@ -25,7 +25,7 @@ public class TokenUtil {
 		
 		return userToken;
 	}
-	public static String  createToken(String userId){
+	public static String  createToken(Long userId){
 		String userToken = Jwts.builder()
 				.setSubject("JuHei")
 				.setExpiration(new Date(new Date().getTime() + 1000*60*60*24*180))

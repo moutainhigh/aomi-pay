@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -51,8 +52,6 @@ public class UserServiceImpl implements UserService {
     private ApiClient apiClient;
     @Autowired
     private StringRedisTemplate redisTemplate;
-    @Autowired
-    private SmsRecordServiceImpl smsRecordService;
     @Autowired
     private UserMapper userMapper;
     /**
@@ -354,56 +353,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void userRegister(String mobile, String password, String code) {
+    public Long userRegister(String mobile) {
         if (mobile == null) {
-            throw new BusinessException(CommonErrorCode.E_900112.getCode(), "手机号为空");
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900112);
         }
         if (!PhoneUtil.isMobileSimple(mobile)) {
-            throw new BusinessException(CommonErrorCode.E_900123.getCode(), "手机号码格式不正确");
-        }
-        if (password == null) {
-            throw new BusinessException(CommonErrorCode.E_900111.getCode(), "密码为空");
-        }
-        if (code == null) {
-            throw new BusinessException(CommonErrorCode.E_900103.getCode(), "验证码为空");
-        }
-        //如果短信验证码不为空， 那么需要
-        SmsRecord smsRecord = smsRecordService.lastSms(mobile);
-        //判断验证码是否正确
-        String codeStr = smsRecord.getVeriCode();
-        if (code.equalsIgnoreCase("null") || code == null || code.equalsIgnoreCase("") || !code.equalsIgnoreCase(codeStr)) {
-            throw new BusinessException(CommonErrorCode.E_900102.getCode(),"验证码不正确");
-        }
-        //判断验证码是否超过15分钟
-        Duration duration = Duration.between(smsRecord.getCreateTime(), LocalDateTime.now());
-        int time = (int)duration.toMillis();
-        if (time>=15*60*1000){
-            throw new BusinessException(CommonErrorCode.E_900134.getCode(),"验证码超时");
-        }
-        Integer integer = userMapper.selectCount(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone,mobile));
-        if(integer>0){
-            throw new BusinessException(CommonErrorCode.E_900113.getCode(),"手机号码已存在");
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900123);
         }
 
+
+        Integer integer = userMapper.selectCount(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone,mobile));
+        if(integer>0){
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900113);
+        }
+        Long x = null;
         UserInf userInf = new UserInf();
         //插入登陆表里面
-        userInf.setUserId(RandomUuidUtil.generateNumString(20));
         userInf.setPhone(mobile);
-        String safePsw = MD5Util.getMd5(password + "aomi1003");
-        userInf.setPassword(safePsw);
+        Random random = new Random();
+        x = Long.valueOf(random.nextInt(899999999) + 100000000);
+        userInf.setUserId(x);
         userInf.setModifiedTime(LocalDateTime.now());
         userMapper.insert(userInf);
+        return x;
     }
 
     @Override
     public String userLogin(String phone, String password) {
+        if(phone==null){
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900112);
+        }
+        if(!PhoneUtil.isMobileSimple(phone)){
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900123);
+        }
+        if(password==null){
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900111);
+        }
+
         String safePsw = MD5Util.getMd5(password+"aomi1003");
         log.info("================================用户登录手机号："+phone+",加密后登录密码："+safePsw);
         UserInf userInf = userMapper.selectOne(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone, phone).eq(UserInf::getPassword, safePsw));
         if(userInf==null){
-            throw new BusinessException(CommonErrorCode.E_900127.getCode(),"手机号码与密码不匹配");
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900127);
         }
-        String userId = userInf.getUserId();
+        Long userId = userInf.getUserId();
         String token = TokenUtil.createToken(userId);
         return token;
     }
