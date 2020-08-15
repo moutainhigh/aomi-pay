@@ -7,7 +7,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -25,11 +24,11 @@ import java.util.List;
 @SpringBootApplication
 @EnableZuulProxy
 @EnableSwagger2
-@ComponentScan("com.aomi.pay.config")
 public class ZuulServer {
     public static void main(String[] args) {
-        SpringApplication.run(ZuulServer.class,args);
+        SpringApplication.run(ZuulServer.class, args);
     }
+
     @Bean
     public AuthenticationHeaderFilter authenticationHeadFilter() {
         return new AuthenticationHeaderFilter();
@@ -47,8 +46,8 @@ public class ZuulServer {
 
     @Bean
     public FilterRegistrationBean characterEncodingFilter() {
-        FilterRegistrationBean filter=new FilterRegistrationBean();
-        CharacterEncodingFilter characterEncodingFilter =new CharacterEncodingFilter();
+        FilterRegistrationBean filter = new FilterRegistrationBean();
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         filter.setFilter(characterEncodingFilter);
         return filter;
@@ -56,6 +55,7 @@ public class ZuulServer {
 
     /**
      * Desc: swagger2 接口文档整合网关
+     *
      * @author : hdq
      * @date : 2020/7/14 15:37
      */
@@ -67,10 +67,10 @@ public class ZuulServer {
         public List<SwaggerResource> get() {
             List<SwaggerResource> resources = new ArrayList<SwaggerResource>();
 
-            resources.add(swaggerResource("环迅api调用服务","/api/v2/api-docs","2.0"));
-            resources.add(swaggerResource("user服务","/user/v2/api-docs","2.0"));
-            resources.add(swaggerResource("order服务","/order/v2/api-docs","2.0"));
-            resources.add(swaggerResource("dictionary服务","/dictionary/v2/api-docs","2.0"));
+            resources.add(swaggerResource("环迅api调用服务", "/api/v2/api-docs", "2.0"));
+            resources.add(swaggerResource("user服务", "/user/v2/api-docs", "2.0"));
+            resources.add(swaggerResource("order服务", "/order/v2/api-docs", "2.0"));
+            resources.add(swaggerResource("dictionary服务", "/dictionary/v2/api-docs", "2.0"));
             return resources;
         }
 

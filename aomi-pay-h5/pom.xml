@@ -26,21 +26,30 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- 导入servlet-api -->
+        <!--配置springboot支持jsp  jsp对servlet容器的支持 -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!--在jsp页面使用jstl标签来处理界面逻辑，那么需要引入jstl maven-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
 
+        <!--配置springboot支持jsp  添加jsp支持 -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <!--配置springboot支持jsp  添加tomcat支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
 
         <dependency>
@@ -85,6 +94,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!--配置中心依赖-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -105,6 +120,26 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
+                <targetPath>META-INF/resources</targetPath>
+                <includes>
+                    <include>**/*.*</include>
+                    <include>**/*.html</include>
+                    <include>**/*.js</include>
+                    <include>**/*.css</include>
+                    <include>**/*.png</include>
+                    <include>**/*.gif</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 </project>

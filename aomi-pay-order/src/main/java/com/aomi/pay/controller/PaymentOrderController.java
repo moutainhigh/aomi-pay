@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * 交易类(无卡类)接口Controller
@@ -41,7 +42,8 @@ public class PaymentOrderController {
         log.info("--------h5支付开始--------req:{}",req);
         //参数校验
         ValidateUtil.valid(req);
-        String payInfo = paymentOrderService.jsPay(Long.valueOf(req.getId()),new BigDecimal(req.getAmount()),Integer.parseInt(req.getPayType()));
+        //String payInfo = paymentOrderService.jsPay(req.getMerchantId(),new BigDecimal(req.getAmount()),Integer.parseInt(req.getPayType()),req.getUserId());
+        String payInfo = paymentOrderService.jsPay(req);
         log.info("--------h5支付结束--------");
         return new BaseResponse(CommonErrorCode.SUCCESS,payInfo);
     }
@@ -55,6 +57,8 @@ public class PaymentOrderController {
         String platformMerchantId = new String(request.getParameter(ApiConstants.MERCHANT_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
         String tradeNo = new String(request.getParameter(ApiConstants.TEADE_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
         String outTradeNo = new String(request.getParameter(ApiConstants.OUT_TRADE_NO).getBytes("ISO-8859-1"), "UTF-8");
+        log.info("request:{}",request);
+        log.info("tradeStatus:{},platformMerchantId:{},tradeNo:{},outTradeNo:{}",tradeStatus,platformMerchantId,tradeNo,outTradeNo);
         paymentOrderService.payNotify(tradeStatus,platformMerchantId,tradeNo,outTradeNo);
         log.info("--------支付回调结束--------");
     }

@@ -23,18 +23,6 @@ public class CommonConstants {
     public static final String ERROR_TOKEN = "000005";
 
     /**
-     * 成功
-     **/
-    public static final String SUCCESS = "000000";
-
-    public static final String BINDTASKCARD = "888888";
-    /***失败**/
-    public static final String FALIED = "999999";
-    /**
-     * 等待回调返回
-     **/
-    public static final String WAIT_NOTIFY = "999998";
-    /**
      * 短信确认调用
      **/
     public static final String CKSMS_CODE = "999990";

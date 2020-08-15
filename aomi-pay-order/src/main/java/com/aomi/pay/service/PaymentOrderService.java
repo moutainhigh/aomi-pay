@@ -1,8 +1,10 @@
 package com.aomi.pay.service;
 
+import com.aomi.pay.model.JsPayRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 
 /**
@@ -19,7 +21,7 @@ public interface PaymentOrderService {
      * @Param merchantId 系统商户id，amount 金额，payType 支付类型（微信，支付宝，银联 编号）
      * @return 原生js信息
      */
-    String jsPay(Long merchantId, BigDecimal amount,int payType) throws Exception;
+    String jsPay(JsPayRequest req) throws Exception;
 
     /**
      * @author  hdq

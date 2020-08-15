@@ -1,20 +1,20 @@
 server:
-  port: 9104
-#springÅäÖÃ
+  port: 9136
+#springé…ç½®
 spring:
   application:
-    name: service-h5 #·şÎñÃû³Æ
+    name: service-h5 #æœåŠ¡åç§°
   cloud:
     config:
-      name: service-h5,common,redis
+      name: service-h5,mysql,common,swagger
       discovery:
         enabled: true
         service-id: config-server
-#ÅäÖÃEureka
+#é…ç½®Eureka
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:6969/eureka/
   instance:
-    prefer-ip-address: true #Ê¹ÓÃipµØÖ·×¢²á
+    prefer-ip-address: true #ä½¿ç”¨ipåœ°å€æ³¨å†Œ
     instance-id: ${spring.cloud.client.ip-address}:${server.port}

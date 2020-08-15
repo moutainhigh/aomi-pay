@@ -6,6 +6,7 @@ import com.aomi.pay.dto.hx.JsPayDTO;
 import com.aomi.pay.entity.PaymentOrder;
 import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.PaymentOrderMapper;
+import com.aomi.pay.model.JsPayRequest;
 import com.aomi.pay.service.PaymentOrderService;
 import com.aomi.pay.util.DateUtil;
 import com.aomi.pay.util.GeneralConvertorUtil;
@@ -54,7 +55,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     private int settleType;
 
     /**
-     * 结算周期
+     * 订单失效时间
      */
     @Value("${pay.hx.exprice}")
     private int exprice;
@@ -65,34 +66,30 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
      * @return 原生js信息
      */
     @Override
-    public String jsPay(Long merchantId, BigDecimal amount, int payType) throws Exception {
+    public String jsPay(JsPayRequest req) throws Exception {
 
-        //AlipayClient alipayClient = new DefaultAlipayClient(URL, APP_ID, APP_PRIVATE_KEY,FORMAT , CHARSET, ALIPAY_PUBLIC_KEY,SIGN_TYPE); //获得初始化的AlipayClient
-
-        //根据商户号获取需要的商户信息 TODO 暂时写死  redis
+        //根据商户号获取需要的商户信息 TODO 暂时写死  redis req.getMerchantId()
         String subAppid = "wxeb1b1558437e9b12";
         String platformMerchantId = "027310103382119";//平台商户号
         String subject = "test华一炒粉---收款";//TODO  商户名+收款
-        String merchantNo = "10000000005";//机构商户号
+        //String merchantNo = "10000000005";//机构商户号
         Long agentId = Long.valueOf("10000000001");//TODO 商户下有地推人员id，根据地推人员id 查询
-
         //生成交易订单号
         BigInteger orderId = PaymentOrderUtil.getOrderCode();
-
+        int payType = Integer.parseInt(req.getPayType());
         JsPayDTO jsPayDTO = new JsPayDTO();
         jsPayDTO.setOrderId(orderId);
-        jsPayDTO.setAmount(amount);
+        jsPayDTO.setAmount(new BigDecimal(req.getAmount()));
         jsPayDTO.setPayType(payType);
-        jsPayDTO.setPlatformMerchantId(merchantNo);
         //产品费率编码  //TODO 暂时先写死  查商户开通了哪些产品 根据支付类型选择  取出redis 或者 查询环迅平台接口
         if (payType == PayConstants.PAY_TYPE_ZFB) {
             jsPayDTO.setProductCode(100043);
-            jsPayDTO.setUserId("2088802566981962");
+            jsPayDTO.setUserId(req.getUserId());
         } else if (payType == PayConstants.PAY_TYPE_WX) {
             jsPayDTO.setProductCode(100042);
             //微信需要传subAppid
             jsPayDTO.setSubAppid(subAppid);
-            jsPayDTO.setUserId("oXpzSv9AcnTkxsErnGUKCDzZIZBs");
+            jsPayDTO.setUserId(req.getUserId());
         } else if (payType == PayConstants.PAY_TYPE_YL) {
             jsPayDTO.setProductCode(100044);
         }
@@ -108,7 +105,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         //TODO  code不为100000
         //实体转化
         PaymentOrder paymentOrder = GeneralConvertorUtil.convertor(jsPayDTO, PaymentOrder.class);
-        paymentOrder.setMerchantId(merchantId);//机构商户号
+        paymentOrder.setMerchantId(req.getMerchantId());//商户号
         paymentOrder.setAgentId(agentId);
 
         paymentOrder = objectToPaymenOrder(paymentOrder, jsonObject);
@@ -182,6 +179,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         //TODO  逻辑待添加
         return null;
     }
+
 }
 
 

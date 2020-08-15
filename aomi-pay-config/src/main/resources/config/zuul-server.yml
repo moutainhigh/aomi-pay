@@ -2,7 +2,8 @@ zuul:
   #  retryable: true
   #  add-host-header: true
   # ignoredServices: "*"
-  #  sensitiveHeaders: "*"
+  #sensitiveHeaders: "*"
+  sensitiveHeaders:
   host:
     socket-timeout-millis: 60000
     connect-timeout-millis: 30000
@@ -19,13 +20,17 @@ zuul:
     dictionary:
       path: /dictionary/**
       serviceId: service-dictionary
-    h5:
-      path: /h5/**
+    qr:
+      path: /qr/**
       serviceId: service-h5
-suce
+    pay:
+      path: /pay/**
+      serviceId: service-order
+  add-host-header: true
+
 ribbon:
-  ReadTimeout: 1000
-  ConnectTimeout: 10000
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
   eager-load:
     #取消懒加载
     enabled: true
