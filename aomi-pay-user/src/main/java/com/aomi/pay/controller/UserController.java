@@ -2,12 +2,19 @@ package com.aomi.pay.controller;
 
 
 import com.aomi.pay.domain.CommonErrorCode;
+import com.aomi.pay.entity.UserInf;
 import com.aomi.pay.exception.BusinessException;
+import com.aomi.pay.mapper.UserMapper;
 import com.aomi.pay.service.UserService;
+import com.aomi.pay.util.IPUtil;
+import com.aomi.pay.util.MD5Util;
+import com.aomi.pay.util.PhoneUtil;
 import com.aomi.pay.vo.AcctVO;
 import com.aomi.pay.vo.BaseResponse;
 import com.aomi.pay.vo.MerchantInfoVO;
 import com.aomi.pay.vo.ProductVO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -16,6 +23,8 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Slf4j
@@ -26,7 +35,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private UserMapper userMapper;
     /**
      * 新建商户
      */
@@ -160,7 +170,50 @@ public class UserController {
     }
 
 
+    /**
+     * 用户注册
+     */
+    @RequestMapping(value = "/user/merchant/register", method = RequestMethod.POST)
+    public BaseResponse UserRegister(@RequestBody JSONObject str) throws Exception {
+        try {
+            String phone = str.getString("phone");
+            String password = str.getString("password");
+            String code = null;
+            try {
+                code = str.getString("code");
+            } catch (Exception e) {
+                code = "0";
+            }
+            userService.userRegister(phone, password, code);
+        } catch (BusinessException businessException) {
+            return new BaseResponse(false,businessException.getCode(), businessException.getDesc());
+        }
+        return new BaseResponse(CommonErrorCode.SUCCESS);
+    }
 
+    /**
+     * 用户登录
+     */
+    @RequestMapping(value = "/user/merchant/login",method = RequestMethod.POST)
+    public BaseResponse userLogin(HttpServletRequest httpServletRequest, @RequestBody JSONObject str) {
+        String phone = str.getString("phone");
+        String password = str.getString("password");
+        log.info("================================用户登录手机号："+phone+",登录密码："+password);
+        if(phone==null){
+            return new BaseResponse(false,"900112","手机号为空");
+        }
+        if(!PhoneUtil.isMobileSimple(phone)){
+            return new BaseResponse(false,"900123","手机号码格式不正确");
+        }
+        if(password==null){
+            return new BaseResponse(false,"900111","密码为空");
+        }
+
+        String token = userService.userLogin(phone,password);
+
+
+        return new BaseResponse(CommonErrorCode.SUCCESS,token);
+    }
 //
 //
 //    /**

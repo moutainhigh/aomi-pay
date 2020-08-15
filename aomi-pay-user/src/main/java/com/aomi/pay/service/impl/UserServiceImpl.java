@@ -2,19 +2,13 @@ package com.aomi.pay.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.aomi.pay.domain.CommonErrorCode;
-import com.aomi.pay.entity.MerchantImg;
-import com.aomi.pay.entity.MerchantInfo;
-import com.aomi.pay.entity.MerchantProduct;
-import com.aomi.pay.entity.MerchantProductBind;
+import com.aomi.pay.entity.*;
 import com.aomi.pay.exception.BusinessException;
 import com.aomi.pay.exception.SystemException;
 import com.aomi.pay.feign.ApiClient;
-import com.aomi.pay.mapper.MerchantImgMapper;
-import com.aomi.pay.mapper.MerchantInfoMapper;
-import com.aomi.pay.mapper.MerchantProductBindMapper;
-import com.aomi.pay.mapper.MerchantProductMapper;
+import com.aomi.pay.mapper.*;
 import com.aomi.pay.service.UserService;
-import com.aomi.pay.util.AliOSSUtil;
+import com.aomi.pay.util.*;
 import com.aomi.pay.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -35,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -56,7 +51,10 @@ public class UserServiceImpl implements UserService {
     private ApiClient apiClient;
     @Autowired
     private StringRedisTemplate redisTemplate;
-
+    @Autowired
+    private SmsRecordServiceImpl smsRecordService;
+    @Autowired
+    private UserMapper userMapper;
     /**
      * 新建商户
      */
@@ -353,6 +351,61 @@ public class UserServiceImpl implements UserService {
         if (ObjectUtils.equals(data, null)) {
             throw new BusinessException(CommonErrorCode.E_301010);
         }
+    }
+
+    @Override
+    public void userRegister(String mobile, String password, String code) {
+        if (mobile == null) {
+            throw new BusinessException(CommonErrorCode.E_900112.getCode(), "手机号为空");
+        }
+        if (!PhoneUtil.isMobileSimple(mobile)) {
+            throw new BusinessException(CommonErrorCode.E_900123.getCode(), "手机号码格式不正确");
+        }
+        if (password == null) {
+            throw new BusinessException(CommonErrorCode.E_900111.getCode(), "密码为空");
+        }
+        if (code == null) {
+            throw new BusinessException(CommonErrorCode.E_900103.getCode(), "验证码为空");
+        }
+        //如果短信验证码不为空， 那么需要
+        SmsRecord smsRecord = smsRecordService.lastSms(mobile);
+        //判断验证码是否正确
+        String codeStr = smsRecord.getVeriCode();
+        if (code.equalsIgnoreCase("null") || code == null || code.equalsIgnoreCase("") || !code.equalsIgnoreCase(codeStr)) {
+            throw new BusinessException(CommonErrorCode.E_900102.getCode(),"验证码不正确");
+        }
+        //判断验证码是否超过15分钟
+        Duration duration = Duration.between(smsRecord.getCreateTime(), LocalDateTime.now());
+        int time = (int)duration.toMillis();
+        if (time>=15*60*1000){
+            throw new BusinessException(CommonErrorCode.E_900134.getCode(),"验证码超时");
+        }
+        Integer integer = userMapper.selectCount(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone,mobile));
+        if(integer>0){
+            throw new BusinessException(CommonErrorCode.E_900113.getCode(),"手机号码已存在");
+        }
+
+        UserInf userInf = new UserInf();
+        //插入登陆表里面
+        userInf.setUserId(RandomUuidUtil.generateNumString(20));
+        userInf.setPhone(mobile);
+        String safePsw = MD5Util.getMd5(password + "aomi1003");
+        userInf.setPassword(safePsw);
+        userInf.setModifiedTime(LocalDateTime.now());
+        userMapper.insert(userInf);
+    }
+
+    @Override
+    public String userLogin(String phone, String password) {
+        String safePsw = MD5Util.getMd5(password+"aomi1003");
+        log.info("================================用户登录手机号："+phone+",加密后登录密码："+safePsw);
+        UserInf userInf = userMapper.selectOne(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone, phone).eq(UserInf::getPassword, safePsw));
+        if(userInf==null){
+            throw new BusinessException(CommonErrorCode.E_900127.getCode(),"手机号码与密码不匹配");
+        }
+        String userId = userInf.getUserId();
+        String token = TokenUtil.createToken(userId);
+        return token;
     }
 
 

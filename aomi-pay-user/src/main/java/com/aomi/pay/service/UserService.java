@@ -31,4 +31,8 @@ public interface UserService {
      void updateProductModel(JSONObject str) throws Exception;
 
     void updateMchtAcct(AcctVO acctVO) throws Exception;
+
+     void userRegister(String phone, String password, String code);
+
+     String userLogin(String phone, String password);
 }
