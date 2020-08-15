@@ -16,11 +16,11 @@ import lombok.Data;
 public class JsPayRequest {
 
     /**
-     * 商户id
+     * 固码编码
      */
-    @Validator(isNotNull = true, maxLength = 20, regexExpression = RegexUtils.REGEX_NUMBER, description = "商品id")
-    @ApiModelProperty(value = "商户id", name = "merchantId", required = true)
-    private String merchantId;
+    @Validator(isNotNull = true, maxLength = 30, regexExpression = RegexUtils.REGEX_NUMBER, description = "商品id")
+    @ApiModelProperty(value = "固码编码", name = "fixedQrCode", required = true)
+    private String fixedQrCode;
 
     /**
      * 支付方式（0：支付宝 1：微信 2：银联

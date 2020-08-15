@@ -2,16 +2,15 @@ package com.aomi.pay.service.impl;
 
 import com.aomi.pay.constants.ApiConstants;
 import com.aomi.pay.constants.PayConstants;
+import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.dto.hx.JsPayDTO;
 import com.aomi.pay.entity.PaymentOrder;
 import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.PaymentOrderMapper;
 import com.aomi.pay.model.JsPayRequest;
+import com.aomi.pay.model.NotifyRequest;
 import com.aomi.pay.service.PaymentOrderService;
-import com.aomi.pay.util.DateUtil;
-import com.aomi.pay.util.GeneralConvertorUtil;
-import com.aomi.pay.util.PaymentOrderUtil;
-import com.aomi.pay.util.StringUtil;
+import com.aomi.pay.util.*;
 import com.aomi.pay.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -70,8 +69,10 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
 
         //根据商户号获取需要的商户信息 TODO 暂时写死  redis req.getMerchantId()
         String subAppid = "wxeb1b1558437e9b12";
-        String platformMerchantId = "027310103382119";//平台商户号
-        String subject = "test华一炒粉---收款";//TODO  商户名+收款
+        //平台商户号
+        String platformMerchantId = "027310103382119";
+        //TODO  商户名+收款
+        String subject = "test华一炒粉---收款";
         //String merchantNo = "10000000005";//机构商户号
         Long agentId = Long.valueOf("10000000001");//TODO 商户下有地推人员id，根据地推人员id 查询
         //生成交易订单号
@@ -94,20 +95,28 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             jsPayDTO.setProductCode(100044);
         }
         jsPayDTO.setExprice(exprice);
-        jsPayDTO.setPlatformMerchantId(platformMerchantId);//平台商户号
+        //平台商户号
+        jsPayDTO.setPlatformMerchantId(platformMerchantId);
         jsPayDTO.setNotifyUrl(notifyUrl);
-        jsPayDTO.setSettleType(settleType);//TODO 结算周期  暂T1 读配置
+        //TODO 结算周期  暂T1 读配置
+        jsPayDTO.setSettleType(settleType);
         jsPayDTO.setSubject(subject);
         //调用环迅api接口
         BaseResponse response = apiClient.onlineTrade(jsPayDTO);
-        log.info("环迅api：{}", response);
+        log.info("环迅h5-api：{}", response);
+        if (!CommonErrorCode.SUCCESS.getCode().equals(response.getCode())) {
+            CommonExceptionUtils.throwBusinessException(response.getCode(), response.getMessage());
+        }
         JSONObject jsonObject = JSONObject.fromObject(response.getData());
-        //TODO  code不为100000
         //实体转化
         PaymentOrder paymentOrder = GeneralConvertorUtil.convertor(jsPayDTO, PaymentOrder.class);
-        paymentOrder.setMerchantId(req.getMerchantId());//商户号
+        //商户号 TODO 暂写死
+        paymentOrder.setMerchantId("12345678901234567890");
         paymentOrder.setAgentId(agentId);
-
+        //paymentOrder.setCreateDate(DateUtil.format(DateUtil.getCurrDate(), DateUtil.YYYY_MM_DD));
+        paymentOrder.setCreateDate(DateUtil.getCurrDate());
+        //TODO 写死环迅标识
+        paymentOrder.setPlatformTag("hx");
         paymentOrder = objectToPaymenOrder(paymentOrder, jsonObject);
         log.info("paymentOrder:{}", paymentOrder);
         //插入订单交易记录
@@ -122,9 +131,11 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
      * @desc 实体转化
      **/
     private PaymentOrder objectToPaymenOrder(PaymentOrder paymentOrder, JSONObject jsonObject) {
-        paymentOrder.setPlatformMerchantId(jsonObject.getString(ApiConstants.MERCHANT_NO_NAME));//平台商户号
+        //平台商户号
+        paymentOrder.setPlatformMerchantId(jsonObject.getString(ApiConstants.MERCHANT_NO_NAME));
         if (jsonObject.has(ApiConstants.TEADE_NO_NAME) && StringUtil.isNotBlank(jsonObject.getString(ApiConstants.TEADE_NO_NAME))) {
-            paymentOrder.setPlatformOrderId(jsonObject.getString(ApiConstants.TEADE_NO_NAME));//平台订单号
+            //平台订单号
+            paymentOrder.setPlatformOrderId(jsonObject.getString(ApiConstants.TEADE_NO_NAME));
         }
         //平台支付状态转换系统支付状态
         if (jsonObject.has(ApiConstants.TRADE_STATUS_NAME)) {
@@ -162,22 +173,26 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             case ApiConstants.TRADE_STATUS_REFUND:
                 payStatus = PayConstants.PAY_STATUS_REFUND;
                 break;
-            default:
-                payStatus = PayConstants.PAY_STATUS_TO_BE_PAY;
         }
         return payStatus;
     }
 
     /**
      * @author hdq
-     * @date 2020/8/8
-     * @Param tradeStatus 支付状态， platformMerchantId 平台商户号  ， tradeNo 平台流水号，  outTradeNo系统交易id
+     * @date 2020/8/15
+     * @Param NotifyRequest notifyRequest
      * @desc 支付回调
      */
     @Override
-    public String payNotify(String tradeStatus, String platformMerchantId, String tradeNo, String outTradeNo) throws Exception {
-        //TODO  逻辑待添加
-        return null;
+    public void payNotify(NotifyRequest notifyRequest) throws Exception {
+        //同步订单信息
+        PaymentOrder paymentOrder = new PaymentOrder();
+        int payStatus = tradeStatusToPayStatus(notifyRequest.getTradeStatus());
+        paymentOrder.setPayStatus(payStatus);
+        paymentOrder.setCompleteTime(DateUtil.format(notifyRequest.getCompleteTime(),DateUtil.YYYYMMDDHHMMSS));
+        paymentOrder.setOutTransactionId(notifyRequest.getOutTransactionId());
+        paymentOrder.setOrderId(new BigInteger(notifyRequest.getOutTradeNo()));
+        paymentOrderMapper.updateByOrderId(paymentOrder);
     }
 
 }

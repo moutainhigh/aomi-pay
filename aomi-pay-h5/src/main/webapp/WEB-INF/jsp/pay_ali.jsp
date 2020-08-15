@@ -86,7 +86,7 @@
             url: "https://pay.cloudbest.shop/payment/jsPay",
             async: false,
             data: JSON.stringify({
-                "merchantId": "12345123451234512345",
+                "fixedQrCode": "12345123451234512345",
                 "payType": "0",
                 "amount": $("#amount").val(),
                 "userId": userId
@@ -97,6 +97,7 @@
                 console.log(JSON.stringify(d));
                 if (d.code == "100000") {
                     var data = JSON.parse(d.data);
+                    console.log(d.data);
                     ap.tradePay({tradeNO: data.tradeNO}, function (res) {
                         if (res.resultCode == '9000') {
                             success();
