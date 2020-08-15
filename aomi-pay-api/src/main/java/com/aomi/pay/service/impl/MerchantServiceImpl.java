@@ -65,6 +65,25 @@ public class MerchantServiceImpl implements MerchantService {
     @Value("${api_route.mcht.update_org_mcht}")
     private String routeUpdateMchtInfo;
 
+    /**
+     * 修改商户状态
+     */
+    @Value("${api_route.mcht.update_mcht_staus}")
+    private String routeUpdateMchtStatus;
+
+    /**
+     * 修改商户开通产品签约费率
+     */
+    @Value("${api_route.mcht.update_product_model}")
+    private String routeUpdateProductModel;
+
+    /**
+     * 修改商户结算银行卡信息
+     */
+    @Value("${api_route.mcht.update_mcht_acct}")
+    private String routeUpdateMchtAcct;
+
+
 
 
     @Override
@@ -167,6 +186,7 @@ public class MerchantServiceImpl implements MerchantService {
 
         JSONObject resultJson = new JSONObject();
         //todo 处理返回值
+
         Object post = SdkUtil.post(merchantInfoVO, routeCreateOrgMcht);
         JSONObject jsonObject = JSONObject.fromObject(post);
         String mchtNo = jsonObject.getString("mchtNo");
@@ -321,6 +341,35 @@ public class MerchantServiceImpl implements MerchantService {
         }
 
         Object post = SdkUtil.post(merchantInfoVO, routeUpdateMchtInfo);
+        JSONObject jsonObject = JSONObject.fromObject(post);
+        return jsonObject;
+    }
+
+    @Override
+    public JSONObject updateMchtStatus(JSONObject str) throws IOException {
+
+        str.put("instId", INST_ID);
+        log.info("--------修改商户状态--------");
+        Object post = SdkUtil.post(str, routeUpdateMchtStatus);
+        JSONObject jsonObject = JSONObject.fromObject(post);
+        return jsonObject;
+    }
+
+    @Override
+    public JSONObject updateProductModel(JSONObject str) throws IOException {
+
+        str.put("instId", INST_ID);
+        log.info("--------修改商户开通产品签约费率--------");
+        Object post = SdkUtil.post(str, routeUpdateProductModel);
+        JSONObject jsonObject = JSONObject.fromObject(post);
+        return jsonObject;
+    }
+
+    @Override
+    public JSONObject updateMchtAcct(AcctVO acctVO) throws IOException {
+        acctVO.setInstId(INST_ID);
+        log.info("--------修改商户结算银行卡信息--------");
+        Object post = SdkUtil.post(acctVO, routeUpdateMchtAcct);
         JSONObject jsonObject = JSONObject.fromObject(post);
         return jsonObject;
     }

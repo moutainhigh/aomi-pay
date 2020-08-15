@@ -4,6 +4,7 @@ package com.aomi.pay.controller;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.exception.BusinessException;
 import com.aomi.pay.service.UserService;
+import com.aomi.pay.vo.AcctVO;
 import com.aomi.pay.vo.BaseResponse;
 import com.aomi.pay.vo.MerchantInfoVO;
 import com.aomi.pay.vo.ProductVO;
@@ -124,8 +125,38 @@ public class UserController {
     @ApiOperation(value = "修改商户入网信息")
     @PostMapping("/user/merchant/updateInfo")
     public BaseResponse updateInfo(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
-        JSONObject jsonObject = userService.updateInfo(merchantInfoVO);
-        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
+        userService.updateInfo(merchantInfoVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS);
+    }
+
+    /**
+     * 修改商户状态
+     */
+    @ApiOperation(value = "修改商户状态")
+    @PostMapping("/user/merchant/updateStatus")
+    public BaseResponse updateStatus(@RequestBody JSONObject str) throws Exception {
+        userService.updateStatus(str);
+        return new BaseResponse(CommonErrorCode.SUCCESS);
+    }
+
+    /**
+     *  修改商户开通产品签约费率
+     */
+    @ApiOperation(value = "修改商户开通产品签约费率")
+    @PostMapping("/user/merchant/updateProductModel")
+    public BaseResponse updateProductModel(@RequestBody JSONObject str) throws Exception {
+        userService.updateProductModel(str);
+        return new BaseResponse(CommonErrorCode.SUCCESS);
+    }
+
+    /**
+     *  修改商户结算银行卡信息
+     */
+    @ApiOperation(value = "修改商户结算银行卡信息")
+    @PostMapping("/user/merchant/updateMchtAcct")
+    public BaseResponse updateMchtAcct(@RequestBody AcctVO acctVO) throws Exception {
+        userService.updateMchtAcct(acctVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS);
     }
 
 

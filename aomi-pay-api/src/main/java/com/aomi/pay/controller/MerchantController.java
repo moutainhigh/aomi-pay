@@ -3,10 +3,7 @@ package com.aomi.pay.controller;
 
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.service.MerchantService;
-import com.aomi.pay.vo.BaseResponse;
-import com.aomi.pay.vo.MerchantInfoVO;
-import com.aomi.pay.vo.PictureVO;
-import com.aomi.pay.vo.ProductVO;
+import com.aomi.pay.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +73,27 @@ public class MerchantController {
     @PostMapping("/updateMchtInfo")
     public BaseResponse updateMchtInfo(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
         JSONObject jsonObject = merchantService.updateMchtInfo(merchantInfoVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+    }
+
+    @ApiOperation(value = "修改商户入网信息")
+    @PostMapping("/updateMchtStatus")
+    public BaseResponse updateMchtStatus(@RequestBody JSONObject str) throws Exception {
+        JSONObject jsonObject = merchantService.updateMchtStatus(str);
+        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+    }
+
+    @ApiOperation(value = "修改商户开通产品签约费率")
+    @PostMapping("/updateProductModel")
+    public BaseResponse updateProductModel(@RequestBody JSONObject str) throws Exception {
+        JSONObject jsonObject = merchantService.updateProductModel(str);
+        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+    }
+
+    @ApiOperation(value = "修改商户开通产品签约费率")
+    @PostMapping("/updateMchtAcct")
+    public BaseResponse updateMchtAcct(@RequestBody AcctVO acctVO) throws Exception {
+        JSONObject jsonObject = merchantService.updateMchtAcct(acctVO);
         return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
     }
 

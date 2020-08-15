@@ -1,5 +1,6 @@
 package com.aomi.pay.service;
 
+import com.aomi.pay.vo.AcctVO;
 import com.aomi.pay.vo.MerchantInfoVO;
 import com.aomi.pay.vo.PictureVO;
 import com.aomi.pay.vo.ProductVO;
@@ -21,4 +22,10 @@ public interface MerchantService {
     JSONObject queryMchtAudit(JSONObject str) throws IOException;
 
     JSONObject updateMchtInfo(MerchantInfoVO merchantInfoVO) throws IOException;
+
+    JSONObject updateMchtStatus(JSONObject str) throws IOException;
+
+    JSONObject updateProductModel(JSONObject str) throws IOException;
+
+    JSONObject updateMchtAcct(AcctVO acctVO) throws IOException;
 }

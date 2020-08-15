@@ -7,6 +7,7 @@ import com.aomi.pay.entity.MerchantInfo;
 import com.aomi.pay.entity.MerchantProduct;
 import com.aomi.pay.entity.MerchantProductBind;
 import com.aomi.pay.exception.BusinessException;
+import com.aomi.pay.exception.SystemException;
 import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.MerchantImgMapper;
 import com.aomi.pay.mapper.MerchantInfoMapper;
@@ -15,6 +16,7 @@ import com.aomi.pay.mapper.MerchantProductMapper;
 import com.aomi.pay.service.UserService;
 import com.aomi.pay.util.AliOSSUtil;
 import com.aomi.pay.vo.*;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -64,18 +66,22 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isEmpty(userPhone)){
             throw new BusinessException(CommonErrorCode.E_301008);
         }
+        log.info("--------新建商户--------");
         String instMchtNo = IdWorker.getTimeId().substring(0,20);
         jsonObject.put("userPhone",userPhone);
         jsonObject.put("instMchtNo",instMchtNo);
         return jsonObject;
     }
 
+
     /**
      * 商户信息入网
      */
     @Override
     public String create(MerchantInfoVO merchantInfoVO) throws Exception {
-
+        if(StringUtils.isEmpty(String.valueOf(merchantInfoVO))){
+            throw new BusinessException(CommonErrorCode.E_301009);//填写信息为空
+        }
         MerchantInfo merchantInfo = new MerchantInfo();
 //        String substring = IdWorker.getTimeId().substring(0,20);
 //        Long id = Long.parseLong(substring);
@@ -83,6 +89,7 @@ public class UserServiceImpl implements UserService {
         merchantInfo.setSnModelId(merchantInfoVO.getSnModelId());
         merchantInfo.setServiceType(merchantInfoVO.getServiceType());
 //        merchantInfo.setId(id);
+        merchantInfo.setCreateTime(LocalDateTime.now());
         merchantInfo.setStatus("0");
         merchantInfo.setPassword("000000");
 
@@ -150,7 +157,13 @@ public class UserServiceImpl implements UserService {
 //            throw new BusinessException(CommonErrorCode.E_301006);//暂定
 //        }
 
-        Object data = apiClient.createOrgMcht(merchantInfoVO).getData();
+        //todo 异常处理
+        Object data = null;
+        try {
+            data = apiClient.createOrgMcht(merchantInfoVO).getData();
+        } catch (SystemException systemException) {
+            throw new SystemException(CommonErrorCode.E_301010);
+        }
         JSONObject jsonObject = JSONObject.fromObject(data);
         String mchtNo = jsonObject.getString("mchtNo");
         merchantInfo.setPlatformId(mchtNo);
@@ -169,7 +182,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void openMcht(ProductVO productVO) throws Exception {
-
+        if (StringUtils.isEmpty(String.valueOf(productVO))){
+            throw new BusinessException(CommonErrorCode.E_301009);//填写信息为空
+        }
         Integer productId = productVO.getProductId();//产品id
         MerchantProduct merchantProduct = merchantProductMapper.selectById(productId);
         productVO.setModelId(merchantProduct.getModelId());
@@ -226,19 +241,119 @@ public class UserServiceImpl implements UserService {
      * 修改商户入网信息
      */
     @Override
-    public JSONObject updateInfo(MerchantInfoVO merchantInfoVO) throws Exception {
+    public void updateInfo(MerchantInfoVO merchantInfoVO) throws Exception {
+        if (StringUtils.isEmpty(String.valueOf(merchantInfoVO))){
+            throw new BusinessException(CommonErrorCode.E_301009);
+        }
+        String instMchtNo = merchantInfoVO.getMchtBase().getInstMchtNo();//商户机构id
+
+        MerchantInfo merchantInfo = new MerchantInfo();
+        merchantInfo.setSn(merchantInfoVO.getSn());
+        merchantInfo.setSnModelId(merchantInfoVO.getSnModelId());
+        merchantInfo.setServiceType(merchantInfoVO.getServiceType());
+        merchantInfo.setStatus("0");
+
+        MchtBase mchtBase = merchantInfoVO.getMchtBase();
+        merchantInfo.setMerchantName(mchtBase.getMchtName());
+        merchantInfo.setSimpleName(mchtBase.getSimpleName());
+        merchantInfo.setMerchantKind(mchtBase.getMchtKind());
+        merchantInfo.setAreaNo(mchtBase.getAreaNo());
+        merchantInfo.setAddress(mchtBase.getAddress());
+        merchantInfo.setMerchantPhone(mchtBase.getStorePhone());
+        merchantInfo.setMerchantScope(mchtBase.getMchtScope());
+        merchantInfo.setMerchantType(mchtBase.getMchtType());
+        merchantInfo.setUnionpayMerchant(mchtBase.getNuionpayMacht());
+
+        MchtUser mchtUser = merchantInfoVO.getMchtUser();
+        merchantInfo.setLegalPersonEmail(mchtUser.getEmail());
+        merchantInfo.setLegalPersonName(mchtUser.getName());
+        merchantInfo.setLegalPersonPhone(mchtUser.getPhone());
+        merchantInfo.setLegalPersonCardno(mchtUser.getCardNo());
+        merchantInfo.setLegalPersonCardnoDate(mchtUser.getCardDate());
+
+        MchtAcct mchtAcct = merchantInfoVO.getMchtAcct();
+        merchantInfo.setAcctProxy(mchtAcct.getAcctProxy());
+        merchantInfo.setAgentCardNo(mchtAcct.getAgentCardNo());
+        merchantInfo.setAgentCardDate(mchtAcct.getAgentCardDate());
+        merchantInfo.setAcctType(mchtAcct.getAcctType());
+        merchantInfo.setAcctNo(mchtAcct.getAcctNo());
+        merchantInfo.setAcctName(mchtAcct.getAcctName());
+        merchantInfo.setAcctBankNo(mchtAcct.getAcctBankNo());
+        merchantInfo.setAcctZbankCode(mchtAcct.getAcctZbankCode());
+        merchantInfo.setAcctZbankNo(mchtAcct.getAcctZbankNo());
+
+        MchtComp mchtComp = merchantInfoVO.getMchtComp();
+        merchantInfo.setLicenseDate(mchtComp.getLicenseDate());
+        merchantInfo.setLicenseNo(mchtComp.getLicenseNo());
+        merchantInfo.setLicenseType(mchtComp.getLicenseType());
+
 
         log.info("--------修改商户入网信息--------");
         Object data = apiClient.updateMchtInfo(merchantInfoVO).getData();
         if (ObjectUtils.equals(data, null)) {
-            throw new BusinessException(CommonErrorCode.E_301004);
+            throw new BusinessException(CommonErrorCode.E_301010);
         }
+//        JSONObject jsonObject = JSONObject.fromObject(data);
+        merchantInfoMapper.update(merchantInfo,new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId,instMchtNo));
+    }
 
-        JSONObject jsonObject = JSONObject.fromObject(data);
-        return jsonObject;
+    /**
+     * 修改商户状态
+     */
+    @Override
+    public void updateStatus(JSONObject str) throws Exception {
+        log.info("--------修改商户状态--------");
+//        String mchtNo = str.getString("mchtNo");
+//        String unionPayMchtNo = str.getString("unionPayMchtNo");
+        //todo 待修改
+        Object data = apiClient.updateMchtStatus(str).getData();
+        if (ObjectUtils.equals(data, null)) {
+            throw new BusinessException(CommonErrorCode.E_301010);
+        }
     }
 
 
+    /**
+     * 修改商户开通产品签约费率
+     */
+    @Override
+    public void updateProductModel(JSONObject str) throws Exception {
+        String instMchtNo = str.getString("instMchtNo");
+        if (StringUtils.isEmpty(instMchtNo)){
+            throw new BusinessException(CommonErrorCode.E_301003);//暂定
+        }
+        Integer productId = str.getInt("productId");
+        if (productId == null){
+            throw new BusinessException(CommonErrorCode.E_301011);//暂定
+        }
+
+        MerchantInfo merchantInfo = merchantInfoMapper.selectOne(new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId, instMchtNo));
+        MerchantProduct merchantProduct = merchantProductMapper.selectById(productId);
+        str.put("mchtNo",merchantInfo.getPlatformId());
+        str.put("modelId",merchantProduct.getModelId());
+        str.put("productCode",merchantProduct.getProductCode());
+
+        //todo 待修改
+        log.info("--------修改商户开通产品签约费率--------");
+        Object data = apiClient.updateProductModel(str).getData();
+        if (ObjectUtils.equals(data, null)) {
+            throw new BusinessException(CommonErrorCode.E_301010);
+        }
+
+    }
+
+    /**
+     *  修改商户结算银行卡信息
+     */
+    @Override
+    public void updateMchtAcct(AcctVO acctVO) throws Exception {
+        //todo 待修改
+        log.info("--------修改商户结算银行卡信息--------");
+        Object data = apiClient.updateMchtAcct(acctVO).getData();
+        if (ObjectUtils.equals(data, null)) {
+            throw new BusinessException(CommonErrorCode.E_301010);
+        }
+    }
 
 
     /**

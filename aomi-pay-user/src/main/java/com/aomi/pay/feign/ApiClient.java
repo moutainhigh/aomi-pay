@@ -1,9 +1,6 @@
 package com.aomi.pay.feign;
 
-import com.aomi.pay.vo.BaseResponse;
-import com.aomi.pay.vo.MerchantInfoVO;
-import com.aomi.pay.vo.PictureVO;
-import com.aomi.pay.vo.ProductVO;
+import com.aomi.pay.vo.*;
 import net.sf.json.JSONObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +29,20 @@ public interface ApiClient {
     @PostMapping("/merchant/queryMchtAudit")
     public BaseResponse queryMchtAudit(@RequestBody JSONObject str) throws Exception;
 
+    //修改商户入网信息
     @PostMapping("/merchant/updateMchtInfo")
     public BaseResponse updateMchtInfo(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception;
+
+    //修改商户状态
+    @PostMapping("/merchant/updateMchtStatus")
+    public BaseResponse updateMchtStatus(@RequestBody JSONObject str) throws Exception;
+
+    //修改商户开通产品签约费率
+    @PostMapping("/merchant/updateProductModel")
+    public BaseResponse updateProductModel(@RequestBody JSONObject str) throws Exception;
+
+    //修改商户结算银行卡信息
+    @PostMapping("/merchant/updateMchtAcct")
+    public BaseResponse updateMchtAcct(@RequestBody AcctVO acctVO) throws Exception;
 
 }

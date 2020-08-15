@@ -1,5 +1,6 @@
 package com.aomi.pay.service;
 
+import com.aomi.pay.vo.AcctVO;
 import com.aomi.pay.vo.MerchantInfoVO;
 import com.aomi.pay.vo.ProductVO;
 import net.sf.json.JSONObject;
@@ -21,7 +22,13 @@ public interface UserService {
 
      JSONObject queryMchtAudit(JSONObject str) throws Exception;
 
-     JSONObject updateInfo(MerchantInfoVO merchantInfoVO) throws Exception;
+     void updateInfo(MerchantInfoVO merchantInfoVO) throws Exception;
 
      JSONObject  addMerchant(String userPhone);
+
+     void updateStatus(JSONObject str) throws Exception;
+
+     void updateProductModel(JSONObject str) throws Exception;
+
+    void updateMchtAcct(AcctVO acctVO) throws Exception;
 }
