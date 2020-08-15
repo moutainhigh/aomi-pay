@@ -4,18 +4,26 @@ package com.aomi.pay.controller;
 import com.aomi.pay.constants.ApiConstants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.model.JsPayRequest;
+import com.aomi.pay.model.NotifyRequest;
 import com.aomi.pay.service.PaymentOrderService;
+import com.aomi.pay.util.GeneralConvertorUtil;
 import com.aomi.pay.util.ValidateUtil;
 import com.aomi.pay.vo.BaseResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * 交易类(无卡类)接口Controller
@@ -34,32 +42,27 @@ public class PaymentOrderController {
     private PaymentOrderService paymentOrderService;
 
     @ApiOperation(value = "h5支付")
-    /*@ApiResponses({
-            @ApiResponse(code=200,message="成功",response= DictListResp.class),
-    })*/
     @PostMapping("/jsPay")
     public BaseResponse jsPay(@RequestBody JsPayRequest req) throws Exception {
-        log.info("--------h5支付开始--------req:{}",req);
+        log.info("--------h5支付开始--------req:{}", req);
         //参数校验
         ValidateUtil.valid(req);
-        //String payInfo = paymentOrderService.jsPay(req.getMerchantId(),new BigDecimal(req.getAmount()),Integer.parseInt(req.getPayType()),req.getUserId());
         String payInfo = paymentOrderService.jsPay(req);
         log.info("--------h5支付结束--------");
-        return new BaseResponse(CommonErrorCode.SUCCESS,payInfo);
+        return new BaseResponse(CommonErrorCode.SUCCESS, payInfo);
     }
 
     @ApiOperation(value = "支付回调")
     @PostMapping("/notify")
-    public void payNotify(HttpServletRequest request) throws Exception {
-        log.info("------------支付回调开始------------");
-        //获取通知信息
-        String tradeStatus = new String(request.getParameter(ApiConstants.TRADE_STATUS_NAME).getBytes("ISO-8859-1"), "UTF-8");
-        String platformMerchantId = new String(request.getParameter(ApiConstants.MERCHANT_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
-        String tradeNo = new String(request.getParameter(ApiConstants.TEADE_NO_NAME).getBytes("ISO-8859-1"), "UTF-8");
-        String outTradeNo = new String(request.getParameter(ApiConstants.OUT_TRADE_NO).getBytes("ISO-8859-1"), "UTF-8");
-        log.info("request:{}",request);
-        log.info("tradeStatus:{},platformMerchantId:{},tradeNo:{},outTradeNo:{}",tradeStatus,platformMerchantId,tradeNo,outTradeNo);
-        paymentOrderService.payNotify(tradeStatus,platformMerchantId,tradeNo,outTradeNo);
+    public void payNotify(@RequestBody String request) throws Exception {
+        log.info("------------支付回调开始------------params:{}", request);
+
+        JSONObject jsonObject = JSONObject.fromObject(request);
+        Object data = jsonObject.get("data");
+        if(!StringUtils.isEmpty(data)){
+            NotifyRequest notifyRequest = GeneralConvertorUtil.convertor(JSONObject.fromObject(data), NotifyRequest.class);
+            paymentOrderService.payNotify(notifyRequest);
+        }
         log.info("--------支付回调结束--------");
     }
 

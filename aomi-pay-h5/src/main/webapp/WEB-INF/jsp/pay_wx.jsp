@@ -79,7 +79,7 @@
             url: "https://pay.cloudbest.shop/payment/jsPay",
             async: false,
             data: JSON.stringify({
-                "merchantId": "12345123451234512345",
+                "fixedQrCode": "12345123451234512345",
                 "payType": "1",
                 "amount": $("#amount").val(),
                 "userId": userId

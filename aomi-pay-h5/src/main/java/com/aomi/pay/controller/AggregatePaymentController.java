@@ -3,18 +3,17 @@ package com.aomi.pay.controller;
 import com.aomi.pay.constants.H5Constants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.feign.PayClient;
+import com.aomi.pay.service.AggregatePaymentService;
 import com.aomi.pay.util.StringUtil;
 import com.aomi.pay.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * h5Controller
@@ -30,10 +29,12 @@ public class AggregatePaymentController {
     @Resource
     private PayClient payClient;
 
+    @Resource
+    private AggregatePaymentService aggregatePaymentService;
+
     @GetMapping("/hello1/{merchantId}")
     public String hello1(HttpServletRequest request, @PathVariable("merchantId") String merchantId, HttpServletResponse httpServletResponse) throws Exception {
         log.info("--------hello1--------");
-        //TODO useragent
         Cookie[] cookies = request.getCookies();
         String userId = "";
         if (cookies != null && cookies.length > 0) {
@@ -105,16 +106,16 @@ public class AggregatePaymentController {
         return "pay_wx";
     }
 
-    @GetMapping("/hello/{merchantId}")
-    public String hello(HttpServletRequest request, @PathVariable("merchantId") String merchantId, HttpServletResponse httpServletResponse) throws Exception {
+    @GetMapping("/hello/{fixedQrCode}")
+    public String hello(HttpServletRequest request, @PathVariable("fixedQrCode") String fixedQrCode, HttpServletResponse httpServletResponse) throws Exception {
         String userAgent = request.getHeader(H5Constants.USER_AGENT_NAME);
 
         if (StringUtil.isNotBlank(userAgent) && userAgent.contains(H5Constants.USER_AGENT_ALIPAY)) {
-
-            return null;
+            aggregatePaymentService.getUserId(fixedQrCode,request,httpServletResponse);
+            return "pay_ali";
         } else if (StringUtil.isNotBlank(userAgent) && userAgent.contains(H5Constants.USER_AGENT_WX)) {
-
-            return null;
+            aggregatePaymentService.getOpenId(fixedQrCode,request,httpServletResponse);
+            return "pay_wx";
         } else {
             return "no_support";
         }
@@ -137,8 +138,23 @@ public class AggregatePaymentController {
         }
     }
 
+    /**
+     * @author  hdq
+     * @date  2020/8/15
+     * @desc 成功页
+     **/
     @GetMapping("/success")
     public String success() {
         return "success";
+    }
+
+    /**
+     * @author  hdq
+     * @date  2020/8/15
+     * @desc 失败页
+     **/
+    @GetMapping("/fail")
+    public String fail() {
+        return "fail";
     }
 }

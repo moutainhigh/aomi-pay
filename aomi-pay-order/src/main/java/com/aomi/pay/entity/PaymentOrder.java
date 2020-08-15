@@ -114,6 +114,18 @@ public class PaymentOrder implements Serializable {
      */
     @TableField("pay_info")
     private String payInfo;
+
+    /**
+     * 平台标识(hx)
+     */
+    @TableField("platform_tag")
+    private String platformTag;
+
+    /**
+     * 订单创建日期
+     */
+    @TableField("create_date")
+    private Date createDate;
     /**
      * 支付完成时间
      */

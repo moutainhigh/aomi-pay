@@ -11,7 +11,9 @@ public class SysConstants {
     /** UTF-8 */
     public static final String CHARSET_UTF8 = "UTF-8";
 
-    /** yyyy-MM-dd hh:mm:ss */
-    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd hh:mm:ss";
+    public static final String RESULT_CODE_NAME = "code";
+
+    public static final String RESULT_MESSAGE_NAME = "message";
+
 
 }

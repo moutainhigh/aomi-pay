@@ -127,7 +127,7 @@ public class SdkUtil {
         log.info("response.body:{}", StringUtils.isEmpty(response.body()) ? null : content);
         if (!StringUtils.isEmpty(response.body())) {
             JSONObject jsonObject = JSONObject.fromObject(content);
-            //当接口返回resultCode为不1 或者 errorCode 不为空时 抛出异常信息
+            //当接口返回resultCode为不100000 或者 errorCode 不为空时 抛出异常信息
             if (ApiConstants.RESULT_CODE_FAIL.equals(jsonObject.getString(ApiConstants.RESULT_CODE_NAME))) {
                 CommonExceptionUtils.throwBusinessException((jsonObject.getString(ApiConstants.ERROR_CODE_NAME)), "api接口返回异常信息：".concat(jsonObject.getString(ApiConstants.ERROR_DESC_NAME)));
             }
