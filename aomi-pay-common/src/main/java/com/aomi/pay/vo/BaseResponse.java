@@ -87,7 +87,6 @@ public class BaseResponse<T> implements Serializable {
      */
     public BaseResponse(CommonErrorCode commonErrorCode) {
         super();
-        this.success = commonErrorCode.isSuccess();
         this.code = commonErrorCode.getCode();
         this.message = commonErrorCode.getDesc();
     }

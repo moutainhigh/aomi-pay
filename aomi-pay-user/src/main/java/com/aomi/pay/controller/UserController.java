@@ -9,6 +9,7 @@ import com.aomi.pay.service.UserService;
 import com.aomi.pay.util.IPUtil;
 import com.aomi.pay.util.MD5Util;
 import com.aomi.pay.util.PhoneUtil;
+import com.aomi.pay.util.TokenUtil;
 import com.aomi.pay.vo.AcctVO;
 import com.aomi.pay.vo.BaseResponse;
 import com.aomi.pay.vo.MerchantInfoVO;
@@ -174,8 +175,8 @@ public class UserController {
      * 用户生成用户id
      */
     @RequestMapping(value = "/user/merchant/register", method = RequestMethod.POST)
-    public BaseResponse UserRegister(@RequestParam("phone") String phone) throws Exception {
-        Long userId = userService.userRegister(phone);
+    public BaseResponse UserRegister(@RequestParam("phone") String phone,@RequestParam("type") Integer type,@RequestParam("bdNo") String bdNo) throws Exception {
+        Long userId = userService.userRegister(phone,type,bdNo);
         return new BaseResponse(CommonErrorCode.SUCCESS,userId);
     }
 
@@ -191,6 +192,16 @@ public class UserController {
         String token = userService.userLogin(phone,password);
 
 
+        return new BaseResponse(CommonErrorCode.SUCCESS,token);
+    }
+    /**
+     * 查询账单
+     */
+    @RequestMapping(value = "/user/merchant/queryOrder/{token}",method = RequestMethod.POST)
+    public BaseResponse queryOrder( @PathVariable("token") String token) throws Exception {
+
+        Long userId = TokenUtil.getUserId(token);
+        userService.queryOrder(userId);
         return new BaseResponse(CommonErrorCode.SUCCESS,token);
     }
 //

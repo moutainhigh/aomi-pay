@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -353,7 +352,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long userRegister(String mobile) {
+    public Long userRegister(String mobile, Integer type, String bdNo) {
         if (mobile == null) {
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900112);
         }
@@ -372,7 +371,10 @@ public class UserServiceImpl implements UserService {
         Random random = new Random();
         x = Long.valueOf(random.nextInt(899999999) + 100000000);
         userInf.setUserId(x);
+        userInf.setType(type);
+        userInf.setBdNo(bdNo);
         userInf.setModifiedTime(LocalDateTime.now());
+        userInf.setPassword("e6be206350726d8d4e5881fc35e206ff");
         userMapper.insert(userInf);
         return x;
     }
@@ -389,7 +391,7 @@ public class UserServiceImpl implements UserService {
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900111);
         }
 
-        String safePsw = MD5Util.getMd5(password+"aomi1003");
+        String safePsw = MD5Util.getMd5(password+"aomiwangluo");
         log.info("================================用户登录手机号："+phone+",加密后登录密码："+safePsw);
         UserInf userInf = userMapper.selectOne(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone, phone).eq(UserInf::getPassword, safePsw));
         if(userInf==null){
@@ -398,6 +400,11 @@ public class UserServiceImpl implements UserService {
         Long userId = userInf.getUserId();
         String token = TokenUtil.createToken(userId);
         return token;
+    }
+
+    @Override
+    public void queryOrder(Long userId) {
+
     }
 
 
