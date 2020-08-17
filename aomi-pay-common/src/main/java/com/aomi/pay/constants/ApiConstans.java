@@ -6,7 +6,7 @@ package com.aomi.pay.constants;
  * @Date: 2020/8/4 15:41
  * @Version: 1.0
  */
-public class ApiConstants {
+public class ApiConstans {
 
     /**
      * 环迅平台处理结果  成功 1

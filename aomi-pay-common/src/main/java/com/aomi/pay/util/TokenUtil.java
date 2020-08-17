@@ -18,14 +18,22 @@ public class TokenUtil {
 	public static String  createToken(long customerId, String phone){
 		String userToken = Jwts.builder()
 				.setSubject("JuHei")
-				.setExpiration(new Date(new Date().getTime() + 1000*60*60*24*600))
+				.setExpiration(new Date(new Date().getTime() + 1000*60*60*24*180))
 				.claim("customerId", customerId)
 				.claim("phone",phone)
 		.signWith(SignatureAlgorithm.HS512, CommonConstants.SECRETKEY).compact();
 		
 		return userToken;
 	}
-	
+	public static String  createToken(String userId){
+		String userToken = Jwts.builder()
+				.setSubject("JuHei")
+				.setExpiration(new Date(new Date().getTime() + 1000*60*60*24*180))
+				.claim("userId",userId)
+				.signWith(SignatureAlgorithm.HS512, CommonConstants.SECRETKEY).compact();
+
+		return userToken;
+	}
 	public  static long getUserId(String token) throws Exception{
 		
 		Claims claims = Jwts.parser().setSigningKey(CommonConstants.SECRETKEY).parseClaimsJws(token).getBody();

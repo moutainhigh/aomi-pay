@@ -6,7 +6,7 @@ package com.aomi.pay.constants;
  * @Date: 2020/7/17 15:41
  * @Version: 1.0
  */
-public class ParamConstants {
+public class ParamConstans {
 
     /** 页码  默认为1 */
     public static final Integer PAGE_NO = 1;

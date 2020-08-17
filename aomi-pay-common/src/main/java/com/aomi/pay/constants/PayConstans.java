@@ -6,7 +6,7 @@ package com.aomi.pay.constants;
  * @Date: 2020/8/4 15:41
  * @Version: 1.0
  */
-public class PayConstants {
+public class PayConstans {
 
     /**
      * 收款方式  0：支付宝

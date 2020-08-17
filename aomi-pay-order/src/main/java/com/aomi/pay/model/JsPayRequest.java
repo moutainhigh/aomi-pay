@@ -36,10 +36,4 @@ public class JsPayRequest {
     @ApiModelProperty(value = "支付金额", name = "amount", required = true)
     private String amount;
 
-    /**
-     * 支付金额
-     */
-    @Validator(isNotNull = true, description = "userId")
-    @ApiModelProperty(value = "微信支付宝userId", name = "userId", required = true)
-    private String userId;
 }

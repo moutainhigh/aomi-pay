@@ -5,8 +5,6 @@ import com.aliyun.oss.model.ListObjectsRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Component
 public class AliOSSUtil {
 
 //	@Value("${alioss.endpoint}")
@@ -37,11 +34,11 @@ public class AliOSSUtil {
 	//@Value("${alioss.out-endpoint}")
 	private String outEndpoint = "https://oss-cn-shanghai.aliyuncs.com";
 	//@Value("${alioss.access_key_id}")
-	private String access_key_id = "LTAI4FzVTyi2XjJTKH6cHcWa";
-	//@Value("${alioss.access_key_secret}")
-	private String access_key_secret = "AgoNiSSAdZslCHMku53FYNpVxiCaBf";
-	//@Value("${alioss.bucket_name}")
-	private String bucket_name = "aomi";
+	private String access_key_id = "LTAI4GBdGynh1ukFbgDHkkra";
+//	@Value("${alioss.access_key_secret}")
+	private String access_key_secret = "ukcDLHhLdrmLbQmgc2pAvbanIR6DaS";
+//	@Value("${alioss.bucket_name}")
+	private String bucket_name = "jubaojuhe";
 
 
 	

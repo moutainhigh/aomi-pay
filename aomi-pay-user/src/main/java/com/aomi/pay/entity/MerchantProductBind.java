@@ -1,46 +1,42 @@
 package com.aomi.pay.entity;
 
+
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
 /**
  * <p>
- * 银行编码字典表
+ * 商户产品利率绑定关系表
  * </p>
  *
- * @author hdq
+ * @author author
  * @since 2020-08-11
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("t_dictionary_bank")
-public class DictionaryBank implements Serializable {
+@TableName("t_merchant_product_bind")
+public class MerchantProductBind implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * id
      */
-
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
     /**
-     * 银行编号
+     * 机构商户id
      */
-    @TableField("bank_id")
-    private Long bankId;
+    private String merchantId;
+
     /**
-     * 银行全称
+     * 产品id
      */
-    @TableField("bank_name")
-    private String bankName;
+    private Integer productId;
+
 
 }
