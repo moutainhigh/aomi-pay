@@ -368,7 +368,6 @@ public class UserServiceImpl implements UserService {
         }
         Long x = null;
         UserInf userInf = new UserInf();
-        //插入登陆表里面
         userInf.setPhone(mobile);
         Random random = new Random();
         x = Long.valueOf(random.nextInt(899999999) + 100000000);
