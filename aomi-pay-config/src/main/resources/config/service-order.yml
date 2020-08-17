@@ -4,7 +4,7 @@ pay:
     #支付回调地址
     notify_url: https://pay.cloudbest.shop/payment/notify
     #结算周期
-    settle_type: 0
+    settle_type: 2
     #订单失效时间 分钟
     exprice: 60
 

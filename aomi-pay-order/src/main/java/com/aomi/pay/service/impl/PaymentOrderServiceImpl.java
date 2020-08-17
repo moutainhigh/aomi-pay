@@ -60,6 +60,12 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     private int exprice;
 
     /**
+     * 微信appid
+     */
+    @Value("${wx.appid}")
+    private String appid;
+
+    /**
      * h5支付 商户id，金额，支付类型
      *
      * @return 原生js信息
@@ -68,13 +74,13 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     public String jsPay(JsPayRequest req) throws Exception {
 
         //根据商户号获取需要的商户信息 TODO 暂时写死  redis req.getMerchantId()
-        String subAppid = "wxeb1b1558437e9b12";
+        String merchantId = "135795489";
         //平台商户号
-        String platformMerchantId = "027310103382119";
+        String platformMerchantId = "027310103388566";
         //TODO  商户名+收款
-        String subject = "test华一炒粉---收款";
+        String subject = "全季酒店(川沙店) 收款";
         //String merchantNo = "10000000005";//机构商户号
-        Long agentId = Long.valueOf("10000000001");//TODO 商户下有地推人员id，根据地推人员id 查询
+        String bdNo = "1000000001";//TODO 商户下有地推人员id，根据地推人员id 查询
         //生成交易订单号
         BigInteger orderId = PaymentOrderUtil.getOrderCode();
         int payType = Integer.parseInt(req.getPayType());
@@ -89,7 +95,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         } else if (payType == PayConstants.PAY_TYPE_WX) {
             jsPayDTO.setProductCode(100042);
             //微信需要传subAppid
-            jsPayDTO.setSubAppid(subAppid);
+            jsPayDTO.setSubAppid(appid);
             jsPayDTO.setUserId(req.getUserId());
         } else if (payType == PayConstants.PAY_TYPE_YL) {
             jsPayDTO.setProductCode(100044);
@@ -111,8 +117,8 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         //实体转化
         PaymentOrder paymentOrder = GeneralConvertorUtil.convertor(jsPayDTO, PaymentOrder.class);
         //商户号 TODO 暂写死
-        paymentOrder.setMerchantId("12345678901234567890");
-        paymentOrder.setAgentId(agentId);
+        paymentOrder.setMerchantId(merchantId);
+        paymentOrder.setBdNo(bdNo);
         //paymentOrder.setCreateDate(DateUtil.format(DateUtil.getCurrDate(), DateUtil.YYYY_MM_DD));
         paymentOrder.setCreateDate(DateUtil.getCurrDate());
         //TODO 写死环迅标识
