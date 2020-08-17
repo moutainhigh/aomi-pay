@@ -58,14 +58,14 @@ public class PaymentOrder implements Serializable {
     @TableField("platform_merchant_id")
     private String platformMerchantId;
     /**
+     *  推广员No
+     */
+    @TableField("bd_no")
+    private String bdNo;
+    /**
      * 费率
      */
     private BigDecimal rate;
-    /**
-     * 代理商id
-     */
-    @TableField("agent_id")
-    private Long agentId;
     /**
      * 订单标题
      */

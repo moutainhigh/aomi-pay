@@ -88,7 +88,7 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
                 if (CommonErrorCode.SUCCESS.getCode().equals(response.getCode())) {
                     userId = response.getData().toString();
                     Cookie userCookie = new Cookie(H5Constants.USER_ID_NAME, userId);
-                    log.info("useId存cookie");
+                    log.info("useId存cookie:{}",userId);
                     userCookie.setMaxAge(H5Constants.COOKIE_MAX_AGE);
                     userCookie.setPath("/");
                     httpServletResponse.addCookie(userCookie);
@@ -119,7 +119,7 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
                 if (CommonErrorCode.SUCCESS.getCode().equals(response.getCode())) {
                     userId = response.getData().toString();
                     Cookie userCookie = new Cookie(H5Constants.USER_ID_NAME, userId);
-                    log.info("useId存cookie");
+                    log.info("useId存cookie:{}",userId);
                     userCookie.setMaxAge(H5Constants.COOKIE_MAX_AGE);
                     userCookie.setPath("/");
                     httpServletResponse.addCookie(userCookie);

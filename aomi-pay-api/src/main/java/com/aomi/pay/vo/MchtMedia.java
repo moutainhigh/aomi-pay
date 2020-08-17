@@ -20,5 +20,8 @@ public class MchtMedia {
     private String handheld;
     private List<String> extraPics;
     private String certReverse;
+    private String license;
+    private String doorHead;
+    private String cashier;
 
 }
