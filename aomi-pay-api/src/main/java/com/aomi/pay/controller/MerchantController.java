@@ -43,15 +43,15 @@ public class MerchantController {
     @PostMapping("/createOrgMcht")
     public BaseResponse createOrgMcht(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
         JSONObject resultJson = this.merchantService.createOrgMcht(merchantInfoVO);
-        return new BaseResponse(CommonErrorCode.SUCCESS,resultJson);
+        return new BaseResponse(CommonErrorCode.SUCCESS, resultJson);
     }
 
 
     @ApiOperation(value = "商户开通产品")
     @PostMapping("/addProduct")
     public BaseResponse addProduct(@RequestBody ProductVO productVO) throws Exception {
-       JSONObject jsonObject = this.merchantService.addProduct(productVO);
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+        JSONObject jsonObject = this.merchantService.addProduct(productVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
 
@@ -59,42 +59,42 @@ public class MerchantController {
     @PostMapping("/queryMcht")
     public BaseResponse queryMcht(@RequestBody JSONObject str) throws Exception {
         MerchantInfoVO merchantInfoVO = merchantService.queryMcht(str);
-        return new BaseResponse(CommonErrorCode.SUCCESS,merchantInfoVO);
+        return new BaseResponse(CommonErrorCode.SUCCESS, merchantInfoVO);
     }
 
     @ApiOperation(value = "查询商户审核状态")
     @PostMapping("/queryMchtAudit")
     public BaseResponse queryMchtAudit(@RequestBody JSONObject str) throws Exception {
         JSONObject jsonObject = merchantService.queryMchtAudit(str);
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
     @ApiOperation(value = "修改商户入网信息")
     @PostMapping("/updateMchtInfo")
     public BaseResponse updateMchtInfo(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
         JSONObject jsonObject = merchantService.updateMchtInfo(merchantInfoVO);
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
     @ApiOperation(value = "修改商户入网信息")
     @PostMapping("/updateMchtStatus")
     public BaseResponse updateMchtStatus(@RequestBody JSONObject str) throws Exception {
         JSONObject jsonObject = merchantService.updateMchtStatus(str);
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
     @ApiOperation(value = "修改商户开通产品签约费率")
     @PostMapping("/updateProductModel")
     public BaseResponse updateProductModel(@RequestBody JSONObject str) throws Exception {
         JSONObject jsonObject = merchantService.updateProductModel(str);
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
     @ApiOperation(value = "修改商户开通产品签约费率")
     @PostMapping("/updateMchtAcct")
     public BaseResponse updateMchtAcct(@RequestBody AcctVO acctVO) throws Exception {
         JSONObject jsonObject = merchantService.updateMchtAcct(acctVO);
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
+        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
     }
 
 
@@ -129,7 +129,6 @@ public class MerchantController {
 //    }
 
 
-
 //    @Value("${api_route.mcht.add_product}")
 //    private String routeAddProduct;
 //
@@ -152,7 +151,7 @@ public class MerchantController {
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
 //    }
 
-}
+
 //    /**
 //     * 商户图片上传路径
 //     */
@@ -193,13 +192,13 @@ public class MerchantController {
 //     */
 //    @Value("${api_route.mcht.create_org_mcht}")
 //    private String routeCreateOrgMcht;
-//
+
 //    /**
 //     * 商户信息入网路径
 //     */
 //    @Value("${api_route.mcht.query_mcht}")
 //    private String routeQueryMcht;
-//
+
 //    /**
 //     * 查询商户审核状态路径
 //     */
@@ -212,7 +211,7 @@ public class MerchantController {
 //    @Value("${api_route.mcht.add_product}")
 //    private String routeAddProduct;
 
-//
+
 //    @ApiOperation(value = "商户信息入网")
 //    @PostMapping("/createOrgMcht/test")
 //    public BaseResponse createOrgMcht() throws Exception {
@@ -281,9 +280,6 @@ public class MerchantController {
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
 
 
-
-
-
 //    @ApiOperation(value = "商户入网信息查询")
 //    @PostMapping("/queryMcht")
 //    public BaseResponse queryMcht() throws Exception {
@@ -293,8 +289,8 @@ public class MerchantController {
 //        paramsData.put("instId", "015001");
 //        paramsData.put("mchtNo", "015370109123528");
 //        paramsData.put("instMchtNo", "test100000002");
-//        String result = SdkUtil.post(paramsData, routeQueryMcht);
-//        JSONObject jsonObject = JSONObject.fromObject(result);
+//        Object post = SdkUtil.post(paramsData, routeQueryMcht);
+//        JSONObject jsonObject = JSONObject.fromObject(post);
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
 //    }
 //
@@ -329,3 +325,5 @@ public class MerchantController {
 //        JSONObject jsonObject = JSONObject.fromObject(result);
 //        return new BaseResponse(CommonErrorCode.SUCCESS, jsonObject);
 //    }
+
+}

@@ -27,36 +27,39 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    /**
-     * 新建商户
-     */
-    @ApiOperation(value = "新建商户")
-    @PostMapping("user/merchant/addMerchant")
-    public BaseResponse addMerchant(@RequestBody JSONObject str){
-        String userPhone = str.getString("userPhone");
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = userService.addMerchant(userPhone);
-        } catch (BusinessException businessException) {
-            return new BaseResponse(businessException.getCode(), businessException.getMessage());
-        }
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
-    }
 
     /**
-     * 商户信息入网
+     * 机构查询商户信息
      */
-    @ApiOperation(value = "商户信息入网")
-    @PostMapping("user/merchant/merchantInfo/create")
-    public BaseResponse create(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
-        String mchtNo = null;
+    @ApiOperation(value = "机构查询商户信息")
+    @PostMapping("user/merchant/findMerchantInfo")
+    public BaseResponse findMerchantInfo(@RequestBody JSONObject str){
+        MerchantInfoVO rmerchantInfoVO = new MerchantInfoVO();
         try {
-            mchtNo = userService.create(merchantInfoVO);
+            rmerchantInfoVO = userService.findMerchantInfo(str);
         } catch (BusinessException businessException) {
             return new BaseResponse(businessException.getCode(), businessException.getMessage());
         }
-        return new BaseResponse(CommonErrorCode.SUCCESS,mchtNo);
+        return new BaseResponse(CommonErrorCode.SUCCESS,rmerchantInfoVO);
     }
+
+
+    /**
+     * 机构插入商户信息
+     */
+    @ApiOperation(value = "机构插入商户信息")
+    @PostMapping("user/merchant/insertMerchantInfo")
+    public BaseResponse insertMerchantInfo(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
+        MerchantInfoVO rmerchantInfoVO = new MerchantInfoVO();
+        try {
+            rmerchantInfoVO = userService.insertMerchantInfo(merchantInfoVO);
+        } catch (BusinessException businessException) {
+            return new BaseResponse(businessException.getCode(), businessException.getMessage());
+        }
+        return new BaseResponse(CommonErrorCode.SUCCESS,rmerchantInfoVO);
+    }
+
+
 
 
     /**
@@ -119,6 +122,22 @@ public class UserController {
     }
 
 
+   /**
+     * 商户信息入网
+     */
+    @ApiOperation(value = "商户信息入网")
+    @PostMapping("user/merchant/merchantInfo/create")
+    public BaseResponse create(@RequestBody JSONObject str) throws Exception {
+        String string = null;
+        try {
+            string = userService.create(str);
+        } catch (BusinessException businessException) {
+            return new BaseResponse(businessException.getCode(), businessException.getMessage());
+        }
+        return new BaseResponse(CommonErrorCode.SUCCESS,string);
+    }
+
+
     /**
      * 修改商户入网信息
      */
@@ -160,6 +179,20 @@ public class UserController {
     }
 
 
+    /**
+     //     * 商户信息入网
+     //     */
+//    @ApiOperation(value = "商户信息入网")
+//    @PostMapping("user/merchant/merchantInfo/createTwo")
+//    public BaseResponse createTwo(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
+//        String mchtNo = null;
+//        try {
+//            mchtNo = userService.create(merchantInfoVO);
+//        } catch (BusinessException businessException) {
+//            return new BaseResponse(businessException.getCode(), businessException.getMessage());
+//        }
+//        return new BaseResponse(CommonErrorCode.SUCCESS,mchtNo);
+//    }
 
 //
 //
@@ -334,6 +367,7 @@ public class UserController {
 //                    @ApiImplicitParam(name = "image", value = "文件流对象,接收数据格式", required = true,dataType = "MultipartFile",allowMultiple = true)
 //            }
 //    )
+
 
 
 
