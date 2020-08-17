@@ -80,7 +80,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         //TODO  商户名+收款
         String subject = "全季酒店(川沙店) 收款";
         //String merchantNo = "10000000005";//机构商户号
-        String bdNo = "1000000001";//TODO 商户下有地推人员id，根据地推人员id 查询
+        String bdNo = "1000000001";
         //生成交易订单号
         BigInteger orderId = PaymentOrderUtil.getOrderCode();
         int payType = Integer.parseInt(req.getPayType());
