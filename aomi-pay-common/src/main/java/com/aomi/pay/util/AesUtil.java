@@ -111,7 +111,7 @@ public class AesUtil {
         // System.out.println("key: " + initkey());
 
         //System.out.println(initkey());
-        String data = "6513216516312312313212316516131231";
+        String data = "123456";
 
         String encrypt = encrypt(data);
         System.out.println(encrypt);

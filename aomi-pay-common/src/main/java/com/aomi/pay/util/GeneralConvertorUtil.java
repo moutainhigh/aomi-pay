@@ -1,14 +1,13 @@
 package com.aomi.pay.util;
 
-import com.aomi.pay.vo.BaseRequest;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @ProjectName: aomi
