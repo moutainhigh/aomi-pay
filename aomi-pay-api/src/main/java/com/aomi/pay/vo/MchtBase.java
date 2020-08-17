@@ -14,18 +14,20 @@ import lombok.Data;
 public class MchtBase {
 
 
-    private String mchtScope;
-    private String mchtKind;
     /**
      * 机构方商户号
      */
-    private String instMchtNo;
-    private String mchtNo;
-    private String address;
+    private Long instMchtNo;
     private String mchtName;
+    private String mchtNo;
     private String simpleName;
+    private String mchtKind;
     private String areaNo;
-    private String mchtType;
+    private String address;
     private String storePhone;
+    private String mchtScope;
+    private String mchtType;
+    private String status;
+    private String nuionpayMacht;
 
 }

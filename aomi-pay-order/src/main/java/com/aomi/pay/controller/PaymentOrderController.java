@@ -1,7 +1,6 @@
 package com.aomi.pay.controller;
 
 
-import com.aomi.pay.constants.ApiConstants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.model.JsPayRequest;
 import com.aomi.pay.model.NotifyRequest;

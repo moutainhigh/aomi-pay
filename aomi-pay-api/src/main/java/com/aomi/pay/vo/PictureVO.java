@@ -12,7 +12,7 @@ public class PictureVO implements Serializable {
 
     private String picType;//类型
     private String picName;//图片名称
-    private String userId;//商户id；
+    private Long userId;//商户id；
     private String imagStr;
 
 

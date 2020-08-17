@@ -9,6 +9,7 @@ import com.aomi.pay.service.UserService;
 import com.aomi.pay.util.IPUtil;
 import com.aomi.pay.util.MD5Util;
 import com.aomi.pay.util.PhoneUtil;
+import com.aomi.pay.util.TokenUtil;
 import com.aomi.pay.vo.AcctVO;
 import com.aomi.pay.vo.BaseResponse;
 import com.aomi.pay.vo.MerchantInfoVO;
@@ -37,36 +38,39 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserMapper userMapper;
-    /**
-     * 新建商户
-     */
-    @ApiOperation(value = "新建商户")
-    @PostMapping("user/merchant/addMerchant")
-    public BaseResponse addMerchant(@RequestBody JSONObject str){
-        String userPhone = str.getString("userPhone");
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = userService.addMerchant(userPhone);
-        } catch (BusinessException businessException) {
-            return new BaseResponse(businessException.getCode(), businessException.getMessage());
-        }
-        return new BaseResponse(CommonErrorCode.SUCCESS,jsonObject);
-    }
 
     /**
-     * 商户信息入网
+     * 机构查询商户信息
      */
-    @ApiOperation(value = "商户信息入网")
-    @PostMapping("user/merchant/merchantInfo/create")
-    public BaseResponse create(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
-        String mchtNo = null;
+    @ApiOperation(value = "机构查询商户信息")
+    @PostMapping("user/merchant/findMerchantInfo")
+    public BaseResponse findMerchantInfo(@RequestBody JSONObject str){
+        MerchantInfoVO rmerchantInfoVO = new MerchantInfoVO();
         try {
-            mchtNo = userService.create(merchantInfoVO);
+            rmerchantInfoVO = userService.findMerchantInfo(str);
         } catch (BusinessException businessException) {
             return new BaseResponse(businessException.getCode(), businessException.getMessage());
         }
-        return new BaseResponse(CommonErrorCode.SUCCESS,mchtNo);
+        return new BaseResponse(CommonErrorCode.SUCCESS,rmerchantInfoVO);
     }
+
+
+    /**
+     * 机构插入商户信息
+     */
+    @ApiOperation(value = "机构插入商户信息")
+    @PostMapping("user/merchant/insertMerchantInfo")
+    public BaseResponse insertMerchantInfo(@RequestBody MerchantInfoVO merchantInfoVO) throws Exception {
+        MerchantInfoVO rmerchantInfoVO = new MerchantInfoVO();
+        try {
+            rmerchantInfoVO = userService.insertMerchantInfo(merchantInfoVO);
+        } catch (BusinessException businessException) {
+            return new BaseResponse(businessException.getCode(), businessException.getMessage());
+        }
+        return new BaseResponse(CommonErrorCode.SUCCESS,rmerchantInfoVO);
+    }
+
+
 
 
     /**
@@ -129,6 +133,22 @@ public class UserController {
     }
 
 
+   /**
+     * 商户信息入网
+     */
+    @ApiOperation(value = "商户信息入网")
+    @PostMapping("user/merchant/merchantInfo/create")
+    public BaseResponse create(@RequestBody JSONObject str) throws Exception {
+        String string = null;
+        try {
+            string = userService.create(str);
+        } catch (BusinessException businessException) {
+            return new BaseResponse(businessException.getCode(), businessException.getMessage());
+        }
+        return new BaseResponse(CommonErrorCode.SUCCESS,string);
+    }
+
+
     /**
      * 修改商户入网信息
      */
@@ -171,24 +191,12 @@ public class UserController {
 
 
     /**
-     * 用户注册
+     * 用户生成用户id
      */
     @RequestMapping(value = "/user/merchant/register", method = RequestMethod.POST)
-    public BaseResponse UserRegister(@RequestBody JSONObject str) throws Exception {
-        try {
-            String phone = str.getString("phone");
-            String password = str.getString("password");
-            String code = null;
-            try {
-                code = str.getString("code");
-            } catch (Exception e) {
-                code = "0";
-            }
-            userService.userRegister(phone, password, code);
-        } catch (BusinessException businessException) {
-            return new BaseResponse(businessException.getCode(), businessException.getDesc());
-        }
-        return new BaseResponse(CommonErrorCode.SUCCESS);
+    public BaseResponse UserRegister(@RequestParam("phone") String phone,@RequestParam("type") Integer type,@RequestParam("bdNo") String bdNo) throws Exception {
+        Long userId = userService.userRegister(phone,type,bdNo);
+        return new BaseResponse(CommonErrorCode.SUCCESS,userId);
     }
 
     /**
@@ -199,19 +207,20 @@ public class UserController {
         String phone = str.getString("phone");
         String password = str.getString("password");
         log.info("================================用户登录手机号："+phone+",登录密码："+password);
-        if(phone==null){
-            return new BaseResponse("900112","手机号为空");
-        }
-        if(!PhoneUtil.isMobileSimple(phone)){
-            return new BaseResponse("900123","手机号码格式不正确");
-        }
-        if(password==null){
-            return new BaseResponse("900111","密码为空");
-        }
 
         String token = userService.userLogin(phone,password);
 
 
+        return new BaseResponse(CommonErrorCode.SUCCESS,token);
+    }
+    /**
+     * 查询账单
+     */
+    @RequestMapping(value = "/user/merchant/queryOrder/{token}",method = RequestMethod.POST)
+    public BaseResponse queryOrder( @PathVariable("token") String token) throws Exception {
+
+        Long userId = TokenUtil.getUserId(token);
+        userService.queryOrder(userId);
         return new BaseResponse(CommonErrorCode.SUCCESS,token);
     }
 //
@@ -387,6 +396,7 @@ public class UserController {
 //                    @ApiImplicitParam(name = "image", value = "文件流对象,接收数据格式", required = true,dataType = "MultipartFile",allowMultiple = true)
 //            }
 //    )
+
 
 
 
