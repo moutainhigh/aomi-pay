@@ -17,6 +17,7 @@ import com.aomi.pay.util.AesUtil;
 import com.aomi.pay.util.AliOSSUtil;
 import com.aomi.pay.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.ObjectUtils;
@@ -141,10 +142,8 @@ public class UserServiceImpl implements UserService {
         merchantInfo.setStatus("1");
         merchantInfoMapper.updateById(merchantInfo);
 
-
         MerchantInfo afterMerchantInfo = merchantInfoMapper.selectById(instMchtNo);
         System.out.println(afterMerchantInfo);
-
         return null;
     }
 
@@ -265,7 +264,7 @@ public class UserServiceImpl implements UserService {
         String imgCode = jsonObject.getString("imgCode");
 
         //图片上传到阿里云
-        String imgOss = this.uploadImgOss(request);
+        String imgOss = this.uploadImgOss(request,userId);
 
         merchantImg.setImgUrl(imgOss);
         merchantImg.setImgCode(imgCode);
@@ -567,8 +566,6 @@ public class UserServiceImpl implements UserService {
 
 
 
-
-
     /**
      * 上传图片文件返回图片byte[]
      */
@@ -576,6 +573,12 @@ public class UserServiceImpl implements UserService {
     public String getPhoto(HttpServletRequest request) throws IOException {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile image = multipartRequest.getFile("image");
+        long imageSize = image.getSize();
+        System.out.println(imageSize);
+        if (imageSize > 2097152){
+            throw new BusinessException(CommonErrorCode.E_301005);//暂定
+        }
+
         InputStream inStream = image.getInputStream();
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
@@ -590,45 +593,17 @@ public class UserServiceImpl implements UserService {
         }
         inStream.close();
         String imageStr = Base64Utils.encodeToString(buffer);
-
-
-        //todo 判断照片大小 不能超过2M ???
-        Integer equalIndex = imageStr.indexOf("=");//1.找到等号，把等号去掉
-        if (imageStr.indexOf("=") > 0) {
-            imageStr = imageStr.substring(0, equalIndex);
-        }
-        Integer size = imageSize(imageStr);
-        System.out.println(size);
-        if (size > 1048576) {
-            throw new BusinessException(CommonErrorCode.E_301005);//暂定
-        }
         return imageStr;
     }
 
-    //计算base64图片的字节数(单位:字节)
-    //传入的图片base64是去掉头部的data:image/png;base64,字符串
 
-    public Integer imageSize(String imageBase64Str) {
-
-        //1.找到等号，把等号也去掉(=用来填充base64字符串长度用)
-        Integer equalIndex = imageBase64Str.indexOf("=");
-        if (imageBase64Str.indexOf("=") > 0) {
-            imageBase64Str = imageBase64Str.substring(0, equalIndex);
-        }
-        //2.原来的字符流大小，单位为字节
-        Integer strLength = imageBase64Str.length();
-//        System.out.println("imageBase64Str Length = " + strLength);
-        //3.计算后得到的文件流大小，单位为字节
-        Integer size = strLength - (strLength / 8) * 2;
-        return size;
-    }
 
 
     /**
      * 上传图片到阿里云
      * 添加商品图片(上传图片)
      */
-    public String uploadImgOss(HttpServletRequest request) {
+    public String uploadImgOss(HttpServletRequest request,String userId) {
         String imgurl = "";
         try {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -642,8 +617,9 @@ public class UserServiceImpl implements UserService {
             if (file != null) {
                 String fileName = file.getOriginalFilename();
                 String prefix = fileName.substring(fileName.lastIndexOf("."));
-                fileName = System.currentTimeMillis() + prefix;
-                ossObjectName = ossObjectNamePrefix + fileName;
+                fileName = System.currentTimeMillis() + prefix; //字符串+商户号+时间戳
+                String StringUserId = userId + "-" + IdWorker.getTimeId().substring(0,10) + "-";
+                ossObjectName = StringUserId + ossObjectNamePrefix + fileName;
                 AliOSSUtil aliOSSUtil = new AliOSSUtil();
                 try {
                     aliOSSUtil.uploadStreamToOss(ossObjectName, file.getInputStream());
@@ -658,6 +634,11 @@ public class UserServiceImpl implements UserService {
         }
         return imgurl;
     }
+
+    public static void main(String[] args) {
+
+    }
+
 
 }
 
