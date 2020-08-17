@@ -4,15 +4,11 @@ import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * @ProjectName: aomi
- * @Package: com.aomi.pay.domain
- * @ClassName: GeneralConvertor
  * @Author: hdq
  * @Description: dozer 转换器   对象与对象的转换
  * @Date: 2020/7/8 13:30

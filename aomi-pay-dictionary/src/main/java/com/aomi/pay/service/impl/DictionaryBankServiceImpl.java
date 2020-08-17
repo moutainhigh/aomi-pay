@@ -1,25 +1,18 @@
 package com.aomi.pay.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.aomi.pay.entity.DictionaryBank;
 import com.aomi.pay.mapper.DictionaryBankMapper;
 import com.aomi.pay.service.DictionaryBankService;
 import com.aomi.pay.util.GeneralConvertorUtil;
-import com.aomi.pay.util.JsonUtil;
-import com.aomi.pay.util.RedisUtil;
-import com.aomi.pay.util.StringUtil;
 import com.aomi.pay.vo.DictionaryBankVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

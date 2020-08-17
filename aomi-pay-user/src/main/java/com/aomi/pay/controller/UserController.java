@@ -186,7 +186,7 @@ public class UserController {
             }
             userService.userRegister(phone, password, code);
         } catch (BusinessException businessException) {
-            return new BaseResponse(false,businessException.getCode(), businessException.getDesc());
+            return new BaseResponse(businessException.getCode(), businessException.getDesc());
         }
         return new BaseResponse(CommonErrorCode.SUCCESS);
     }
@@ -200,13 +200,13 @@ public class UserController {
         String password = str.getString("password");
         log.info("================================用户登录手机号："+phone+",登录密码："+password);
         if(phone==null){
-            return new BaseResponse(false,"900112","手机号为空");
+            return new BaseResponse("900112","手机号为空");
         }
         if(!PhoneUtil.isMobileSimple(phone)){
-            return new BaseResponse(false,"900123","手机号码格式不正确");
+            return new BaseResponse("900123","手机号码格式不正确");
         }
         if(password==null){
-            return new BaseResponse(false,"900111","密码为空");
+            return new BaseResponse("900111","密码为空");
         }
 
         String token = userService.userLogin(phone,password);

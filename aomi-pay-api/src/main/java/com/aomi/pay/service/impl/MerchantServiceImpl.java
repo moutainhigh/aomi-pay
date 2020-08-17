@@ -146,7 +146,7 @@ public class MerchantServiceImpl implements MerchantService {
             mchtMedia.setHandheld(SdkUtil.encrypt(mchtMedia.getHandheld()));
         }
         mchtMedia.setBankCardPositive(SdkUtil.encrypt(mchtMedia.getBankCardPositive()));
-        mchtMedia.setLicense(SdkUtil.encrypt(mchtMedia.getLicense()));
+        /*mchtMedia.setLicense(SdkUtil.encrypt(mchtMedia.getLicense()));
         if (StringUtils.isNotEmpty(mchtMedia.getOrgImage())) {
             mchtMedia.setOrgImage(SdkUtil.encrypt(mchtMedia.getOrgImage()));
         }
@@ -163,7 +163,7 @@ public class MerchantServiceImpl implements MerchantService {
         mchtMedia.setAgenCardFront(SdkUtil.encrypt(mchtMedia.getAgenCardFront()));
         mchtMedia.setAgenIdCardBackPic(SdkUtil.encrypt(mchtMedia.getAgenIdCardBackPic()));
         mchtMedia.setAgentCardId(SdkUtil.encrypt(mchtMedia.getAgentCardId()));
-        mchtMedia.setAgentProtocol(SdkUtil.encrypt(mchtMedia.getAgentProtocol()));
+        mchtMedia.setAgentProtocol(SdkUtil.encrypt(mchtMedia.getAgentProtocol()));*/
 
         List<String> industryLicenses = mchtMedia.getIndustryLicenses();
         if (CollectionUtils.isNotEmpty(industryLicenses)) {
@@ -303,7 +303,7 @@ public class MerchantServiceImpl implements MerchantService {
             mchtMedia.setHandheld(SdkUtil.encrypt(mchtMedia.getHandheld()));
         }
         mchtMedia.setBankCardPositive(SdkUtil.encrypt(mchtMedia.getBankCardPositive()));
-        mchtMedia.setLicense(SdkUtil.encrypt(mchtMedia.getLicense()));
+        /*mchtMedia.setLicense(SdkUtil.encrypt(mchtMedia.getLicense()));
         if (StringUtils.isNotEmpty(mchtMedia.getOrgImage())) {
             mchtMedia.setOrgImage(SdkUtil.encrypt(mchtMedia.getOrgImage()));
         }
@@ -321,7 +321,7 @@ public class MerchantServiceImpl implements MerchantService {
         mchtMedia.setAgenIdCardBackPic(SdkUtil.encrypt(mchtMedia.getAgenIdCardBackPic()));
         mchtMedia.setAgentCardId(SdkUtil.encrypt(mchtMedia.getAgentCardId()));
         mchtMedia.setAgentProtocol(SdkUtil.encrypt(mchtMedia.getAgentProtocol()));
-
+*/
         List<String> industryLicenses = mchtMedia.getIndustryLicenses();
         if (CollectionUtils.isNotEmpty(industryLicenses)) {
             List<String> collect = industryLicenses.stream().map(industryLicense -> {

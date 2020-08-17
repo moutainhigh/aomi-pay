@@ -91,7 +91,7 @@ public class SmsRecordController {
             smsRecord.setCreateTime(LocalDateTime.now());
             smsRecordService.createSmsRecord(smsRecord);
         }catch (BusinessException businessException){
-            return new BaseResponse(false,businessException.getCode(),businessException.getDesc());
+            return new BaseResponse(businessException.getCode(),businessException.getDesc());
         }
 
         return new BaseResponse(CommonErrorCode.SUCCESS);
