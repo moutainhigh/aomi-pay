@@ -60,10 +60,10 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     private int exprice;
 
     /**
-     * 订单失效时间
+     * 微信appid
      */
-    @Value("${pay.hx.exprice}")
-    private int exprice;
+    @Value("${wx.appid}")
+    private String appid;
 
     /**
      * h5支付 商户id，金额，支付类型
@@ -75,11 +75,10 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
 
         //根据商户号获取需要的商户信息 TODO 暂时写死  redis req.getMerchantId()
         String merchantId = "135795489";
-        String subAppid = "wxeb1b1558437e9b12";
         //平台商户号
         String platformMerchantId = "027310103388566";
         //TODO  商户名+收款
-        String subject = "全季酒店(川沙店)收款";
+        String subject = "全季酒店(川沙店) 收款";
         //String merchantNo = "10000000005";//机构商户号
         String bdNo = "1000000001";//TODO 商户下有地推人员id，根据地推人员id 查询
         //生成交易订单号
@@ -96,7 +95,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         } else if (payType == PayConstants.PAY_TYPE_WX) {
             jsPayDTO.setProductCode(100042);
             //微信需要传subAppid
-            jsPayDTO.setSubAppid(subAppid);
+            jsPayDTO.setSubAppid(appid);
             jsPayDTO.setUserId(req.getUserId());
         } else if (payType == PayConstants.PAY_TYPE_YL) {
             jsPayDTO.setProductCode(100044);
