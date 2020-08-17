@@ -9,9 +9,8 @@ spring:
     config:
       server:
         native:
-          searchLocations: classpath:/config # 内置：配置文件所在目录，classpath（类路径）和（系统文件路径） file两种
-          #searchLocations: file:F:\\aomi-pay-config  #外置：本地绝对路径
-          #searchLocations: file:///config  #外置：运行目录
+          #searchLocations: classpath:/config # 内置：配置文件所在目录，classpath（类路径）和（系统文件路径） file两种
+          searchLocations: file:F:\\aomi-pay-config  #外置：本地绝对路径
     bus:
       enabled: true
       trace:

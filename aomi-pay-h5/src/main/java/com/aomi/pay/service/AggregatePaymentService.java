@@ -1,6 +1,7 @@
 package com.aomi.pay.service;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,12 +21,12 @@ public interface AggregatePaymentService {
      * @date 2020/8/15
      * @desc 获取支付宝userid
      **/
-    void getUserId(String fixedQrCode,HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception;
+    void getUserId(String fixedQrCode, HttpServletRequest request, HttpServletResponse httpServletResponse, Model model) throws Exception;
 
     /**
      * @author hdq
      * @date 2020/8/15
      * @desc 获取微信
      **/
-    void getOpenId(String fixedQrCode,HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception;
+    void getOpenId(String fixedQrCode, HttpServletRequest request, HttpServletResponse httpServletResponse, Model model) throws Exception;
 }

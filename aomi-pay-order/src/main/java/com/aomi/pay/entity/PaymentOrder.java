@@ -51,7 +51,7 @@ public class PaymentOrder implements Serializable {
      * 商户号
      */
     @TableField("merchant_id")
-    private String merchantId;
+    private Long merchantId;
     /**
      * 平台商户号
      */

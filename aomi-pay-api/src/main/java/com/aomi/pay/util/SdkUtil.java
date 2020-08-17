@@ -170,7 +170,7 @@ public class SdkUtil {
      * @desc  各种测试节省时间
      **/
     public static void main(String[] args) throws Exception{
-/*        String encrypt = SecretUtil
+       /* String encrypt = SecretUtil
                 .encrypt("430981199403131717", "7kyB+aUhF14f+zbE0ERd4Q==", SecretType.AES);
 
         System.out.println(encrypt);
@@ -182,15 +182,15 @@ public class SdkUtil {
         /*String decrypt = SecretUtil
                 .decrypt("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=", KEY, SecretType.AES);
         String decrypt1 = SecretUtil
-                .decrypt("GD2miQARzl1DpNlKSRHrc9lDoXUTDGtHgytmaXl2371PQpe78I9K/NhKYHP9cTCG", "7kyB+aUhF14f+zbE0ERd4Q==", SecretType.AES);
-        String decrypt2 = SecretUtil
-                .decrypt("VfQY65Q0OPO40V9PuGp6Qi7mK49nW23kzxnfXw26XK23hTiJACAE1ss6lZf8QgLG", "7kyB+aUhF14f+zbE0ERd4Q==", SecretType.AES);
+                .decrypt("GD2miQARzl1DpNlKSRHrc9lDoXUTDGtHgytmaXl2371PQpe78I9K/NhKYHP9cTCG", "7kyB+aUhF14f+zbE0ERd4Q==", SecretType.AES);*/
+        /*String decrypt2 = SecretUtil
+                .decrypt("90oADKMp68kGwg+li+xiM+0RkO8vTcKttmcoCKSVDVg=", "DhkBuSzwoA2gwusyl4LdsQ==", SecretType.AES);
 
         System.out.println(decrypt);
         System.out.println(decrypt1);
         System.out.println(decrypt2);*/
 
-        Map<String, Object> paramsData = setMap1();
+        /*Map<String, Object> paramsData = setMap1();
         String route = "/online/trade";
         //String route = "/mcht/add_product";
         //String route = "/online/query";
@@ -224,7 +224,7 @@ public class SdkUtil {
             }
         }
 
-        JSONObject jsonObject = JSONObject.fromObject(content);
+        JSONObject jsonObject = JSONObject.fromObject(content);*/
 
 
             //java.net.URL url = new URL("http://cloudbest.oss-cn-shanghai.aliyuncs.com/appsys-image-1594099431722.jpg");

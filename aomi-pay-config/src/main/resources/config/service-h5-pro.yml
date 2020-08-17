@@ -10,13 +10,13 @@ alipay:
   #请求auth_code的支付宝链接
   auth_code_url: https://openauth.alipay.com/oauth2/publicAppAuthorize.htm
   #支付宝appid
-  appid: 2021001168632988
+  appid: 2021001187615824
   #回调地址
-  redirect_uri: https%3A%2F%2Fqr.cloudbest.shop%2Fhello%2F
+  redirect_uri: https%3A%2F%2Fqr.cloudbest.shop%2F
 wx:
   #请求code的微信链接
   code_url: https://open.weixin.qq.com/connect/oauth2/authorize
   #微信appid
-  appid: wxeb1b1558437e9b12
+  appid: wx16aaf5a88d56ab23
   #回调地址
-  redirect_uri: https://qr.cloudbest.shop/hello/
+  redirect_uri: https://qr.cloudbest.shop/

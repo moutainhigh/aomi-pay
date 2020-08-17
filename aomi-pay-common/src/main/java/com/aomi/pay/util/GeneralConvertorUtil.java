@@ -97,6 +97,7 @@ public class GeneralConvertorUtil {
      **/
     public static <T> List<T> fuzzyQuery(List<T> list, String keywords, String name) throws Exception {
         List<T> fuzzyQuery = new LinkedList<>();
+        long time1 = System.currentTimeMillis();
         //大小写不敏感的时候，多加一个条件
         Pattern pattern = Pattern.compile(keywords, Pattern.CASE_INSENSITIVE);
         for (T t : list) {
@@ -106,7 +107,9 @@ public class GeneralConvertorUtil {
                 fuzzyQuery.add(t);
             }
         }
-
+        long time2 = System.currentTimeMillis();
+        System.out.println("时间差异:");
+        System.out.print(time2 - time1);
         return fuzzyQuery;
     }
 

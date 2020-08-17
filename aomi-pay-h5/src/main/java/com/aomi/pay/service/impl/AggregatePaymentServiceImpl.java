@@ -7,11 +7,11 @@ import com.aomi.pay.service.AggregatePaymentService;
 import com.aomi.pay.util.StringUtil;
 import com.aomi.pay.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -78,7 +78,7 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
      * @desc 获取支付宝userid
      */
     @Override
-    public void getUserId(String fixedQrCode, HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception {
+    public void getUserId(String fixedQrCode, HttpServletRequest request, HttpServletResponse httpServletResponse, Model model) throws Exception {
         String userId = getUserIdByCookies(request);
         if (StringUtil.isBlank(userId)) {
             String authCode = request.getParameter(H5Constants.AUTH_CODE);
@@ -88,17 +88,23 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
                 if (CommonErrorCode.SUCCESS.getCode().equals(response.getCode())) {
                     userId = response.getData().toString();
                     Cookie userCookie = new Cookie(H5Constants.USER_ID_NAME, userId);
-                    log.info("useId存cookie:{}",userId);
+                    log.info("useId存cookie:{}", userId);
                     userCookie.setMaxAge(H5Constants.COOKIE_MAX_AGE);
                     userCookie.setPath("/");
                     httpServletResponse.addCookie(userCookie);
+                    //TODO userclient.getuser
+                    model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
                 }
             } else {
                 String url = aliAuthCodeUrl.concat("?").concat("app_id=").concat(aliAppId).concat("&redirect_uri=").concat(aliRedirectUri).concat(fixedQrCode).concat("&response_type=code&scope=auth_base");
                 httpServletResponse.setStatus(302);
                 httpServletResponse.setHeader("location", url);
             }
+        }else{
+            //TODO userclient.getuser
+            model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
         }
+
     }
 
     /**
@@ -109,7 +115,7 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
      * @desc 获取微信
      */
     @Override
-    public void getOpenId(String fixedQrCode, HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception {
+    public void getOpenId(String fixedQrCode, HttpServletRequest request, HttpServletResponse httpServletResponse, Model model) throws Exception {
         String userId = getUserIdByCookies(request);
         if (StringUtil.isBlank(userId)) {
             String code = request.getParameter(H5Constants.CODE);
@@ -119,16 +125,21 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
                 if (CommonErrorCode.SUCCESS.getCode().equals(response.getCode())) {
                     userId = response.getData().toString();
                     Cookie userCookie = new Cookie(H5Constants.USER_ID_NAME, userId);
-                    log.info("useId存cookie:{}",userId);
+                    log.info("useId存cookie:{}", userId);
                     userCookie.setMaxAge(H5Constants.COOKIE_MAX_AGE);
                     userCookie.setPath("/");
                     httpServletResponse.addCookie(userCookie);
+                    //TODO userclient.getuser
+                    model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
                 }
             } else {
                 String url = wxCodeUrl.concat("?appid=").concat(wxAppId).concat("&redirect_uri=").concat(wxRedirectUri).concat(fixedQrCode).concat("&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect;");
                 httpServletResponse.setStatus(302);
                 httpServletResponse.setHeader("location", url);
             }
+        }else{
+            //TODO userclient.getuser
+            model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
         }
     }
 

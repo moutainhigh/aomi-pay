@@ -2,6 +2,7 @@ package com.aomi.pay.controller;
 
 
 import com.aomi.pay.util.SdkUtil;
+import com.aomi.pay.util.StringUtil;
 import com.aomi.pay.vo.*;
 import com.aomi.pay.domain.CommonErrorCode;
 import io.swagger.annotations.Api;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 商户入网类接口Controller
@@ -74,15 +72,17 @@ public class MerchantController {
 
     @ApiOperation(value = "商户上传图片")
     @PostMapping("/uploadImg")
-    public BaseResponse uploadImg(@RequestParam String img) throws Exception {
+    public BaseResponse uploadImg(@RequestParam String img,@RequestParam String picType) throws Exception {
         log.info("--------商户上传图片--------");
         Map<String, Object> paramsData = new HashMap<>();
         //TODO 这个接口是可以上传成功的， 现在参数是写死的,待改成对应的model入参
-        paramsData.put("picType", "01");
+        paramsData.put("picType", picType);
         //TODO base64的图片
         paramsData.put("pic", img);
         paramsData.put("instId", intsId);
-        paramsData.put("pikName", "hahaha");
+        Random random = new Random();
+        int x = random.nextInt(8999999) + 1000000;
+        //paramsData.put("pikName", x+".jpg");
         //paramsData.put("key-version","29");
 
         Object result = SdkUtil.post(paramsData, routeUploadImg);
@@ -100,7 +100,7 @@ public class MerchantController {
         mchtBase.setMchtScope("181");//经营范围
         //mchtBase.setMchtScope("173");
         mchtBase.setMchtKind("B2");//商户种类 1个人  2个体工商、企业
-        mchtBase.setInstMchtNo("135795489");//商户号
+        mchtBase.setInstMchtNo("135795456");//商户号
         mchtBase.setAddress(SdkUtil.encrypt("上海市浦东新区川沙路5007号"));//商户地址
         //mchtBase.setAddress(SdkUtil.encrypt("上海市崇明区堡镇堡镇南路58号15幢2楼227-3室"));
         mchtBase.setMchtName(SdkUtil.encrypt("上海力寰酒店管理有限公司"));//商户名称
@@ -134,18 +134,18 @@ public class MerchantController {
         mchtAcct.setAcctBankNo("103100000026");//开户行编码
 
         MchtMedia mchtMedia = new MchtMedia();
-        mchtMedia.setCertFront("R/jf9qROMQimPu6r8qqVzu0RkO8vTcKttmcoCKSVDVg=");//身份证正面
-        mchtMedia.setCertReverse("l8cpGV3Yof1Y1Gzm/iduLu0RkO8vTcKttmcoCKSVDVg=");//身份证反面
+        mchtMedia.setCertFront("OSMb90Uww077AWe4SEFHye0RkO8vTcKttmcoCKSVDVg=");//身份证正面
+        mchtMedia.setCertReverse("6P0L3jBpFf1QetgFyis1MO0RkO8vTcKttmcoCKSVDVg=");//身份证反面
         /*List<String> indestruLicenses = new LinkedList<String>();
         indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
         indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
         indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
         indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
         mchtMedia.setIndustryLicenses(indestruLicenses);*/
-        mchtMedia.setBankCardPositive("Xlp6puEH492TCgDGt8fs3O0RkO8vTcKttmcoCKSVDVg=");//银行卡正面
-        mchtMedia.setLicense("klshpa98Jjpwpwh43rodWO0RkO8vTcKttmcoCKSVDVg=");//营业执照
-        mchtMedia.setDoorHead("UU+eeaK8kdVCXwJPVtmyu+0RkO8vTcKttmcoCKSVDVg=");//门头照
-        mchtMedia.setCashier("j3A9uz4flDupzyB06YBage0RkO8vTcKttmcoCKSVDVg=");//收银台照片
+        mchtMedia.setBankCardPositive("5vnF2H4aWhQIPmufVjWixO0RkO8vTcKttmcoCKSVDVg=");//银行卡正面
+        mchtMedia.setLicense("+yP/IDWhM4hyAZ+FJ3Wm5+0RkO8vTcKttmcoCKSVDVg=");//营业执照
+        mchtMedia.setDoorHead("uzcKY2vnkV6AYws6FBFBje0RkO8vTcKttmcoCKSVDVg=");//门头照
+        mchtMedia.setCashier("X/ekJOS8536EON0C70N9he0RkO8vTcKttmcoCKSVDVg=");//收银台照片
 
         //mchtMedia.setHandheld("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
 
@@ -223,69 +223,91 @@ public class MerchantController {
         Data data = new Data();
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         MchtBase mchtBase = new MchtBase();
-        mchtBase.setMchtScope("173");
-        mchtBase.setMchtKind("B2");
-        //mchtBase.setInstMchtNo("10000000001");
-        mchtBase.setMchtNo("027310103382119");
-        mchtBase.setAddress(SdkUtil.encrypt("上海市崇明区堡镇堡镇南路58号15幢2楼227-3室"));
-        mchtBase.setMchtName(SdkUtil.encrypt("上海引线物联科技有限公司"));
-        mchtBase.setSimpleName(SdkUtil.encrypt("上海引线物联"));
-        mchtBase.setAreaNo("310112");
-        mchtBase.setMchtType("0");
-        mchtBase.setStorePhone(SdkUtil.encrypt("021-2358996"));
+        mchtBase.setMchtNo("027310103388566");//商户号
+        mchtBase.setMchtScope("181");//经营范围
+        //mchtBase.setMchtScope("173");
+        mchtBase.setMchtKind("B2");//商户种类 1个人  2个体工商、企业
+        mchtBase.setInstMchtNo("135795489");//商户号
+        mchtBase.setAddress(SdkUtil.encrypt("上海市浦东新区川沙路5007号"));//商户地址
+        //mchtBase.setAddress(SdkUtil.encrypt("上海市崇明区堡镇堡镇南路58号15幢2楼227-3室"));
+        mchtBase.setMchtName(SdkUtil.encrypt("上海力寰酒店管理有限公司"));//商户名称
+        //mchtBase.setMchtName(SdkUtil.encrypt("上海引线物联科技有限公司"));
+        mchtBase.setSimpleName(SdkUtil.encrypt("全季酒店(川沙店)"));//商户简称
+        mchtBase.setAreaNo("310115");//经营区域码
+        mchtBase.setMchtType("0");//是否特约
+        mchtBase.setStorePhone(SdkUtil.encrypt("13801700257"));//店铺联系电话
 
         MchtUser mchtUser = new MchtUser();
-        mchtUser.setPhone(SdkUtil.encrypt("13032100263"));
-        mchtUser.setName(SdkUtil.encrypt("徐光寅"));
+        mchtUser.setPhone(SdkUtil.encrypt("13801700257"));//法人电话
+        mchtUser.setName(SdkUtil.encrypt("洪邦耀"));//用户名称
         //mchtUser.setCardNo("eUXo2ePvDBmmjon4vvCzNGs45ZcQ7GDK60UO/cFufSg=");
-        mchtUser.setCardNo(SdkUtil.encrypt("31011019861015323X"));
-        //mchtUser.setCardDate(SdkUtil.encrypt("362531197706090296"));
-        //mchtUser.setEmail("IuwYW+1WKOWmSACCpmpmT2xy8YrcfxQlbST+WLq6fsE=");
+        mchtUser.setCardNo(SdkUtil.encrypt("310109195601312412"));//证件号码
+        mchtUser.setCardDate("20151027-长期");//身份证有效期
+        //mchtUser.setEmail(SdkUtil.encrypt("aominet@qq.com"));//法人email
 
         MchtComp mchtComp = new MchtComp();
         mchtComp.setLicenseType("1");
-        mchtComp.setLicenseNo(SdkUtil.encrypt("91310230MA1JYU6M1J"));
-        //mchtComp.setLicenseDate("20150125");
+        mchtComp.setLicenseNo(SdkUtil.encrypt("91310115078131852J"));//营业执照号码
+        mchtComp.setLicenseDate("20130912");
 
         MchtAcct mchtAcct = new MchtAcct();
-        mchtAcct.setAcctProxy("0");
-        mchtAcct.setAcctNo(SdkUtil.encrypt("1001213909200209221"));
-        mchtAcct.setAcctType("0");
-        mchtAcct.setAcctZbankCode("520102");
-        mchtAcct.setAcctZbankNo("403711001013");
-        mchtAcct.setAcctName(SdkUtil.encrypt("上海引线物联科技有限公司"));
-        mchtAcct.setAcctBankNo("102290021393");
-        //mchtAcct.setAgentCardNo("TPu2cNtqsN5/gFcSrNjmmeje2Ac1xcDbZkJFHehr0aM=");
+        mchtAcct.setAcctProxy("1");//是否代理清算账户
+        mchtAcct.setAcctNo(SdkUtil.encrypt("6230520030057527272"));//银行卡号
+        //mchtAcct.setAcctNo(SdkUtil.encrypt("1001213909200209221"));
+        mchtAcct.setAcctType("1");//账户类型 0对公 1对私
+        mchtAcct.setAcctZbankCode("310115");//支行区域编码
+        mchtAcct.setAcctZbankNo("103290076250");//支行编码
+        mchtAcct.setAcctName(SdkUtil.encrypt("洪邦耀"));//账户姓名
+        mchtAcct.setAcctBankNo("103100000026");//开户行编码
 
         MchtMedia mchtMedia = new MchtMedia();
-        mchtMedia.setCertFront("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
-        List<String> indestruLicenses = new LinkedList<String>();
-        indestruLicenses.add("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
-        indestruLicenses.add("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
-        indestruLicenses.add("VfQY65Q0OPO40V9PuGp6Qi7mK49nW23kzxnfXw26XK23hTiJACAE1ss6lZf8QgLG");
-        indestruLicenses.add("GD2miQARzl1DpNlKSRHrc9lDoXUTDGtHgytmaXl2371PQpe78I9K/NhKYHP9cTCG");
-        mchtMedia.setIndustryLicenses(indestruLicenses);
-        mchtMedia.setBankCardPositive("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
-        mchtMedia.setHandheld("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
-        mchtMedia.setCertReverse("Y7kZ9x5N7f7OP+sDLgI9hc6y0kBbxi03zgnad76q0CQ=");
+        mchtMedia.setCertFront(SdkUtil.encrypt("R/jf9qROMQimPu6r8qqVzu0RkO8vTcKttmcoCKSVDVg="));//身份证正面
+        mchtMedia.setCertReverse(SdkUtil.encrypt("l8cpGV3Yof1Y1Gzm/iduLu0RkO8vTcKttmcoCKSVDVg="));//身份证反面
+        /*List<String> indestruLicenses = new LinkedList<String>();
+        indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
+        indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
+        indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
+        indestruLicenses.add("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
+        mchtMedia.setIndustryLicenses(indestruLicenses);*/
+        //mchtMedia.setBankCardPositive(SdkUtil.encrypt("Xlp6puEH492TCgDGt8fs3O0RkO8vTcKttmcoCKSVDVg="));//银行卡正面
+        mchtMedia.setLicense(SdkUtil.encrypt("klshpa98Jjpwpwh43rodWO0RkO8vTcKttmcoCKSVDVg="));//营业执照
+        mchtMedia.setDoorHead(SdkUtil.encrypt("UU+eeaK8kdVCXwJPVtmyu+0RkO8vTcKttmcoCKSVDVg="));//门头照
+        mchtMedia.setCashier(SdkUtil.encrypt("j3A9uz4flDupzyB06YBage0RkO8vTcKttmcoCKSVDVg="));//收银台照片
+
+        //mchtMedia.setHandheld("VQRX3pXP5g/4AVUr7ajon+0RkO8vTcKttmcoCKSVDVg=");
 
         Product product = new Product();
 
         Map<String,String> productMap = new HashMap<>();
-        productMap.put("100010","MHN90144");
-        productMap.put("100011","MHN11201");
+        productMap.put("100043","MHN10563");
+        productMap.put("100044","MHN10563");
+        productMap.put("100042","MHN10563");
+        //productMap.put("100011","MHN11201");
+        //productMap.put("100010","MHN90144");
 
         paramsData.put("mchtBase", mchtBase);
         paramsData.put("mchtUser", mchtUser);
         paramsData.put("mchtComp", mchtComp);
         paramsData.put("mchtAcct", mchtAcct);
         paramsData.put("mchtMedia", mchtMedia);
-        //paramsData.put("product", productMap);
+        paramsData.put("product", productMap);
         paramsData.put("instId", intsId);
         paramsData.put("key-version", "29");
 
-
         Object result = SdkUtil.post(paramsData, routeUpdateProduct);
+        return new BaseResponse(CommonErrorCode.SUCCESS, result);
+    }
+
+    @ApiOperation(value = "加密，解密")
+    @PostMapping("/test")
+    public BaseResponse test(@RequestParam String str,@RequestParam int type) throws Exception {
+        log.info("--------加解密--------");
+        String result = "";
+        if(type == 0){
+            result = SdkUtil.encrypt(str);
+        }else if(type == 1){
+            result = SdkUtil.decrypt(str);
+        }
         return new BaseResponse(CommonErrorCode.SUCCESS, result);
     }
 }

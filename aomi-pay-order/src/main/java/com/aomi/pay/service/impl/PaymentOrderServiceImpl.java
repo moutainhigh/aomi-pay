@@ -5,6 +5,7 @@ import com.aomi.pay.constants.PayConstants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.dto.hx.JsPayDTO;
 import com.aomi.pay.entity.PaymentOrder;
+import com.aomi.pay.enums.PayEnums;
 import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.PaymentOrderMapper;
 import com.aomi.pay.model.JsPayRequest;
@@ -74,9 +75,9 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     public String jsPay(JsPayRequest req) throws Exception {
 
         //根据商户号获取需要的商户信息 TODO 暂时写死  redis req.getMerchantId()
-        String merchantId = "135795489";
+        Long merchantId = 135795456L;
         //平台商户号
-        String platformMerchantId = "027310103388566";
+        String platformMerchantId = "027310103367232";
         //TODO  商户名+收款
         String subject = "全季酒店(川沙店) 收款";
         //String merchantNo = "10000000005";//机构商户号
@@ -104,8 +105,8 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         //平台商户号
         jsPayDTO.setPlatformMerchantId(platformMerchantId);
         jsPayDTO.setNotifyUrl(notifyUrl);
-        //TODO 结算周期  暂T1 读配置
-        jsPayDTO.setSettleType(settleType);
+        //TODO 结算周期  暂D0 如果失败重新下单 T1
+        jsPayDTO.setSettleType(PayEnums.SETTLE_TYPE_T1);
         jsPayDTO.setSubject(subject);
         //调用环迅api接口
         BaseResponse response = apiClient.onlineTrade(jsPayDTO);

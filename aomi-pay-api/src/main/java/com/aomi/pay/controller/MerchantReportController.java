@@ -82,7 +82,7 @@ public class MerchantReportController {
         //TODO 这个接口是可以请求成功的， 现在参数是写死的,待改成对应的model入参
         paramsData.put("instId", intsId);
         paramsData.put("mchtNo", mchtNo);
-        paramsData.put("appid", "wxeb1b1558437e9b12");
+        paramsData.put("appid", "wx16aaf5a88d56ab23");
         //paramsData.put("subscribeAppid", "154344164291514368");
         Object result = SdkUtil.post(paramsData, routeConfigWechatSubmcht);
         return new BaseResponse(CommonErrorCode.SUCCESS,result);
