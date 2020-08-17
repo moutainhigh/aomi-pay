@@ -7,8 +7,7 @@ import com.aomi.pay.exception.BusinessException;
 import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.*;
 import com.aomi.pay.service.UserService;
-import com.aomi.pay.util.AesUtil;
-import com.aomi.pay.util.AliOSSUtil;
+import com.aomi.pay.util.*;
 import com.aomi.pay.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -60,13 +59,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public MerchantInfoVO insertMerchantInfo(MerchantInfoVO merchantInfoVO) throws Exception {
-        if(StringUtils.isEmpty(String.valueOf(merchantInfoVO))){
+        if (StringUtils.isEmpty(String.valueOf(merchantInfoVO))) {
             throw new BusinessException(CommonErrorCode.E_301009);//填写信息为空
         }
         Long instMchtNo = merchantInfoVO.getMchtBase().getInstMchtNo();
         MerchantInfo beforeMerchantInfo = merchantInfoMapper.selectById(instMchtNo);
         MerchantInfo merchantInfo = null;
-        if (beforeMerchantInfo != null){
+        if (beforeMerchantInfo != null) {
             merchantInfo = new MerchantInfo();
             MchtBase mchtBase = merchantInfoVO.getMchtBase();
             merchantInfo.setMerchantName(mchtBase.getMchtName());
@@ -78,8 +77,8 @@ public class UserServiceImpl implements UserService {
             merchantInfo.setMerchantScope(mchtBase.getMchtScope());
             merchantInfo.setMerchantType(mchtBase.getMchtType());
             merchantInfo.setUnionpayMerchant(mchtBase.getNuionpayMacht());
-            merchantInfoMapper.update(merchantInfo,new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId,instMchtNo));
-        }else {
+            merchantInfoMapper.update(merchantInfo, new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId, instMchtNo));
+        } else {
             merchantInfo = new MerchantInfo();
             MchtBase mchtBase = merchantInfoVO.getMchtBase();
             merchantInfo.setId(instMchtNo);
@@ -100,7 +99,7 @@ public class UserServiceImpl implements UserService {
         merchantInfo.setLegalPersonEmail(mchtUser.getEmail());
         merchantInfo.setLegalPersonName(mchtUser.getName());
         merchantInfo.setLegalPersonPhone(mchtUser.getPhone());
-        if (StringUtils.isNotEmpty(mchtUser.getCardNo())){
+        if (StringUtils.isNotEmpty(mchtUser.getCardNo())) {
             merchantInfo.setLegalPersonCardno(AesUtil.encrypt(mchtUser.getCardNo()));//加密入库
         }
         merchantInfo.setLegalPersonCardnoDate(mchtUser.getCardDate());
@@ -111,10 +110,10 @@ public class UserServiceImpl implements UserService {
         merchantInfo.setAgentCardNo(mchtAcct.getAgentCardNo());
         merchantInfo.setAgentCardDate(mchtAcct.getAgentCardDate());
         merchantInfo.setAcctType(mchtAcct.getAcctType());
-        if (StringUtils.isNotEmpty(mchtAcct.getAcctNo())){
+        if (StringUtils.isNotEmpty(mchtAcct.getAcctNo())) {
             merchantInfo.setAcctNo(AesUtil.encrypt(mchtAcct.getAcctNo()));//加密入库
         }
-        if(StringUtils.isNotEmpty(mchtAcct.getAcctName())){
+        if (StringUtils.isNotEmpty(mchtAcct.getAcctName())) {
             merchantInfo.setAcctName(AesUtil.encrypt(mchtAcct.getAcctName()));
         }
         merchantInfo.setAcctBankNo(mchtAcct.getAcctBankNo());
@@ -124,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
         MchtComp mchtComp = merchantInfoVO.getMchtComp();
         merchantInfo.setLicenseDate(mchtComp.getLicenseDate());
-        if (StringUtils.isNotEmpty(mchtComp.getLicenseNo())){
+        if (StringUtils.isNotEmpty(mchtComp.getLicenseNo())) {
             merchantInfo.setLicenseNo(AesUtil.encrypt(mchtComp.getLicenseNo()));
         }
         merchantInfo.setLicenseType(mchtComp.getLicenseType());
@@ -145,19 +144,18 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     /**
      * 机构查询商户信息
      */
     @Override
     public MerchantInfoVO findMerchantInfo(JSONObject str) {
         String instMchtNo = str.getString("instMchtNo");
-        if(StringUtils.isEmpty(String.valueOf(instMchtNo))){
+        if (StringUtils.isEmpty(String.valueOf(instMchtNo))) {
             throw new BusinessException(CommonErrorCode.E_301003);//填写信息为空
         }
-        MerchantInfo rmerchantInfo = merchantInfoMapper.selectOne(new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId,instMchtNo));
+        MerchantInfo rmerchantInfo = merchantInfoMapper.selectOne(new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId, instMchtNo));
         MerchantInfoVO merchantInfoVO = new MerchantInfoVO();
-        if (StringUtils.isNotEmpty(String.valueOf(rmerchantInfo))){
+        if (StringUtils.isNotEmpty(String.valueOf(rmerchantInfo))) {
             merchantInfoVO = this.common(rmerchantInfo);
         }
         return merchantInfoVO;
@@ -171,7 +169,7 @@ public class UserServiceImpl implements UserService {
     public String create(JSONObject str) throws Exception {
 
         Long instMchtNo = str.getLong("instMchtNo");
-        if (instMchtNo == null){
+        if (instMchtNo == null) {
             throw new BusinessException(CommonErrorCode.E_301003);//暂定
         }
         MerchantInfo merchantInfo = merchantInfoMapper.selectById(instMchtNo);
@@ -189,7 +187,7 @@ public class UserServiceImpl implements UserService {
 
         String desc = jsonObject.getString("desc");
         //todo 处理返回值
-        if (StringUtils.isNotEmpty(desc)){
+        if (StringUtils.isNotEmpty(desc)) {
             return desc;
         }
 
@@ -205,7 +203,6 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
-
 
 
     /**
@@ -239,7 +236,7 @@ public class UserServiceImpl implements UserService {
      * 商户上传图片
      */
     @Override
-    public String uploadImg(HttpServletRequest request,String picType,String userId) throws Exception {
+    public String uploadImg(HttpServletRequest request, String picType, String userId) throws Exception {
         log.info("--------商户上传图片--------");
         MerchantImg merchantImg = new MerchantImg();
 
@@ -276,11 +273,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
-
-
-
     /**
      * 商户入网信息查询
      *
@@ -311,7 +303,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public JSONObject queryMchtAudit(JSONObject str) throws Exception {
         String mchtNo = str.getString("mchtNo");
-        if (StringUtils.isEmpty(mchtNo)){
+        if (StringUtils.isEmpty(mchtNo)) {
             throw new BusinessException(CommonErrorCode.E_301003);//暂定
         }
         log.info("--------查询商户审核状态--------");
@@ -326,11 +318,10 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改商户入网信息
-     *
      */
     @Override
     public void updateInfo(MerchantInfoVO merchantInfoVO) throws Exception {
-        if (StringUtils.isEmpty(String.valueOf(merchantInfoVO))){
+        if (StringUtils.isEmpty(String.valueOf(merchantInfoVO))) {
             throw new BusinessException(CommonErrorCode.E_301009);
         }
         Long instMchtNo = merchantInfoVO.getMchtBase().getInstMchtNo();//商户机构id
@@ -384,7 +375,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(CommonErrorCode.E_301010);
         }
 //        JSONObject jsonObject = JSONObject.fromObject(data);
-        merchantInfoMapper.update(merchantInfo,new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId,instMchtNo));
+        merchantInfoMapper.update(merchantInfo, new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId, instMchtNo));
     }
 
     /**
@@ -408,19 +399,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateProductModel(JSONObject str) throws Exception {
         Long instMchtNo = str.getLong("instMchtNo");
-        if (instMchtNo == null){
+        if (instMchtNo == null) {
             throw new BusinessException(CommonErrorCode.E_301003);//暂定
         }
         Integer productId = str.getInt("productId");
-        if (productId == null){
+        if (productId == null) {
             throw new BusinessException(CommonErrorCode.E_301011);//暂定
         }
 
         MerchantInfo merchantInfo = merchantInfoMapper.selectOne(new LambdaQueryWrapper<MerchantInfo>().eq(MerchantInfo::getId, instMchtNo));
         MerchantProduct merchantProduct = merchantProductMapper.selectById(productId);
-        str.put("mchtNo",merchantInfo.getPlatformId());
-        str.put("modelId",merchantProduct.getModelId());
-        str.put("productCode",merchantProduct.getProductCode());
+        str.put("mchtNo", merchantInfo.getPlatformId());
+        str.put("modelId", merchantProduct.getModelId());
+        str.put("productCode", merchantProduct.getProductCode());
 
         //todo 待修改
         log.info("--------修改商户开通产品签约费率--------");
@@ -454,8 +445,8 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        Integer integer = userMapper.selectCount(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone,mobile));
-        if(integer>0){
+        Integer integer = userMapper.selectCount(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone, mobile));
+        if (integer > 0) {
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900113);
         }
         Long x = null;
@@ -474,20 +465,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String userLogin(String phone, String password) {
-        if(phone==null){
+        if (phone == null) {
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900112);
         }
-        if(!PhoneUtil.isMobileSimple(phone)){
+        if (!PhoneUtil.isMobileSimple(phone)) {
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900123);
         }
-        if(password==null){
+        if (password == null) {
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900111);
         }
 
-        String safePsw = MD5Util.getMd5(password+"aomiwangluo");
-        log.info("================================用户登录手机号："+phone+",加密后登录密码："+safePsw);
+        String safePsw = MD5Util.getMd5(password + "aomiwangluo");
+        log.info("================================用户登录手机号：" + phone + ",加密后登录密码：" + safePsw);
         UserInf userInf = userMapper.selectOne(new LambdaQueryWrapper<UserInf>().eq(UserInf::getPhone, phone).eq(UserInf::getPassword, safePsw));
-        if(userInf==null){
+        if (userInf == null) {
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900127);
         }
         Long userId = userInf.getUserId();
@@ -501,15 +492,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /**
-     * 商户上传图片
-     */
-    @Override
-    public String uploadImg(HttpServletRequest request,String picType,String userId) throws Exception {
-        log.info("--------商户上传图片--------");
-        MerchantImg merchantImg = new MerchantImg();
-
-
     //获取imageCode
     private MchtMedia getString(Long instMchtNo) {
 
@@ -518,52 +500,52 @@ public class UserServiceImpl implements UserService {
         merchantImgs.forEach(merchantImg -> {
             String type = merchantImg.getType();
             String imgCode = merchantImg.getImgCode();
-            if (StringUtils.equals(type,"01")){
+            if (StringUtils.equals(type, "01")) {
                 mchtMedia.setCertFront(imgCode);
             }
-            if (StringUtils.equals(type,"02")){
+            if (StringUtils.equals(type, "02")) {
                 mchtMedia.setCertReverse(imgCode);
             }
-            if (StringUtils.equals(type,"03")){
+            if (StringUtils.equals(type, "03")) {
                 mchtMedia.setHandheld(imgCode);
             }
-            if (StringUtils.equals(type,"04")){
+            if (StringUtils.equals(type, "04")) {
                 mchtMedia.setBankCardPositive(imgCode);
             }
-            if (StringUtils.equals(type,"05")){
+            if (StringUtils.equals(type, "05")) {
                 mchtMedia.setLicense(imgCode);
             }
-            if (StringUtils.equals(type,"06")){
+            if (StringUtils.equals(type, "06")) {
                 mchtMedia.setOrgImage(imgCode);
             }
-            if (StringUtils.equals(type,"07")){
+            if (StringUtils.equals(type, "07")) {
                 mchtMedia.setTaxImage(imgCode);
             }
-            if (StringUtils.equals(type,"08")){
+            if (StringUtils.equals(type, "08")) {
                 mchtMedia.setOpenAccoLic(imgCode);
             }
-            if (StringUtils.equals(type,"09")){
+            if (StringUtils.equals(type, "09")) {
                 mchtMedia.setDoorHead(imgCode);
             }
-            if (StringUtils.equals(type,"10")){
+            if (StringUtils.equals(type, "10")) {
                 mchtMedia.setCashier(imgCode);
             }
-            if (StringUtils.equals(type,"11")){
+            if (StringUtils.equals(type, "11")) {
                 mchtMedia.setShopPanoram(imgCode);
             }
-            if (StringUtils.equals(type,"12")){
+            if (StringUtils.equals(type, "12")) {
                 mchtMedia.setPriLicAgree(imgCode);
             }
-            if (StringUtils.equals(type,"13")){
+            if (StringUtils.equals(type, "13")) {
                 mchtMedia.setAgenCardFront(imgCode);
             }
-            if (StringUtils.equals(type,"14")){
+            if (StringUtils.equals(type, "14")) {
                 mchtMedia.setAgenIdCardBackPic(imgCode);
             }
-            if (StringUtils.equals(type,"15")){
+            if (StringUtils.equals(type, "15")) {
                 mchtMedia.setAgentCardId(imgCode);
             }
-            if (StringUtils.equals(type,"16")){
+            if (StringUtils.equals(type, "16")) {
                 mchtMedia.setAgentProtocol(imgCode);
             }
         });
@@ -572,7 +554,7 @@ public class UserServiceImpl implements UserService {
 
 
     // 数据组装
-    public MerchantInfoVO common(MerchantInfo merchantInfo){
+    public MerchantInfoVO common(MerchantInfo merchantInfo) {
 
         MerchantInfoVO merchantInfoVO = new MerchantInfoVO();
 
@@ -623,9 +605,6 @@ public class UserServiceImpl implements UserService {
 
         return merchantInfoVO;
     }
-
-
-
 
 
     /**
@@ -719,7 +698,6 @@ public class UserServiceImpl implements UserService {
     }
 
 }
-
 
 
 //
@@ -836,8 +814,9 @@ public class UserServiceImpl implements UserService {
 //        return jsonObject;
 //    }
 /**
- //     * 商户信息入网
- //     */
+ * //     * 商户信息入网
+ * //
+ */
 //    @Override
 //    public String create(MerchantInfoVO merchantInfoVO) throws Exception {
 //        if(StringUtils.isEmpty(String.valueOf(merchantInfoVO))){
