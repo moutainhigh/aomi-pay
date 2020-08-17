@@ -106,7 +106,7 @@ public class AggregatePaymentController {
         return "pay_wx";
     }
 
-    @GetMapping("/hello/{fixedQrCode}")
+    @GetMapping("/{fixedQrCode}")
     public String hello(HttpServletRequest request, @PathVariable("fixedQrCode") String fixedQrCode, HttpServletResponse httpServletResponse) throws Exception {
         String userAgent = request.getHeader(H5Constants.USER_AGENT_NAME);
 
@@ -121,7 +121,7 @@ public class AggregatePaymentController {
         }
     }
 
-    @GetMapping("/{merchantId}")
+ /*   @GetMapping("/{merchantId}")
     public String aggregatePayment(HttpServletRequest request, @PathVariable("merchantId") String merchantId, HttpServletResponse httpServletResponse) throws Exception {
         String userAgent = request.getHeader("user-agent");
         String url = "";
@@ -136,7 +136,7 @@ public class AggregatePaymentController {
         } else {
             return "123123";
         }
-    }
+    }*/
 
     /**
      * @author  hdq

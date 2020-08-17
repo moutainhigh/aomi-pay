@@ -118,6 +118,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.4.2.RELEASE</version>
             </plugin>
         </plugins>
         <resources>
@@ -131,13 +132,14 @@
                 <directory>src/main/webapp</directory>
                 <targetPath>META-INF/resources</targetPath>
                 <includes>
-                    <include>**/*.*</include>
+                    <include>**/**</include>
                     <include>**/*.html</include>
                     <include>**/*.js</include>
                     <include>**/*.css</include>
                     <include>**/*.png</include>
                     <include>**/*.gif</include>
                 </includes>
+                <!--<filtering>false</filtering>-->
             </resource>
         </resources>
     </build>
