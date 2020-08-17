@@ -13,13 +13,14 @@ import lombok.Data;
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class MchtAcct {
 
-    private String acctZbankNo;
     private String acctProxy;
-    private String acctNo;
+    private String agentCardNo;
+    private String agentCardDate;
     private String acctType;
-    private String acctZbankCode;
+    private String acctNo;
     private String acctName;
     private String acctBankNo;
-    private String agentCardNo;
+    private String acctZbankCode;
+    private String acctZbankNo;
 
 }

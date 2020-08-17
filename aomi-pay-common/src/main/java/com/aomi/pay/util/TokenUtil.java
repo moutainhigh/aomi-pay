@@ -1,6 +1,7 @@
 package com.aomi.pay.util;
 
 import com.aomi.pay.constants.CommonConstants;
+import com.aomi.pay.domain.CommonErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,7 +26,7 @@ public class TokenUtil {
 		
 		return userToken;
 	}
-	public static String  createToken(String userId){
+	public static String  createToken(Long userId){
 		String userToken = Jwts.builder()
 				.setSubject("JuHei")
 				.setExpiration(new Date(new Date().getTime() + 1000*60*60*24*180))
@@ -35,11 +36,16 @@ public class TokenUtil {
 		return userToken;
 	}
 	public  static long getUserId(String token) throws Exception{
-		
-		Claims claims = Jwts.parser().setSigningKey(CommonConstants.SECRETKEY).parseClaimsJws(token).getBody();
+
+		Claims claims = null;
+		try {
+			claims = Jwts.parser().setSigningKey(CommonConstants.SECRETKEY).parseClaimsJws(token).getBody();
+		}catch (Exception e){
+			CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_900121);
+		}
 		Map map  = new HashMap();
 		long customerId = Long.valueOf(String.valueOf(claims.get("customerId")));
-	    return customerId;
+		return customerId;
 	}
 	
 	

@@ -32,7 +32,9 @@ public interface UserService {
 
     void updateMchtAcct(AcctVO acctVO) throws Exception;
 
-     void userRegister(String phone, String password, String code);
+     Long userRegister(String phone, Integer type, String bdNo);
 
      String userLogin(String phone, String password);
+
+    void queryOrder(Long userId);
 }
