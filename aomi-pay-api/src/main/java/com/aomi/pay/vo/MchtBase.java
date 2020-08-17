@@ -17,7 +17,7 @@ public class MchtBase {
     /**
      * 机构方商户号
      */
-    private String instMchtNo;
+    private Long instMchtNo;
     private String mchtName;
     private String mchtNo;
     private String simpleName;

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -31,12 +32,15 @@ public class MerchantProductBind implements Serializable {
     /**
      * 机构商户id
      */
-    private String merchantId;
+    private Long merchantId;
 
     /**
      * 产品id
      */
     private Integer productId;
+
+    private Integer state;
+    private LocalDateTime createTime;
 
 
 }
