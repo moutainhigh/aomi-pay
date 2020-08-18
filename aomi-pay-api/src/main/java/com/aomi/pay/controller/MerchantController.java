@@ -3,7 +3,7 @@ package com.aomi.pay.controller;
 
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.service.MerchantService;
-import com.aomi.pay.util.StringUtil;
+import com.aomi.pay.util.SdkUtil;
 import com.aomi.pay.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
