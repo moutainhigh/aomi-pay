@@ -10,9 +10,9 @@ import java.util.Date;
 /**
  * @Author hdq
  * @Date 2020/8/18
- * @Description h5支付接口接收参数封装
+ * @Description 交易列表查询接口接收参数封装
  */
-@ApiModel(value = "h5支付接口接收参数封装")
+@ApiModel(value = "交易列表查询接口接收参数封装")
 @Data
 public class QueryListResponse {
 
