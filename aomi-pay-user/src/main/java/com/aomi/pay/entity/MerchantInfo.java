@@ -27,12 +27,8 @@ public class MerchantInfo implements Serializable {
      * 商户id（机构）账户
      */
     @TableId(value = "id", type = IdType.ID_WORKER)
-    private String id;
+    private Long id;
 
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 平台生成的商户号
@@ -234,6 +230,7 @@ public class MerchantInfo implements Serializable {
      */
     private LocalDateTime createTime;
 
-
+    //推广员id
+    private String bdNo;
 
 }

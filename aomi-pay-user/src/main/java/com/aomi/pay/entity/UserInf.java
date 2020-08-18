@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  * @since 2020-08-06
  */
 @Data
-@TableName("t_dictionary_user")
+@TableName("t_user")
 public class UserInf implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,7 +33,12 @@ public class UserInf implements Serializable {
     /**
      * 用户id
      */
-    private String userId;
+    private Long userId;
+
+    /**
+     * 用户类型（0：商户，1：代理商）
+     */
+    private Integer type;
 
     /**
      * 手机号
@@ -44,6 +49,11 @@ public class UserInf implements Serializable {
      * 密码
      */
     private String password;
+
+    /**
+     * 推广员id
+     */
+    private String bdNo;
 
     /**
      * 注册时间
@@ -59,12 +69,20 @@ public class UserInf implements Serializable {
         this.id = id;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public String getPhone() {
@@ -81,6 +99,14 @@ public class UserInf implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getBdNo() {
+        return bdNo;
+    }
+
+    public void setBdNo(String bdNo) {
+        this.bdNo = bdNo;
     }
 
     public LocalDateTime getModifiedTime() {

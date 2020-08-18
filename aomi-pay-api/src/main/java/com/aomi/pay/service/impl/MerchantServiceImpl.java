@@ -1,7 +1,9 @@
 package com.aomi.pay.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.aomi.pay.exception.BusinessException;
 import com.aomi.pay.service.MerchantService;
+import com.aomi.pay.util.AesUtil;
 import com.aomi.pay.util.SdkUtil;
 import com.aomi.pay.vo.*;
 import lombok.extern.slf4j.Slf4j;
@@ -122,8 +124,9 @@ public class MerchantServiceImpl implements MerchantService {
         mchtBase.setStorePhone(SdkUtil.encrypt(mchtBase.getStorePhone()));
         merchantInfoVO.setMchtBase(mchtBase);
 
+
         MchtUser mchtUser = merchantInfoVO.getMchtUser();
-        mchtUser.setCardNo(SdkUtil.encrypt(mchtUser.getCardNo()));
+        mchtUser.setCardNo(SdkUtil.encrypt(AesUtil.decrypt(mchtUser.getCardNo())));
         mchtUser.setEmail(SdkUtil.encrypt(mchtUser.getEmail()));
         mchtUser.setName(SdkUtil.encrypt(mchtUser.getName()));
         mchtUser.setPhone(SdkUtil.encrypt(mchtUser.getPhone()));
@@ -131,12 +134,18 @@ public class MerchantServiceImpl implements MerchantService {
 
         MchtAcct mchtAcct = merchantInfoVO.getMchtAcct();
         mchtAcct.setAgentCardNo(SdkUtil.encrypt(mchtAcct.getAgentCardNo()));
-        mchtAcct.setAcctNo(SdkUtil.encrypt(mchtAcct.getAcctNo()));
-        mchtAcct.setAcctName(SdkUtil.encrypt(mchtAcct.getAcctName()));
+        if(StringUtils.isNotEmpty(mchtAcct.getAcctNo())){
+            mchtAcct.setAcctNo(SdkUtil.encrypt(AesUtil.decrypt(mchtAcct.getAcctNo())));
+        }
+        if (StringUtils.isNotEmpty(mchtAcct.getAcctName())){
+            mchtAcct.setAcctName(SdkUtil.encrypt(AesUtil.decrypt(mchtAcct.getAcctName())));
+        }
         merchantInfoVO.setMchtAcct(mchtAcct);
 
         MchtComp mchtComp = merchantInfoVO.getMchtComp();
-        mchtComp.setLicenseNo(SdkUtil.encrypt(mchtComp.getLicenseNo()));
+        if (StringUtils.isNotEmpty(mchtComp.getLicenseNo())){
+            mchtComp.setLicenseNo(SdkUtil.encrypt(AesUtil.decrypt(mchtComp.getLicenseNo())));
+        }
         merchantInfoVO.setMchtComp(mchtComp);
 
         MchtMedia mchtMedia = merchantInfoVO.getMchtMedia();
@@ -156,6 +165,7 @@ public class MerchantServiceImpl implements MerchantService {
         if (StringUtils.isNotEmpty(mchtMedia.getOpenAccoLic())) {
             mchtMedia.setOpenAccoLic(SdkUtil.encrypt(mchtMedia.getOpenAccoLic()));
         }
+
         mchtMedia.setDoorHead(SdkUtil.encrypt(mchtMedia.getDoorHead()));
         mchtMedia.setCashier(SdkUtil.encrypt(mchtMedia.getCashier()));
         mchtMedia.setShopPanoram(SdkUtil.encrypt(mchtMedia.getShopPanoram()));
@@ -186,8 +196,16 @@ public class MerchantServiceImpl implements MerchantService {
 
         JSONObject resultJson = new JSONObject();
         //todo 处理返回值
-
-        Object post = SdkUtil.post(merchantInfoVO, routeCreateOrgMcht);
+//
+        Object post = null;
+        try {
+            post = SdkUtil.post(merchantInfoVO, routeCreateOrgMcht);
+        } catch (BusinessException businessException) {
+            String desc = businessException.getDesc();
+            String substring = desc.substring(12);
+            resultJson.put("desc",substring);
+            return resultJson;
+        }
         JSONObject jsonObject = JSONObject.fromObject(post);
         String mchtNo = jsonObject.getString("mchtNo");
         String unionPayMchtNo = jsonObject.getString("unionPayMchtNo");
@@ -213,7 +231,7 @@ public class MerchantServiceImpl implements MerchantService {
     @Override
     public MerchantInfoVO queryMcht(JSONObject str) throws Exception {
         log.info("--------商户入网信息查询--------");
-        String instMchtNo = str.getString("instMchtNo");
+        Long instMchtNo = str.getLong("instMchtNo");
         String mchtNo = str.getString("mchtNo");
 
         JSONObject productJson = new JSONObject();

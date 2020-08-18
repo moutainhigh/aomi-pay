@@ -12,27 +12,33 @@ import javax.servlet.http.HttpServletRequest;
 public interface UserService {
 
 
-     String create(MerchantInfoVO merchantInfoVO) throws Exception;
+    String create(JSONObject str) throws Exception;
 
-     void openMcht(ProductVO productVO) throws Exception;
+    void openMcht(ProductVO productVO) throws Exception;
 
-     String uploadImg(HttpServletRequest request,String picType,String userId) throws Exception;
+    String uploadImg(HttpServletRequest request, String picType, String userId) throws Exception;
 
-     MerchantInfoVO queryMcht(JSONObject str) throws Exception;
+    MerchantInfoVO queryMcht(JSONObject str) throws Exception;
 
-     JSONObject queryMchtAudit(JSONObject str) throws Exception;
+    JSONObject queryMchtAudit(JSONObject str) throws Exception;
 
-     void updateInfo(MerchantInfoVO merchantInfoVO) throws Exception;
+    void updateInfo(MerchantInfoVO merchantInfoVO) throws Exception;
 
-     JSONObject  addMerchant(String userPhone);
+    void updateStatus(JSONObject str) throws Exception;
 
-     void updateStatus(JSONObject str) throws Exception;
-
-     void updateProductModel(JSONObject str) throws Exception;
+    void updateProductModel(JSONObject str) throws Exception;
 
     void updateMchtAcct(AcctVO acctVO) throws Exception;
 
-     void userRegister(String phone, String password, String code);
+    MerchantInfoVO insertMerchantInfo(MerchantInfoVO merchantInfoVO) throws Exception;
+
+    MerchantInfoVO findMerchantInfo(JSONObject str);
+
+    //    String createTwo(JSONObject str) throws Exception;
+
+     Long userRegister(String phone, Integer type, String bdNo);
 
      String userLogin(String phone, String password);
+
+    void queryOrder(Long userId);
 }
