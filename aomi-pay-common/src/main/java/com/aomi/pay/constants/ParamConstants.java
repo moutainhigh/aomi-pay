@@ -17,17 +17,6 @@ public class ParamConstants {
     /** 总行数  默认为10 */
     public static final Integer PAGE_COUNT_NULL = 0;
 
-    /** 排序属性  null替换为0 */
-    public static final Integer SORT_NULL = 0;
-
-    /** 排序属性  按销量从高到低 */
-    public static final Integer SORT_VOLUME_DESC = 1;
-
-    /** 排序属性  按价格从低到高 */
-    public static final Integer SORT_PRICE_ASC = 2;
-
-    /** 排序属性  按价格从高到低 */
-    public static final Integer SORT_ZERO_DESC = 3;
-
-
+    /** 平台标识  默认为hx */
+    public static final String PLATFORM_TAG = "hx";
 }

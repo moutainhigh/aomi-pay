@@ -14,9 +14,19 @@ public class PayConstants {
     public final static int PAY_TYPE_ZFB = 0;
 
     /**
+     * 收款方式  0：支付宝
+     */
+    public final static String PAY_TYPE_ZFB_DESC = "支付宝";
+
+    /**
      * 收款方式  1：微信
      */
     public final static int PAY_TYPE_WX = 1;
+
+    /**
+     * 收款方式  0：支付宝
+     */
+    public final static String PAY_TYPE_WX_DESC = "微信";
 
     /**
      * 收款方式  2：银联
@@ -24,9 +34,19 @@ public class PayConstants {
     public final static int PAY_TYPE_YL = 2;
 
     /**
+     * 收款方式  0：支付宝
+     */
+    public final static String PAY_TYPE_YL_DESC = "银联";
+
+    /**
      * 结算周期 默认 0：T+1
      */
     public final static int SETTLE_TYPE_T1 = 0;
+
+    /**
+     * 结算周期 默认 0：T+1
+     */
+    public final static String SETTLE_TYPE_T1_DESC = "T+1";
 
     /**
      * 结算周期   1：T+0
@@ -34,9 +54,19 @@ public class PayConstants {
     public final static int SETTLE_TYPE_T0 = 1;
 
     /**
+     * 结算周期   1：T+0
+     */
+    public final static String SETTLE_TYPE_T0_DESC = "T+0";
+
+    /**
      * 结算周期  2：S+0
      */
     public final static int SETTLE_TYPE_S0 = 2;
+
+    /**
+     * 结算周期  2：S+0
+     */
+    public final static String SETTLE_TYPE_S0_DESC = "S+0";
 
     /**
      * 结算周期  3：D+0
@@ -44,9 +74,19 @@ public class PayConstants {
     public final static int SETTLE_TYPE_D0 = 3;
 
     /**
+     * 结算周期  3：D+0
+     */
+    public final static String SETTLE_TYPE_D0_DESC = "D+0";
+
+    /**
      * 结算周期 4：D+1
      */
     public final static int SETTLE_TYPE_D1 = 4;
+
+    /**
+     * 结算周期 4：D+1
+     */
+    public final static String SETTLE_TYPE_D1_DESC = "D+1";
 
     /**
      * 交易状态 0：待支付

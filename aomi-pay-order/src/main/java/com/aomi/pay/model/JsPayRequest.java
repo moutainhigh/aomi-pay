@@ -37,7 +37,7 @@ public class JsPayRequest {
     private String amount;
 
     /**
-     * 支付金额
+     * 支付宝微信userId
      */
     @Validator(isNotNull = true, description = "userId")
     @ApiModelProperty(value = "微信支付宝userId", name = "userId", required = true)

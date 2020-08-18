@@ -1,15 +1,17 @@
 package com.aomi.pay.service.impl;
 
 import com.aomi.pay.constants.ApiConstants;
+import com.aomi.pay.constants.ParamConstants;
 import com.aomi.pay.constants.PayConstants;
 import com.aomi.pay.domain.CommonErrorCode;
+import com.aomi.pay.domain.PageResult;
 import com.aomi.pay.dto.hx.JsPayDTO;
 import com.aomi.pay.entity.PaymentOrder;
-import com.aomi.pay.enums.PayEnums;
 import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.PaymentOrderMapper;
 import com.aomi.pay.model.JsPayRequest;
 import com.aomi.pay.model.NotifyRequest;
+import com.aomi.pay.model.QueryListResponse;
 import com.aomi.pay.service.PaymentOrderService;
 import com.aomi.pay.util.*;
 import com.aomi.pay.vo.BaseResponse;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 订单交易管理Service实现类
@@ -106,7 +110,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         jsPayDTO.setPlatformMerchantId(platformMerchantId);
         jsPayDTO.setNotifyUrl(notifyUrl);
         //TODO 结算周期  暂D0 如果失败重新下单 T1
-        jsPayDTO.setSettleType(PayEnums.SETTLE_TYPE_T1);
+        jsPayDTO.setSettleType(PayConstants.SETTLE_TYPE_T1);
         jsPayDTO.setSubject(subject);
         //调用环迅api接口
         BaseResponse response = apiClient.onlineTrade(jsPayDTO);
@@ -196,10 +200,43 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         PaymentOrder paymentOrder = new PaymentOrder();
         int payStatus = tradeStatusToPayStatus(notifyRequest.getTradeStatus());
         paymentOrder.setPayStatus(payStatus);
-        paymentOrder.setCompleteTime(DateUtil.format(notifyRequest.getCompleteTime(),DateUtil.YYYYMMDDHHMMSS));
+        paymentOrder.setCompleteTime(DateUtil.format(notifyRequest.getCompleteTime(), DateUtil.YYYYMMDDHHMMSS));
         paymentOrder.setOutTransactionId(notifyRequest.getOutTransactionId());
         paymentOrder.setOrderId(new BigInteger(notifyRequest.getOutTradeNo()));
         paymentOrderMapper.updateByOrderId(paymentOrder);
+    }
+
+    /**
+     * @param paymentOrder 商户entity
+     * @param pageNo       页码
+     * @param pageSize     页面大小
+     * @author hdq
+     * @date 2020/8/18
+     * @desc 根据商户id查询交易记录列表
+     */
+    @Override
+    public PageResult queryListForPage(PaymentOrder paymentOrder, Integer pageNo, Integer pageSize) {
+        log.info("据商户entity查询交易记录列表,param：{}", paymentOrder);
+        Integer start = (pageNo - ParamConstants.PAGE_NO) * (pageSize);
+        paymentOrder.setPlatformTag("hx");
+        List<PaymentOrder> paymentOrders = paymentOrderMapper.queryListForPage(paymentOrder, start, pageSize);
+        log.info("据商户entity查询交易记录列表,结果：{}", paymentOrders);
+
+        if (paymentOrders.isEmpty()) {
+            return new PageResult(paymentOrders, (long) ParamConstants.PAGE_COUNT_NULL);
+        } else {
+            List<QueryListResponse> resList = paymentOrders.stream().map(obj -> {
+                QueryListResponse res = new QueryListResponse();
+                res.setAmount(obj.getAmount().toString());
+                res.setOrderId(obj.getOrderId().toString());
+                res.setCompleteTime(obj.getCompleteTime());
+                res.setPayType(ConversionUtil.convertPayStatus(obj.getPayType()));
+                res.setSettleType(ConversionUtil.convertSettleType(obj.getSettleType()));
+                return res;
+            }).collect(Collectors.toList());
+
+            return new PageResult(resList, (long) resList.size());
+        }
     }
 
 }

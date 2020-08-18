@@ -30,7 +30,7 @@ public class BasePageRequest implements Serializable {
      * 页面大小
      */
     @Validator(maxLength = 10, regexExpression = RegexUtils.REGEX_PAGESIZE, description = "页面大小")
-    @ApiModelProperty(value = "页面大小", example = "10")
+        @ApiModelProperty(value = "页面大小", example = "10")
     private String pageSize;
 
 }

@@ -46,6 +46,7 @@ public class BasePageResponse<T> implements Serializable {
      */
     @ApiModelProperty(value = "页面大小")
     protected String pageSize;
+
     /**
      * 页面大小
      */
@@ -53,7 +54,7 @@ public class BasePageResponse<T> implements Serializable {
     protected String pages;
 
     public BasePageResponse(PageResult pr, String pageNo, String pageSize) {
-        this.list = (List<T>) pr.getResult();
+        this.list = pr.getResult().isEmpty() ? null : (List<T>) pr.getResult();
         this.count = pr.getCount() == null ? ParamConstants.PAGE_COUNT_NULL : pr.getCount();
         this.pageNo = pageNo;
         this.pageSize = pageSize;
