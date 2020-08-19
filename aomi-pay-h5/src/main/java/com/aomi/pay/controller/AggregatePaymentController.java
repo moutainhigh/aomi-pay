@@ -51,7 +51,9 @@ public class AggregatePaymentController {
      * @desc 成功页
      **/
     @GetMapping("/success")
-    public String success() {
+    public String success(@RequestParam String amount, @RequestParam String merchantSimpleName, Model model) {
+        model.addAttribute("amount",amount);
+        model.addAttribute("merchantSimpleName",merchantSimpleName);
         return "success";
     }
 
