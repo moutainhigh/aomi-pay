@@ -175,7 +175,7 @@
 
     function success() {
         var amount = $("#transAmount").val();
-        window.location.href = ("https://qr.cloudbest.shop/success?amount="+amount+"&merchantSimpleName=${merchantSimpleName}");
+        window.location.href = ("/success?amount="+amount+"&merchantSimpleName="+${merchantSimpleName});
     }
 
     function remarkInput() {
