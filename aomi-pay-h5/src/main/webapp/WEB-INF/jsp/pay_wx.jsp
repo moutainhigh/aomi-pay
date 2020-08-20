@@ -57,7 +57,6 @@
 <div class="storename">
     ${merchantSimpleName}
 </div>
-
 <div class="mainarea">
     <div class="iplabel">请输入金额</div>
     <div class="inputbox">
@@ -176,8 +175,7 @@
 
     function success() {
         var amount = $("#transAmount").val();
-        var merchantSimpleName = $("#merchantSimpleName").val();
-        window.location.href = ("https://qr.cloudbest.shop/success?amount="+amount+"&merchantSimpleName="+merchantSimpleName);
+        window.location.href = ("https://qr.cloudbest.shop/success?amount="+amount+"&merchantSimpleName=${merchantSimpleName}");
     }
 
     function remarkInput() {

@@ -25,14 +25,13 @@
 </body>
 </html>
 <style type="text/css">
-	*{
-		padding: 0;
-		margin: 0;
-	}
-	p,span{
-		padding: 0;
-		margin: 0;
-	}
+html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, 
+form, fieldset, legend, img { margin:0; padding:0; } 
+
+body {
+    font:12px/150% Arial,Verdana,"\5b8b\4f53";
+    background:#fff
+}
 	.home{
 		width: 7.5rem;
 		height: auto;
@@ -57,7 +56,6 @@
 	.cont .img p{
 		font-size: 0.36rem;
        color: #FF8089;
-	   margin-top: -0.2rem;
 	   margin-bottom: 0.48rem;
 	}
 	.money{
@@ -65,15 +63,15 @@
 		height: auto;
 		color: #343434 ;
 		font-size: 0.72rem;
+		line-height: 1.06rem;
 		margin-bottom: 0.1rem;
 	}
-		.store-name {
-			width: 7.5rem;
-			 display: flex;
-			 align-items: center;
-			 justify-content: center;
-			margin-top: 0.1rem;
- 		}
+	.store-name {
+	   width: 7.5rem;
+	   display: flex;
+	   align-items: center;
+	   justify-content: center;
+	}
 	.store-name .name{
 		color: #343434;
 	
@@ -81,7 +79,6 @@
 		font-size: 0.28rem;
 	}
 	.store-name .name2{
-	
 		font-size: 0.28rem;
 		text-align: center;
 		color: rgba(52,52,52,0.7);
