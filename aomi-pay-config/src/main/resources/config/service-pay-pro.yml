@@ -8,7 +8,7 @@ spring:
     #初始化连接池的连接数量 大小，最小，最大
     druid:
       order:
-        url: jdbc:mysql://10.103.1.2:3306/jubao_pay?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        url: jdbc:mysql://aomi-prod-n.rwlb.rds.aliyuncs.com:3306/jubao_pay?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
         username: jubao
         password: NexKhkxa&pkurS8B
         driver-class-name: com.mysql.jdbc.Driver
@@ -18,7 +18,7 @@ spring:
         #配置获取连接等待超时的时间
         max-wait: 60000
       user:
-        url: jdbc:mysql://10.103.1.2:3306/jubao_user?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        url: jdbc:mysql://aomi-prod-n.rwlb.rds.aliyuncs.com:3306/jubao_user?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
         username: jubao_manage
         password: kHEP738yOeMxGT!a
         driver-class-name: com.mysql.jdbc.Driver
