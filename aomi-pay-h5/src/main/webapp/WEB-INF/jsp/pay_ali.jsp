@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib  uri ="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -79,7 +81,18 @@
         </div>
     </div>
 </div>
-
+<div id="test" style="position: fixed;top: 0;left: 0; display: none; width: 100vw;height: 100vh;z-index: 9999;background: rgba(0,0,0,0.7);">
+    <div class="loadEffect">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
 <script type="text/javascript">
     var gps = {};
 
@@ -100,15 +113,18 @@
         userId = getCookie('userId');
 
         $("#sub").on('touchend',function(){
+            $("#test").show();
             alipay(userId);
         });
 
     })();
 
-/*    btn.addEventListener('touchend', function () {
-        alert("1111")
-        alipay(userId);
-    });*/
+    //var url_host = window.location.protocol + "//" + window.location.hostname;
+
+    /*    btn.addEventListener('touchend', function () {
+            alert("1111")
+            alipay(userId);
+        });*/
 
     function getCookie(name) {
         var prefix = name + "="
@@ -137,12 +153,13 @@
     }
 
     function alipay(userId) {
+
         $.ajax({
             type: "POST",
-            url: "https://pay.cloudbest.shop/payment/jsPay",
-            async: false,
+            url: "${payUrl}/payment/jsPay",
+            async: true,
             data: JSON.stringify({
-                "fixedQrCode": "12345123451234512345",
+                "fixedQrCode": getFixedQrCode(),
                 "payType": "0",
                 "amount": $("#transAmount").val(),
                 "userId": userId
@@ -151,6 +168,7 @@
             contentType: 'application/json;charset=UTF-8',
             success: function (d) {
                 console.log(JSON.stringify(d));
+                $("#test").hide();
                 if (d.code == "100000") {
                     var data = JSON.parse(d.data);
                     console.log(d.data);
@@ -158,7 +176,7 @@
                         if (res.resultCode == '9000') {
                             success();
                         } else {
-                            ap.alert(res.resultCode);
+                            //ap.alert(res.resultCode);
                         }
                     });
                 } else {
@@ -166,6 +184,7 @@
                 }
             },
             error: function (e) {
+                $("#test").hide();
                 var jasonData = JSON.parse(e.responseText);
                 layer.msg(jasonData.msg, {icon: 5});
             }
@@ -174,7 +193,8 @@
     }
 
     function success() {
-        window.location.href = ("https://qr.cloudbest.shop/success");
+        var amount = $("#transAmount").val();
+        window.location.href = ("/success?amount=" + amount + "&merchantSimpleName=${merchantSimpleName}");
     }
 
     function remarkInput() {
@@ -215,6 +235,10 @@
 
     function keBordHide() {
         $("#__w_l_h_v_c_z_e_r_o_divid").hide();
+    }
+
+    function getFixedQrCode() {
+        return window.location.pathname.replace('"', '').replace(/[/]/g, '');
     }
 </script>
 </body>

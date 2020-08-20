@@ -3,7 +3,10 @@ package com.aomi.pay.service.impl;
 import com.aomi.pay.constants.H5Constants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.feign.PayClient;
+import com.aomi.pay.model.GetSimpleNameRequest;
 import com.aomi.pay.service.AggregatePaymentService;
+import com.aomi.pay.util.CommonExceptionUtils;
+import com.aomi.pay.util.RedisUtil;
 import com.aomi.pay.util.StringUtil;
 import com.aomi.pay.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +33,11 @@ import javax.servlet.http.HttpServletResponse;
 @RefreshScope
 public class AggregatePaymentServiceImpl implements AggregatePaymentService {
 
-
     @Resource
     private PayClient payClient;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     /**
      * 请求auth_code的支付宝链接
@@ -71,6 +76,12 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
     private String wxRedirectUri;
 
     /**
+     * 支付调用地址
+     */
+    @Value("${pay.url}")
+    private String payUrl;
+
+    /**
      * @param request             HttpServletRequest
      * @param httpServletResponse HttpServletResponse
      * @author hdq
@@ -92,17 +103,19 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
                     userCookie.setMaxAge(H5Constants.COOKIE_MAX_AGE);
                     userCookie.setPath("/");
                     httpServletResponse.addCookie(userCookie);
-                    //TODO userclient.getuser
-                    model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
+                    model.addAttribute("merchantSimpleName", getSimpleName(fixedQrCode));
+                    model.addAttribute("payUrl", payUrl);
+                } else {
+                    CommonExceptionUtils.throwBusinessException(response.getCode(), response.getMessage());
                 }
             } else {
                 String url = aliAuthCodeUrl.concat("?").concat("app_id=").concat(aliAppId).concat("&redirect_uri=").concat(aliRedirectUri).concat(fixedQrCode).concat("&response_type=code&scope=auth_base");
                 httpServletResponse.setStatus(302);
                 httpServletResponse.setHeader("location", url);
             }
-        }else{
-            //TODO userclient.getuser
-            model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
+        } else {
+            model.addAttribute("merchantSimpleName", getSimpleName(fixedQrCode));
+            model.addAttribute("payUrl", payUrl);
         }
 
     }
@@ -129,17 +142,19 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
                     userCookie.setMaxAge(H5Constants.COOKIE_MAX_AGE);
                     userCookie.setPath("/");
                     httpServletResponse.addCookie(userCookie);
-                    //TODO userclient.getuser
-                    model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
+                    model.addAttribute("merchantSimpleName", getSimpleName(fixedQrCode));
+                    model.addAttribute("payUrl", payUrl);
+                } else {
+                    CommonExceptionUtils.throwBusinessException(response.getCode(), response.getMessage());
                 }
             } else {
                 String url = wxCodeUrl.concat("?appid=").concat(wxAppId).concat("&redirect_uri=").concat(wxRedirectUri).concat(fixedQrCode).concat("&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect;");
                 httpServletResponse.setStatus(302);
                 httpServletResponse.setHeader("location", url);
             }
-        }else{
-            //TODO userclient.getuser
-            model.addAttribute("merchantSimpleName","全季酒店(川沙店)");
+        } else {
+            model.addAttribute("merchantSimpleName", getSimpleName(fixedQrCode));
+            model.addAttribute("payUrl", payUrl);
         }
     }
 
@@ -162,6 +177,33 @@ public class AggregatePaymentServiceImpl implements AggregatePaymentService {
         }
         log.info("userId:{}", userId);
         return userId;
+    }
+
+    /**
+     * @author hdq
+     * @date 2020/8/18
+     * @desc 获取商户简称
+     **/
+    public String getSimpleName(String fixedQrCode) {
+
+        String simpleName = "商户收款";
+
+        String result = redisUtil.getString("merchantSimpleCache::".concat(fixedQrCode));
+
+        if (StringUtil.isNotBlank(result)) {
+            simpleName = result;
+        } else {//没取到就调pay服务从数据库取，再存redis
+            GetSimpleNameRequest req = new GetSimpleNameRequest();
+            req.setFixedQrCode(fixedQrCode);
+            BaseResponse response = payClient.getSimpleName(req);
+            if (CommonErrorCode.SUCCESS.getCode().equals(response.getCode())) {
+                simpleName = response.getData().toString();
+            } else {
+                CommonExceptionUtils.throwBusinessException(response.getCode(), response.getMessage());
+            }
+        }
+
+        return simpleName.replace("\"", "");
     }
 }
 

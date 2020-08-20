@@ -1,6 +1,6 @@
 #eureka服务的配置文件
 server:
-  port: 6969 #服务端口
+  port: 7171 #服务端口
 eureka:
   client:
     registerWithEureka: false #是否将自己注册到Eureka服务中

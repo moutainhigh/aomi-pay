@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib  uri ="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <html>
 <head lang="en">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -57,19 +58,12 @@
 <div class="storename">
     ${merchantSimpleName}
 </div>
-
 <div class="mainarea">
     <div class="iplabel">请输入金额</div>
     <div class="inputbox">
         <div class="labelname">￥</div>
         <input class="inputamount" id="transAmount" type="text" name="" placeholder="0.00" readonly="readonly">
     </div>
-
-    <input type="hidden" id="mercId" value="826263457320001">
-    <input type="hidden" id="trmNo" value="">
-    <input type="hidden" id="mercIp" value="124.77.195.137">
-    <input type="hidden" id="requestNo" value="">
-
 </div>
 
 <div class="weui_dialog_alert" id="dialog" style="display: none;">
@@ -83,7 +77,18 @@
         </div>
     </div>
 </div>
-
+<div id="test" style="position: fixed;top: 0;left: 0; display: none; width: 100vw;height: 100vh;z-index: 9999;background: rgba(0,0,0,0.7);">
+    <div class="loadEffect">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
 <script type="text/javascript">
     var gps = {};
 
@@ -104,6 +109,7 @@
         userId = getCookie('userId');
 
         $("#sub").on('touchend',function(){
+            $("#test").show();
             onBridgeReady(userId);
         });
 
@@ -130,10 +136,10 @@
     function onBridgeReady(userId) {
         $.ajax({
             type: "POST",
-            url: "https://pay.cloudbest.shop/payment/jsPay",
-            async: false,
+            url: "${payUrl}/payment/jsPay",
+            async: true,
             data: JSON.stringify({
-                "fixedQrCode": "12345123451234512345",
+                "fixedQrCode": getFixedQrCode(),
                 "payType": "1",
                 "amount": $("#transAmount").val(),
                 "userId": userId
@@ -141,6 +147,7 @@
             dataType: "json",
             contentType: 'application/json;charset=UTF-8',
             success: function (d) {
+                $("#test").hide();
                 console.log(JSON.stringify(d));
                 if (d.code == "100000") {
                     var data = JSON.parse(d.data);
@@ -167,6 +174,7 @@
                 }
             },
             error: function (e) {
+                $("#test").hide();
                 //var jasonData = $.parseJSON(e.responseText);
                 //layer.msg(jasonData.msg, {icon: 5});
             }
@@ -175,7 +183,8 @@
     }
 
     function success() {
-        window.location.href = ("https://qr.cloudbest.shop/success");
+        var amount = $("#transAmount").val();
+        window.location.href = ("/success?amount="+amount+"&merchantSimpleName=${merchantSimpleName}");
     }
 
     function remarkInput() {
@@ -216,6 +225,10 @@
 
     function keBordHide() {
         $("#__w_l_h_v_c_z_e_r_o_divid").hide();
+    }
+
+    function getFixedQrCode() {
+        return window.location.pathname.replace('"', '').replace(/[/]/g, '');
     }
 </script>
 </body>

@@ -1,5 +1,5 @@
 server:
-  port: 8179 #端口
+  port: 8261 #端口
 spring:
   application:
     name: zuul-server #服务名称
@@ -15,11 +15,11 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:6969/eureka/
+      defaultZone: http://localhost:7171/eureka/
   instance:
     prefer-ip-address: true #使用ip地址注册
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
-    status-page-url: http://127.0.0.1:8179/doc.html
+    status-page-url: http://127.0.0.1:8261/doc.html
 
 
 

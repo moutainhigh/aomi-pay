@@ -1,18 +1,14 @@
 package com.aomi.pay.controller;
 
 import com.aomi.pay.constants.H5Constants;
-import com.aomi.pay.domain.CommonErrorCode;
-import com.aomi.pay.feign.PayClient;
 import com.aomi.pay.service.AggregatePaymentService;
 import com.aomi.pay.util.StringUtil;
-import com.aomi.pay.vo.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,7 +47,9 @@ public class AggregatePaymentController {
      * @desc 成功页
      **/
     @GetMapping("/success")
-    public String success() {
+    public String success(@RequestParam String amount, @RequestParam String merchantSimpleName, Model model) {
+        model.addAttribute("amount",amount);
+        model.addAttribute("merchantSimpleName",merchantSimpleName);
         return "success";
     }
 

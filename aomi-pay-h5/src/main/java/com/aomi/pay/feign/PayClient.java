@@ -1,17 +1,19 @@
 package com.aomi.pay.feign;
 
+import com.aomi.pay.model.GetSimpleNameRequest;
 import com.aomi.pay.vo.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * 调order client
+ * 调pay client
  *
  * @author : hdq
  * @date 2020/8/13
  */
-@FeignClient("service-order")
+@FeignClient("service-pay")
 public interface PayClient {
 
     /**
@@ -29,5 +31,13 @@ public interface PayClient {
      **/
     @GetMapping("/wxPay/getOpenId")
     public BaseResponse getOpenId(@RequestParam String code) throws Exception;
+
+    /**
+     * @author hdq
+     * @date 2020/8/18
+     * @desc 根据固码获取商户简称
+     **/
+    @GetMapping("/merchant/getSimpleName")
+    public BaseResponse getSimpleName(@RequestBody GetSimpleNameRequest req);
 
 }

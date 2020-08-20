@@ -90,7 +90,6 @@ public class PayServiceImpl implements PayService {
                 jsPayVO.setSettleType(ApiPayConstans.SETTLE_TYPE_T1);
         }
 
-
         jsPayVO.setIsvOrgId(instId);
         //金额转换
         jsPayVO.setAmount(AmountUtil.changeY2F(jsPayVO.getAmount()));

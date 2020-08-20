@@ -95,6 +95,6 @@ public class JsPayDTO implements Serializable {
     /**
      * 产品编码
      */
-    private Integer productCode;
+    private String productCode;
 
 }

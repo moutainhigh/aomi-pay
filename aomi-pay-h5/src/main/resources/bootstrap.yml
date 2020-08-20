@@ -6,7 +6,7 @@ spring:
     name: service-h5 #服务名称
   cloud:
     config:
-      name: service-h5,mysql,common,swagger
+      name: service-h5,common,swagger,redis
       discovery:
         enabled: true
         service-id: config-server
@@ -14,7 +14,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:6969/eureka/
+      defaultZone: http://localhost:7171/eureka/
   instance:
     prefer-ip-address: true #使用ip地址注册
     instance-id: ${spring.cloud.client.ip-address}:${server.port}

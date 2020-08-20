@@ -1,0 +1,63 @@
+spring:
+  #aop切面控制切换
+  aop:
+    proxy-target-class: true
+    auto: true
+  datasource:
+    #连接池配置
+    #初始化连接池的连接数量 大小，最小，最大
+    druid:
+      order:
+        url: jdbc:mysql://10.103.1.2:3306/jubao_pay?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: jubao
+        password: NexKhkxa&pkurS8B
+        driver-class-name: com.mysql.jdbc.Driver
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+        #配置获取连接等待超时的时间
+        max-wait: 60000
+      user:
+        url: jdbc:mysql://10.103.1.2:3306/jubao_user?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: jubao_manage
+        password: kHEP738yOeMxGT!a
+        driver-class-name: com.mysql.jdbc.Driver
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+        #配置获取连接等待超时的时间
+        max-wait: 60000
+
+#支付参数配置
+pay:
+  hx:
+    #支付回调地址
+    notify_url: https://pay.cloudbest.shop/payment/notify
+    #结算周期
+    settle_type: 2
+    #订单失效时间 分钟
+    exprice: 60
+
+#支付宝参数
+alipay:
+  #网关
+  url: https://openapi.alipay.com/gateway.do
+  #appid
+  appid: 2021001187615824
+  #私钥
+  private_key: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCGdXF6OUiG7sK+mnojDpf7xu3T2sl2v1BLK7KUvg+HFrSWLIqE3kxyMD0s/oAS+vmZO/+KI/P1fBCkaRYmgKiGLM7CVZFEsMPZeh+MBLfetudxaeCeNmA1xh3LpyCW6bbUjVNOs0/aIv9kLx7J4bkf3CoYLj3LE1IaNbfxDS8wIWV/DQQDEWfSTeZFa+I+sHtZMTYe4hAg57Ul3Iy4mjEvicMGYIU3rIH9mObP5GeZjN/nSU9pXwE1mHZ9XV8OOJw72GhhHoWfz6a3nEtoIkfKXCpzj4oisZGjPSTEfdXjo+uRS6Be5cX/69qurLlua7UUp/JNtxfQHMyB5itCxQojAgMBAAECggEAAPuUw77tb8cI91mrsNvncnimvlioBk0pqhL8sCefd25MDZjvvj7dsiv2FoEZsInTDzKoEHtoyg+JE5qNBeUE1k43iKYVdLoSBGHnHx/dtCwEDwkmEiH1nA8Bor5q949nva/2vumCmOaOlU3e3LzgnIIAcMLNwtE2VWi1GnbtNF3XZ+w/r678RyDK/J+Y1v4csHVM+4qeK9wKBG8ydvW+sI4BL9z0+4m1z467y4JgisxsJrUh3mEAXK+hLxqMIjPIE0NS7dYfjTWGHz4e75Ujkqi17BgMJW+9muIFyAUUlcUc1QHBIMxPw0bI5ymyO+wR6ui7G2gGEqLT4nFpTH5KUQKBgQDC+bFzaVIOKJ+uUP8llUX7ZAcc/2ZqAQmg+e9bDGRRUzFBrLFjCAbFxurOpvRtghctAsPdU0S6YgTwhbIp5AHj/r5mFh8/DSM57UzMD46qEXugSnGmftBU2iC8WTYL4N8HyziR8eVWwgSkze/ZsLHJecZwXiRQQydrVlznEwLYuwKBgQCwiuL9ISNP+2m/e1PnowdDQqohOVmZCuleNOXEBvRTJB/98nV+6lVhv73weyZ2hhvwSNiC6ljyBDciKx6FdzgsuWoSxm0qEdTdruyHhW4fKpAP4HK85r8Cu2oVBc83Hi/95dPrZDcuyz0pFEJGBj+eHxO8ptGWkDfoPYyca9YRuQKBgGCE8TZ77dX6gEnv6M73HYS8WNUfDdjuGJErCTWeZc7oixrC3bFzmL6xoS2Z8qh/XO+4TbOz8/L8cQuMc81PBSyTwDeTPfadj1GuynS+Qtan/vYzxB0y6/kFXm0/EIVC1cXq8V82S1zugRQAqnqugOSHNxgLUpi1Fb+KKkVt4NvfAoGAMrdDbCp35YM5Jsv8F6Aq9vSQwUijZ6bN0cVqeDzzNWs8UYy0mkghTRpzK0GFlCkEn6udn0ZJVQVG/WbbtsW/+oEtasVcGOjUePbGdkwrjYKBrj3xWDkFiHhkijOICrJ+YPcEQSwh+ixinol2XH1xCzCsT9awgQtfNDVyToFgFukCgYAXcpACG/FHkImKv0/0rtxlSjC96n8o/hnefI2PlBEA+9PtcZ0fOr80KfMtBGJDT+rZoPP+vVCPRJl/KmegFBaI0jpprORP7YRWnrclpvKf/wuM03bWC/7snQlkQ6/xIv95NvN2qDjH0Y+cemmJV7cke4ZQoRx5NefwH0qwAsTRJQ==
+  #请求方式
+  format: json
+  #编码格式
+  charset: utf-8
+  #公钥
+  public_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr26deqbYz6BG6LBF0olrd16zRId1UITNT7fZO87/6rcCNTYghYvKS8H6cM52NxWntOGhrFBI7V/NO/jKd7FHBw2iXyPoauFc5naLKJodbXUPih9P0CAWRkZd620Tg+QcHiNhDJlfEdwvhiXB4Ul/4j7y5Iz2zuFyLU6WYSVYjhj0GGFxYwSPDOHYKydiEggKgKDgWTrx2/YkSOSl/h/DjNUKCZ8CqEHfOc50JzDUate5FCeHM5bFNQSJ1CILTmX1JajB392waiiL3fuvGNw9Yzsr1QJgfOnxpNEZUlX2vjseewA4cTxVGj9+N1YJDWMj8L81qxMw8S2IkPZaSdrbsQIDAQAB
+  #签名方式
+  sign_type: RSA2
+
+#微信参数
+wx:
+  #appid
+  appid: wx16aaf5a88d56ab23
+  #secret
+  secret: 7785fc7c93f55ca0626787cf0c1dae14

@@ -11,21 +11,12 @@ zuul:
     api:
       path: /api/**
       serviceId: service-api
-    user:
-      path: /user/**
-      serviceId: service-user
-    order:
-      path: /order/**
-      serviceId: service-order
-    dictionary:
-      path: /dictionary/**
-      serviceId: service-dictionary
     qr:
       path: /qr/**
       serviceId: service-h5
     pay:
       path: /pay/**
-      serviceId: service-order
+      serviceId: service-pay
   add-host-header: true
 
 ribbon:
@@ -34,7 +25,7 @@ ribbon:
   eager-load:
     #取消懒加载
     enabled: true
-    clients: service-api, service-order, service-user,service-dictionary
+    clients: service-api, service-pay,service-mq
 
 hystrix:
   threadpool:

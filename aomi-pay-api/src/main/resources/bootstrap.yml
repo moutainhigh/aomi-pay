@@ -1,5 +1,5 @@
 server:
-  port: 9100
+  port: 9200
 #spring配置
 spring:
   main:
@@ -16,7 +16,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:6969/eureka/
+      defaultZone: http://localhost:7171/eureka/
   instance:
     prefer-ip-address: true #使用ip地址注册
     instance-id: ${spring.cloud.client.ip-address}:${server.port}

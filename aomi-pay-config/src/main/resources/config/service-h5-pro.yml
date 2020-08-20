@@ -20,3 +20,6 @@ wx:
   appid: wx16aaf5a88d56ab23
   #回调地址
   redirect_uri: https://qr.cloudbest.shop/
+
+pay:
+  url: https://pay.cloudbest.shop

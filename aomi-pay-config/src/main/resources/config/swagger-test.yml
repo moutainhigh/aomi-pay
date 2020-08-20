@@ -1,3 +1,0 @@
-#配置swagger在测试环境启用
-swagger:
-  enable: true

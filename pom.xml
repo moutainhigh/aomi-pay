@@ -28,12 +28,8 @@
         <module>aomi-pay-api</module>
         <!--配置中心-->
         <module>aomi-pay-config</module>
-        <!--商户-->
-        <module>aomi-pay-user</module>
-        <!--订单-->
-        <module>aomi-pay-order</module>
-        <!--数据字典-->
-        <module>aomi-pay-dictionary</module>
+        <!--交易-->
+        <module>aomi-pay-pay</module>
         <!--h5-->
         <module>aomi-pay-h5</module>
     </modules>
