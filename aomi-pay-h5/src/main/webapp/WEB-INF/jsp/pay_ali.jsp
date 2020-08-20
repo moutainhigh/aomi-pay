@@ -60,7 +60,6 @@
 <div class="storename">
     ${merchantSimpleName}
 </div>
-
 <div class="mainarea">
     <div class="iplabel">请输入金额</div>
     <div class="inputbox">
