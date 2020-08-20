@@ -18,7 +18,7 @@ public class GetSimpleNameRequest {
     /**
      * 固码编码
      */
-    @Validator(isNotNull = true, maxLength = 20, regexExpression = RegexUtils.REGEX_NUMBER, description = "固码编码")
+    @Validator(isNotNull = true, maxLength = 22, regexExpression = RegexUtils.REGEX_NUMBER, description = "固码编码")
     @ApiModelProperty(value = "固码编码", name = "fixedQrCode", required = true)
     private String fixedQrCode;
 
