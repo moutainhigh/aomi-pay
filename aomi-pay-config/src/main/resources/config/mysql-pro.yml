@@ -1,0 +1,29 @@
+spring:
+  #aop切面控制切换
+  aop:
+    proxy-target-class: true
+    auto: true
+  datasource:
+    #连接池配置
+    #初始化连接池的连接数量 大小，最小，最大
+    druid:
+      order:
+        url: jdbc:mysql://aomi-prod-n.rwlb.rds.aliyuncs.com:3306/jubao_pay?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: jubao
+        password: NexKhkxa&pkurS8B
+        driver-class-name: com.mysql.jdbc.Driver
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+        #配置获取连接等待超时的时间
+        max-wait: 60000
+      user:
+        url: jdbc:mysql://aomi-prod-n.rwlb.rds.aliyuncs.com:3306/jubao_user?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: jubao_manage
+        password: kHEP738yOeMxGT!a
+        driver-class-name: com.mysql.jdbc.Driver
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+        #配置获取连接等待超时的时间
+        max-wait: 60000

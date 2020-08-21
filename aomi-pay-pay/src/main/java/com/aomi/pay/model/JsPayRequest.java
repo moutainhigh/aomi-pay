@@ -8,7 +8,7 @@ import lombok.Data;
 
 /**
  * @Author hdq
- * @Date 2020/8/7
+ * @Date 2020/8/18
  * @Description h5支付接口接收参数封装
  */
 @ApiModel(value = "h5支付接口接收参数封装")

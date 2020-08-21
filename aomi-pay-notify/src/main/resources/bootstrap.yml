@@ -1,12 +1,12 @@
 server:
-  port: 9256
+  port: 9283
 #spring配置
 spring:
   application:
-    name: service-pay #服务名称
+    name: service-notify #服务名称
   cloud:
     config:
-      name: service-pay,common,swagger,redis,mysql
+      name: service-notify,common,swagger,redis,mysql
       discovery:
         enabled: true
         service-id: config-server

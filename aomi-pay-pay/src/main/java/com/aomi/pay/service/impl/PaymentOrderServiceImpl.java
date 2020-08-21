@@ -1,20 +1,13 @@
 package com.aomi.pay.service.impl;
 
-import com.aomi.pay.config.DbContextHolder;
 import com.aomi.pay.constants.ApiConstants;
 import com.aomi.pay.constants.PayConstants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.dto.hx.JsPayDTO;
-import com.aomi.pay.entity.MerchantQrBind;
 import com.aomi.pay.entity.PaymentOrder;
 import com.aomi.pay.feign.ApiClient;
 import com.aomi.pay.mapper.order.PaymentOrderMapper;
-import com.aomi.pay.mapper.user.MerchantQrBindMapper;
-import com.aomi.pay.model.GetMerchantInfoResponse;
-import com.aomi.pay.model.JsPayRequest;
-import com.aomi.pay.model.NotifyRequest;
 import com.aomi.pay.model.ProductResponse;
-import com.aomi.pay.service.MerchantService;
 import com.aomi.pay.service.PaymentOrderService;
 import com.aomi.pay.util.*;
 import com.aomi.pay.vo.BaseResponse;
@@ -25,20 +18,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 订单交易管理Service实现类
  *
  * @author : hdq
- * @date 2020/8/7
+ * @date 2020/8/18
  */
 @Slf4j
 @Service
@@ -193,25 +182,6 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
                 break;
         }
         return payStatus;
-    }
-
-    /**
-     * @author hdq
-     * @date 2020/8/15
-     * @Param NotifyRequest notifyRequest
-     * @desc 支付回调
-     */
-    @Override
-    public void payNotify(NotifyRequest notifyRequest) throws Exception {
-        //同步订单信息
-        PaymentOrder paymentOrder = new PaymentOrder();
-        int payStatus = tradeStatusToPayStatus(notifyRequest.getTradeStatus());
-        paymentOrder.setPayStatus(payStatus);
-        paymentOrder.setCompleteTime(DateUtil.format(notifyRequest.getCompleteTime(), DateUtil.YYYYMMDDHHMMSS));
-        paymentOrder.setOutTransactionId(notifyRequest.getOutTransactionId());
-        paymentOrder.setOrderId(new BigInteger(notifyRequest.getOutTradeNo()));
-
-        paymentOrderMapper.updateById(paymentOrder);
     }
 
     /**

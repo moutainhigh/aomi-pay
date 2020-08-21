@@ -32,6 +32,8 @@
         <module>aomi-pay-pay</module>
         <!--h5-->
         <module>aomi-pay-h5</module>
+        <!--回调通知-->
+        <module>aomi-pay-notify</module>
     </modules>
 
     <!--版本控制-->

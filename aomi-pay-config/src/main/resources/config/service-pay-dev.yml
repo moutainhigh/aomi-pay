@@ -1,38 +1,8 @@
-spring:
-  #aop切面控制切换
-  aop:
-    proxy-target-class: true
-    auto: true
-  datasource:
-    #连接池配置
-    #初始化连接池的连接数量 大小，最小，最大
-    druid:
-      order:
-        url: jdbc:mysql://10.103.1.2:3306/aomi_pay_order?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
-        username: root
-        password: aomi123!
-        driver-class-name: com.mysql.jdbc.Driver
-        initialSize: 5
-        minIdle: 5
-        maxActive: 20
-        #配置获取连接等待超时的时间
-        max-wait: 60000
-      user:
-        url: jdbc:mysql://10.103.1.2:3306/aomi_pay_user?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
-        username: root
-        password: aomi123!
-        driver-class-name: com.mysql.jdbc.Driver
-        initialSize: 5
-        minIdle: 5
-        maxActive: 20
-        #配置获取连接等待超时的时间
-        max-wait: 60000
-
 #支付参数配置
 pay:
   hx:
     #支付回调地址
-    notify_url: https://pay.yxwl.wang/payment/notify
+    notify_url: https://notify.yxwl.wang/payNotify
     #结算周期
     settle_type: 2
     #订单失效时间 分钟

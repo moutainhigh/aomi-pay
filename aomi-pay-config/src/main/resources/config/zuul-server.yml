@@ -17,6 +17,9 @@ zuul:
     pay:
       path: /pay/**
       serviceId: service-pay
+    notify:
+      path: /notify/**
+      serviceId: service-notify
   add-host-header: true
 
 ribbon:
@@ -25,7 +28,7 @@ ribbon:
   eager-load:
     #取消懒加载
     enabled: true
-    clients: service-api, service-pay,service-mq
+    clients: service-api, service-pay,service-mq,service-notify
 
 hystrix:
   threadpool:

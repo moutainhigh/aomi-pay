@@ -1,10 +1,7 @@
 package com.aomi.pay.vo;
 
-import com.aomi.pay.annotations.Validator;
 import com.aomi.pay.model.ProductResponse;
-import com.aomi.pay.util.RegexUtils;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,7 +12,6 @@ import java.util.List;
  * @Date 2020/8/7
  * @Description h5支付接口接收参数封装
  */
-@ApiModel(value = "h5支付接口接收参数封装")
 @Data
 public class JsPayVO {
 

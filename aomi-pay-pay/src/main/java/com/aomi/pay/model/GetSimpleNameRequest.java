@@ -8,7 +8,7 @@ import lombok.Data;
 
 /**
  * @Author hdq
- * @Date 2020/8/7
+ * @Date 2020/8/18
  * @Description 根据固码获取商户信息接口接收参数封装
  */
 @ApiModel(value = "根据固码获取商户信息接口接收参数封装")

@@ -118,13 +118,6 @@
 
     })();
 
-    //var url_host = window.location.protocol + "//" + window.location.hostname;
-
-    /*    btn.addEventListener('touchend', function () {
-            alert("1111")
-            alipay(userId);
-        });*/
-
     function getCookie(name) {
         var prefix = name + "="
         var start = document.cookie.indexOf(prefix)

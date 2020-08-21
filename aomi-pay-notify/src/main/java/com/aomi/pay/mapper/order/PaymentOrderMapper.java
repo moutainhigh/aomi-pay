@@ -15,5 +15,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PaymentOrderMapper extends BaseMapper<PaymentOrder> {
 
+    /**
+     * @author  hdq
+     * @date  2020/8/15
+     * @Desc 根据订单号修改订单信息
+     **/
+    void updateByOrderId(PaymentOrder paymentOrder);
 
 }
