@@ -35,7 +35,7 @@ public class NotifyServiceImpl implements NotifyService {
      * @desc 支付回调
      */
     @Override
-    public void payNotify(NotifyRequest notifyRequest) throws Exception {
+    public PaymentOrder payNotify(NotifyRequest notifyRequest) throws Exception {
         //同步订单信息
         PaymentOrder paymentOrder = new PaymentOrder();
         int payStatus = tradeStatusToPayStatus(notifyRequest.getTradeStatus());
@@ -43,10 +43,10 @@ public class NotifyServiceImpl implements NotifyService {
         paymentOrder.setCompleteTime(DateUtil.format(notifyRequest.getCompleteTime(), DateUtil.YYYYMMDDHHMMSS));
         paymentOrder.setOutTransactionId(notifyRequest.getOutTransactionId());
         paymentOrder.setOrderId(new BigInteger(notifyRequest.getOutTradeNo()));
-
         paymentOrderMapper.updateById(paymentOrder);
 
-        //TODO 调通知
+        PaymentOrder po = paymentOrderMapper.selectById(notifyRequest.getOutTradeNo());
+        return po;
     }
 
     /**

@@ -8,12 +8,15 @@ package com.aomi.pay.constants;
  */
 public class SysConstants {
 
-    /** UTF-8 */
-    public static final String CHARSET_UTF8 = "UTF-8";
+    /**
+     * 商户状态 正常
+     **/
+    public static final String MERCHANT_STATUS_NORMAL = "0";
 
-    public static final String RESULT_CODE_NAME = "code";
-
-    public static final String RESULT_MESSAGE_NAME = "message";
+    /**
+     * 播放设备类型  当前为0
+     **/
+    public static final int AUTO_TYPE_DEFAULT = 0;
 
 
 }

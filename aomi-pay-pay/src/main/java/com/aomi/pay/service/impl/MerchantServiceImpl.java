@@ -1,5 +1,6 @@
 package com.aomi.pay.service.impl;
 
+import com.aomi.pay.constants.SysConstants;
 import com.aomi.pay.domain.CommonErrorCode;
 import com.aomi.pay.entity.MerchantInfo;
 import com.aomi.pay.entity.MerchantProduct;
@@ -80,6 +81,8 @@ public class MerchantServiceImpl implements MerchantService {
         MerchantInfo merchantInfo = this.merchantInfoMapper.selectById(merchantId);
 
         if (StringUtils.isEmpty(merchantInfo)) {
+            CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_301013);
+        }else if(SysConstants.MERCHANT_STATUS_NORMAL.equals(merchantInfo.getStatus())){
             CommonExceptionUtils.throwBusinessException(CommonErrorCode.E_301013);
         }
 

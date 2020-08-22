@@ -1,19 +1,18 @@
 package com.aomi.pay.mapper.user;
 
-
-import com.aomi.pay.entity.MerchantInfo;
+import com.aomi.pay.entity.MerchantAudioBind;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
 /**
  * <p>
- *  Mapper 接口
+ * 商户播报设备绑定关系表 Mapper 接口
  * </p>
  *
  * @author author
- * @since 2020-08-06
+ * @since 2020-08-22
  */
 @Repository
-public interface MerchantInfoMapper extends BaseMapper<MerchantInfo> {
+public interface MerchantAudioBindMapper extends BaseMapper<MerchantAudioBind> {
 
 }

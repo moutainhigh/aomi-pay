@@ -1,0 +1,10 @@
+#区域id
+region_id: cn-shanghai
+#key
+access_key: LTAI4G3fFNmVMhts38EouZvp
+#秘钥
+access_secret: P0kP3d9wIaZTqz7p4AdM5dQrfP1hDB
+#产品key
+product_key: a1Ed6GtHEDz
+#传输质量等级
+qos: '0'
