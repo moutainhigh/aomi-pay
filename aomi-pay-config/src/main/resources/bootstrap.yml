@@ -11,7 +11,7 @@ spring:
       server:
         composite: #同时指定了多个profile 优先级从上至下
           - type: native
-            searchLocations: file:F:\\aomi-pay-config  #外置：本地绝对路径
+            search-locations: file:F:\\aomi-manage-config  #外置：本地绝对路径
           - type: native
             search-locations: classpath:/config # 内置：配置文件所在目录，classpath（类路径)
     bus:
