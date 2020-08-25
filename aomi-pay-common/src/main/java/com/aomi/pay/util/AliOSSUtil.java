@@ -136,7 +136,7 @@ public class AliOSSUtil {
 		// 设置URL过期时间为1小时
 		// 关闭Client。
 		ossClient.shutdown();
-	    Date expiration = new Date(new Date().getTime() + 3600l * 1000 * 24 * 365 * 5);
+	    Date expiration = new Date(System.currentTimeMillis() + 3600L * 1000 * 24 * 365 * 5);
 		return ossClient.generatePresignedUrl(bucket_name, objectName, expiration).toString();
 	}
 	

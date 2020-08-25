@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Slf4j
 public class ValidateUtil {
-    public String validate(){
+    public String validate() {
         try {
             valid(this);
         } catch (ValidationException e) {
@@ -45,7 +45,7 @@ public class ValidateUtil {
         for (Field field : fields) {
             fieldValidate(field, object);
             //获取基础请求封装中的param对象成员进行校验
-            if (field.getName().equals("param") && field.getClass() != null) {
+            if ("param".equals(field.getName()) && field.getClass() != null) {
                 //Field[] fieldsParam = field.getClass().getDeclaredFields();
                 Field[] fieldsParam = ((BaseRequest) object).getParam().getClass().getDeclaredFields();
                 for (Field fieldParam : fieldsParam) {
@@ -56,7 +56,7 @@ public class ValidateUtil {
                 //获取param父类的对象成员进行校验
                 if (field.getClass().getSuperclass() != null) {
                     Field[] fieldsParamBasePage = ((BaseRequest) object).getParam().getClass().getSuperclass().getDeclaredFields();
-                    for(Field fieldParamBasePage : fieldsParamBasePage){
+                    for (Field fieldParamBasePage : fieldsParamBasePage) {
                         fieldValidate(fieldParamBasePage, ((BaseRequest) object).getParam());
                     }
                 }
@@ -65,7 +65,7 @@ public class ValidateUtil {
     }
 
 
-    public static void fieldValidate(Field field,Object object) throws ValidationException {
+    public static void fieldValidate(Field field, Object object) throws ValidationException {
         // 对于private私有化的成员变量，通过setAccessible来修改器访问权限
         field.setAccessible(true);
         validate(field, object);
@@ -76,7 +76,7 @@ public class ValidateUtil {
     /**
      * Desc: 获取对象成员的注解信息进行校验
      *
-     * @param field 1
+     * @param field  1
      * @param object 2
      * @return : void
      * @author : hdq
@@ -84,7 +84,7 @@ public class ValidateUtil {
      */
     public static void validate(Field field, Object object) throws ValidationException {
         String description;
-        Object value=null;
+        Object value = null;
         // 获取对象的成员的注解信息
         Validator dv = field.getAnnotation(Validator.class);
         try {
@@ -101,14 +101,14 @@ public class ValidateUtil {
         //null校验
         if (dv.isNotNull()) {
             if (value == null || "".equals(value.toString())) {
-                CommonExceptionUtils.throwParamException(description+ CommonConstants.ERR_DESC_PARAM.NONE_ERROR);
+                CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.NONE_ERROR);
             }
         }
         if (value != null) {
             //如果参数是list,则遍历校验
             if (value instanceof java.util.List) {
-                if(((List) value).isEmpty()){
-                    CommonExceptionUtils.throwParamException(description+ CommonConstants.ERR_DESC_PARAM.NONE_ERROR);
+                if (((List) value).isEmpty()) {
+                    CommonExceptionUtils.throwParamException(description + CommonConstants.ERR_DESC_PARAM.NONE_ERROR);
                 }
                 for (Object o : ((List) value)) {
                     validate(o, dv, description);
@@ -124,19 +124,19 @@ public class ValidateUtil {
 
 
     @Override
-    public String  toString() {
-        Class<?> c=this.getClass();
-        StringBuilder sbuilder=new StringBuilder();
-        Field[] fields=c.getDeclaredFields();
+    public String toString() {
+        Class<?> c = this.getClass();
+        StringBuilder sbuilder = new StringBuilder();
+        Field[] fields = c.getDeclaredFields();
         sbuilder.append(c.getName()).append("[");
-        for(int i=0;i<fields.length; i++){
+        for (int i = 0; i < fields.length; i++) {
             fields[i].setAccessible(true);
             fields[i].getName();
             try {
-                if(i == fields.length-1 ){
-                    sbuilder.append(fields[i].getName()+":"+fields[i].get(this).toString());
-                }else{
-                    sbuilder.append(fields[i].getName()+":"+fields[i].get(this).toString()+",");
+                if (i == fields.length - 1) {
+                    sbuilder.append(fields[i].getName() + ":" + fields[i].get(this).toString());
+                } else {
+                    sbuilder.append(fields[i].getName() + ":" + fields[i].get(this).toString() + ",");
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
@@ -152,7 +152,7 @@ public class ValidateUtil {
      * @author : hdq
      * @date : 2020/7/24 14:53
      */
-    private static void validate(Object value, Validator dv, String description){
+    private static void validate(Object value, Validator dv, String description) {
         //长度校验
         if (value.toString().length() > dv.maxLength() && dv.maxLength() != 0) {
             CommonExceptionUtils.throwParamException(description + "长度不能超过" + dv.maxLength());
@@ -161,7 +161,7 @@ public class ValidateUtil {
             CommonExceptionUtils.throwParamException(description + "长度不能小于" + dv.minLength());
         }
         //正则校验
-        if(!StringUtil.isBlank(value.toString())) {
+        if (!StringUtil.isBlank(value.toString())) {
             if (dv.regexType() != RegexEnum.NONE) {
                 switch (dv.regexType()) {
                     case SPECIALCHAR:

@@ -27,7 +27,7 @@ public class PaymentOrderUtil {
     /**
      * 随机编码
      */
-    private static final int[] r = new int[]{7, 9, 6, 2, 8, 1, 3, 0, 5, 4};
+    private static final int[] RANDOM_CODE = new int[]{7, 9, 6, 2, 8, 1, 3, 0, 5, 4};
 
     /**
      * 用户id和随机数总长度
@@ -41,7 +41,7 @@ public class PaymentOrderUtil {
         String idStr = userId.toString();
         StringBuilder idsbs = new StringBuilder();
         for (int i = idStr.length() - 1; i >= 0; i--) {
-            idsbs.append(r[idStr.charAt(i) - '0']);
+            idsbs.append(RANDOM_CODE[idStr.charAt(i) - '0']);
         }
         return idsbs.append(getRandom(MAXLENGTH - idStr.length())).toString();
     }

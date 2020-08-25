@@ -14,9 +14,9 @@ import java.security.spec.X509EncodedKeySpec;
 public class RSAUtil {
 
 
-    public static final String publicKey ="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCD50IUpnWnpIEIo6hkTBFIU7SvT17m36XdVSWVfZX9hQ87XjTuzNe0UCqlHk98KKJP9hNYPP6EouFLAzEDcjjrjMeZfkDQCO3nwHYkwgY7dbKguPJ5KM49VlK2r0v9XaOu8xx0IT26gyAFJpX5+OWgWLWC3yz5+wxnRiR822nOzQIDAQAB";
+    public static final String PUBLIC_KEY ="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCD50IUpnWnpIEIo6hkTBFIU7SvT17m36XdVSWVfZX9hQ87XjTuzNe0UCqlHk98KKJP9hNYPP6EouFLAzEDcjjrjMeZfkDQCO3nwHYkwgY7dbKguPJ5KM49VlK2r0v9XaOu8xx0IT26gyAFJpX5+OWgWLWC3yz5+wxnRiR822nOzQIDAQAB";
 
-    public static final String privateKey ="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAIPnQhSmdaekgQijqGRMEUhTtK9PXubfpd1VJZV9lf2FDzteNO7M17RQKqUeT3wook/2E1g8/oSi4UsDMQNyOOuMx5l+QNAI7efAdiTCBjt1sqC48nkozj1WUravS/1do67zHHQhPbqDIAUmlfn45aBYtYLfLPn7DGdGJHzbac7NAgMBAAECgYAxhwQo/NfwurQ4qjrwbh+PKN8PdJ4N0qxVD0OtfhpztyKhCB6YDBJygieBGIB//kH0BFH/L+fhpccyg2BECv+T4Wbc3BvG2fSyiUftwTcSZrd9E76kz7JyKU7NulEFYycjA3JL699ITAhkjOLBrLn0V7p0eypVcg9R/WWIi7KUAQJBAP3NJvLVIxhZJn82bpTSYSVcSbEZPwcfaQB97gfVm3P8xbenHL06iTKJMZK4nkW3xdg8PbWxXLkhWpcxfMef9QUCQQCFC8a8xDI03zHLyvT/4MGzxX0ygRYHeYvOqe7XvvUtbutz1GQPVt+i+YZ01DfrJtn8KJTVRYL+9KlY0PuSAh0pAkEAhFANfA8taqYfcbZ409ERoB6KtG8K8rWnUgBUtXTgxAkFModGbkgz+kqXs3vX11TFKcPOEAjU5BbFWYkNGi0D2QJALgrdRAZBubpj6TrbfpGxdx0pLoktrniJwYNdfJxBDPAN24/s8MIHssbXmSa4E1DmrzT8DLJ5mvHgiTQJW4YPwQJAHOuAzFQrDrd2r0Gb1SFhES7moFSclg5ct0UoONPovIMdtnZmG1op3h54kdLJpDARbHvO5iiyZwRFx2b9eTYDQg==";
+    public static final String PRIVATE_KEY ="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAIPnQhSmdaekgQijqGRMEUhTtK9PXubfpd1VJZV9lf2FDzteNO7M17RQKqUeT3wook/2E1g8/oSi4UsDMQNyOOuMx5l+QNAI7efAdiTCBjt1sqC48nkozj1WUravS/1do67zHHQhPbqDIAUmlfn45aBYtYLfLPn7DGdGJHzbac7NAgMBAAECgYAxhwQo/NfwurQ4qjrwbh+PKN8PdJ4N0qxVD0OtfhpztyKhCB6YDBJygieBGIB//kH0BFH/L+fhpccyg2BECv+T4Wbc3BvG2fSyiUftwTcSZrd9E76kz7JyKU7NulEFYycjA3JL699ITAhkjOLBrLn0V7p0eypVcg9R/WWIi7KUAQJBAP3NJvLVIxhZJn82bpTSYSVcSbEZPwcfaQB97gfVm3P8xbenHL06iTKJMZK4nkW3xdg8PbWxXLkhWpcxfMef9QUCQQCFC8a8xDI03zHLyvT/4MGzxX0ygRYHeYvOqe7XvvUtbutz1GQPVt+i+YZ01DfrJtn8KJTVRYL+9KlY0PuSAh0pAkEAhFANfA8taqYfcbZ409ERoB6KtG8K8rWnUgBUtXTgxAkFModGbkgz+kqXs3vX11TFKcPOEAjU5BbFWYkNGi0D2QJALgrdRAZBubpj6TrbfpGxdx0pLoktrniJwYNdfJxBDPAN24/s8MIHssbXmSa4E1DmrzT8DLJ5mvHgiTQJW4YPwQJAHOuAzFQrDrd2r0Gb1SFhES7moFSclg5ct0UoONPovIMdtnZmG1op3h54kdLJpDARbHvO5iiyZwRFx2b9eTYDQg==";
     /**
      * RSA最大加密明文大小
      */
@@ -103,9 +103,9 @@ public class RSAUtil {
 
         //加密字符串
         String message = "121212";
-        String messageEn = encrypt(message,publicKey);
+        String messageEn = encrypt(message,PUBLIC_KEY);
         System.out.println(message + "\t加密后的字符串为:" + messageEn);
-        String messageDe = decrypt(messageEn,privateKey);
+        String messageDe = decrypt(messageEn,PRIVATE_KEY);
         System.out.println("还原后的字符串为:" + messageDe);
     }
 
