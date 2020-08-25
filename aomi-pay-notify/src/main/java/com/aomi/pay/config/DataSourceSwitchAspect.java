@@ -30,13 +30,11 @@ public class DataSourceSwitchAspect {
 
     @Before("orderAspect()")
     public void order() {
-        log.info("切换到order 数据源...");
         DbContextHolder.setDbType(DBTypeEnum.order);
     }
 
     @Before("userAspect()")
     public void user() {
-        log.info("切换到user 数据源...");
         DbContextHolder.setDbType(DBTypeEnum.user);
     }
 

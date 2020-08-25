@@ -17,6 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableCaching
 public class NotifyApplication {
     public static void main(String[] args) {
-        SpringApplication.run(NotifyApplication.class,args);
+        SpringApplication.run(NotifyApplication.class, args);
     }
+
 }

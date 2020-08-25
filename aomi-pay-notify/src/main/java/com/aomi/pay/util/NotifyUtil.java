@@ -1,6 +1,6 @@
 package com.aomi.pay.util;
 
-import com.aomi.pay.MessageVO;
+import com.aomi.pay.vo.MessageVO;
 import com.aomi.pay.constants.SysConstants;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +21,7 @@ public class NotifyUtil {
      **/
     public static void send(String audioCode, int audioType, int payType, BigDecimal amount) {
         //播报消息体
-        String msg = ConversionUtil.convertPayStatus(payType).concat("到账").concat(amount.toString()).concat("元");
+        String msg = ConversionUtil.convertPayStatus(payType).concat("到账").concat(amount.stripTrailingZeros().toPlainString()).concat("元");
         if (audioType == SysConstants.AUTO_TYPE_DEFAULT) {
             //调通知
             MessageVO messageVO = new MessageVO();

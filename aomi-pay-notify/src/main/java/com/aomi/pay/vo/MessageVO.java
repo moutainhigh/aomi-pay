@@ -1,4 +1,4 @@
-package com.aomi.pay;
+package com.aomi.pay.vo;
 
 import lombok.Data;
 

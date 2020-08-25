@@ -1,16 +1,19 @@
 server:
   port: 8401 #端口
+
 spring:
   application:
-    name: config-server #服务名称
+    name: config-server #服务名称#设置为本地启动的方式，而不是通过git
   profiles:
-    active: native #设置为本地启动的方式，而不是通过git
+    active: composite
   cloud:
     config:
       server:
-        native:
-          #searchLocations: classpath:/config # 内置：配置文件所在目录，classpath（类路径）和（系统文件路径） file两种
-          searchLocations: file:F:\\aomi-pay-config  #外置：本地绝对路径
+        composite: #同时指定了多个profile 优先级从上至下
+          - type: native
+            searchLocations: file:F:\\aomi-pay-config  #外置：本地绝对路径
+          - type: native
+            search-locations: classpath:/config # 内置：配置文件所在目录，classpath（类路径)
     bus:
       enabled: true
       trace:
@@ -22,12 +25,6 @@ spring:
     password: guest
     virtual-host: /
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: bus-refresh
-
 #配置Eureka
 eureka:
   client:
@@ -36,3 +33,10 @@ eureka:
   instance:
     prefer-ip-address: true #使用ip地址注册
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+management: # 暴露触发消息总线的地址
+  endpoints:
+    web:
+      exposure:
+        include: "bus-refresh"
+

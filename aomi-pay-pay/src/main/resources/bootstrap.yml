@@ -4,12 +4,15 @@ server:
 spring:
   application:
     name: service-pay #服务名称
+  profiles:
+    active: dev
   cloud:
     config:
       name: service-pay,common,swagger,redis,mysql
       discovery:
         enabled: true
         service-id: config-server
+      profile: ${spring.profiles.active}
 #配置Eureka
 eureka:
   client:

@@ -4,7 +4,7 @@ spring:
     database: 1
     host: 127.0.0.1
     port: 6379
-    timeout: 1000ms
+    timeout: 9000ms
     lettuce:
       pool:
         # 连接池中的最大空闲连接

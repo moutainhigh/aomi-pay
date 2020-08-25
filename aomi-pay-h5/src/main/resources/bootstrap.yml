@@ -4,12 +4,15 @@ server:
 spring:
   application:
     name: service-h5 #服务名称
+  profiles:
+    active: dev
   cloud:
     config:
       name: service-h5,common,swagger,redis
       discovery:
         enabled: true
         service-id: config-server
+      profile: ${spring.profiles.active}
 #配置Eureka
 eureka:
   client:

@@ -6,7 +6,7 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.iot.model.v20180120.PubRequest;
 import com.aliyuncs.iot.model.v20180120.PubResponse;
 import com.aliyuncs.profile.DefaultProfile;
-import com.aomi.pay.MessageVO;
+import com.aomi.pay.vo.MessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.internal.websocket.Base64;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,13 +77,13 @@ public class PopPubUtil {
      * @date 2020/8/22
      * @description: 播报调用
      **/
-    public static void send(String sn, MessageVO messageVO) {
+    public static void send(String audioCode, MessageVO messageVO) {
         DefaultProfile profile = DefaultProfile.getProfile(REGION_ID, ACCESS_KEY, ACCESS_SECRET);
         IAcsClient client = new DefaultAcsClient(profile);
         PubRequest request = new PubRequest();
         request.setQos(QOS);
         request.setProductKey(PRODUCT_KEY);
-        request.setTopicFullName("/" + PRODUCT_KEY + "/" + sn + "/user/get");
+        request.setTopicFullName("/" + PRODUCT_KEY + "/" + audioCode + "/user/get");
 
         request.setMessageContent(Base64.encode(JSON.toJSONString(messageVO)));
 
@@ -109,7 +109,6 @@ public class PopPubUtil {
         request.setQos(0);
         request.setProductKey(productKey);
         request.setTopicFullName("/" + productKey + "/" + "JB2020A000002" + "/user/get");
-        String msgJsonString = JSON.toJSONString(JSON.toJSONString(messageVO));
         request.setMessageContent(Base64.encode(JSON.toJSONString(messageVO)));
         try {
             PubResponse response = client.getAcsResponse(request);

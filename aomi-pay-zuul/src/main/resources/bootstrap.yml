@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: zuul-server #服务名称
+  profiles:
+    active: dev
   main:
     allow-bean-definition-overriding: true #忽略同名bean
   cloud:
@@ -11,6 +13,7 @@ spring:
       discovery:
         enabled: true
         service-id: config-server
+      profile: ${spring.profiles.active}
 #配置Eureka
 eureka:
   client:

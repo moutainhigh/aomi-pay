@@ -5,11 +5,11 @@ import com.aomi.pay.constants.PayConstants;
 import com.aomi.pay.entity.PaymentOrder;
 import com.aomi.pay.mapper.order.PaymentOrderMapper;
 import com.aomi.pay.model.NotifyRequest;
-import com.aomi.pay.service.NotifyService;
+import com.aomi.pay.service.PaymentOrderService;
 import com.aomi.pay.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
@@ -22,8 +22,7 @@ import java.math.BigInteger;
  */
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class)
-public class NotifyServiceImpl implements NotifyService {
+public class PaymentOrderServiceImpl implements PaymentOrderService {
 
     @Resource
     private PaymentOrderMapper paymentOrderMapper;
@@ -35,7 +34,7 @@ public class NotifyServiceImpl implements NotifyService {
      * @desc 支付回调
      */
     @Override
-    public PaymentOrder payNotify(NotifyRequest notifyRequest) throws Exception {
+    public void updateOrder(NotifyRequest notifyRequest) throws Exception {
         //同步订单信息
         PaymentOrder paymentOrder = new PaymentOrder();
         int payStatus = tradeStatusToPayStatus(notifyRequest.getTradeStatus());
@@ -45,8 +44,6 @@ public class NotifyServiceImpl implements NotifyService {
         paymentOrder.setOrderId(new BigInteger(notifyRequest.getOutTradeNo()));
         paymentOrderMapper.updateById(paymentOrder);
 
-        PaymentOrder po = paymentOrderMapper.selectById(notifyRequest.getOutTradeNo());
-        return po;
     }
 
     /**
@@ -78,6 +75,17 @@ public class NotifyServiceImpl implements NotifyService {
         }
         return payStatus;
     }
+
+    /**
+     * @author hdq
+     * @date 2020/8/24
+     * @desc 根据订单号查订单信息
+     **/
+    @Override
+    public PaymentOrder queryByOrderId(BigInteger orderId) {
+        return paymentOrderMapper.selectById(orderId);
+    }
+
 
 }
 

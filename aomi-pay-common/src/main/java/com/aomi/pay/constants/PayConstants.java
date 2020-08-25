@@ -109,4 +109,25 @@ public class PayConstants {
      */
     public final static int PAY_STATUS_REFUND = 4;
 
+    /**
+     * 环迅回调  交易状态 1：处理中
+     */
+    public final static String HX_PAY_STATUS_TO_BE_PAY = "1";
+    /**
+     * 环迅回调  交易状态 0：已成功
+     */
+    public final static String HX_PAY_STATUS_SUCCESS = "0";
+    /**
+     * 环迅回调  交易状态 4：失败
+     */
+    public final static String HX_PAY_STATUS_FAIL = "4";
+    /**
+     * 环迅回调  交易状态 9：已关闭
+     */
+    public final static String HX_PAY_STATUS_CLOSE = "9";
+    /**
+     * 环迅回调  交易状态 6：已退款
+     */
+    public final static String HX_PAY_STATUS_REFUND = "6";
+
 }
