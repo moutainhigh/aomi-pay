@@ -37,7 +37,7 @@ public class AggregatePaymentController {
             aggregatePaymentService.getOpenId(fixedQrCode, request, httpServletResponse, model);
             return "pay_wx";
         } else {
-            return "no_support";
+            return "tips";
         }
     }
 
